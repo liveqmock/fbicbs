@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <link href="#{request.contextPath}/css/ccb.css" type="text/css" rel="stylesheet"/>
+        <link href="#{request.contextPath}/css/form.css" type="text/css" rel="stylesheet"/>
+        <style type="text/css">
+            .rowStyle {
+                height: 28px;
+            }
+        </style>
+        <script language="JavaScript" type="text/JavaScript">
+            function KeyDown() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'inputform:sbknum') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        document.forms['inputform']['inputform:savbtn'].click();
+                    } else {
+                        event.keyCode = 9;
+                    }
+                }
+            }
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <div class="entry">
+            <h:form id="inputform" style="padding-left:10px;padding-top:8px;padding-right:10px">
+                <p:messages id="msgs" showSummary="false" showDetail="true"/>
+                <p:focus for="productcode"/>
+                <p:panel header="修改会计分录">
+                    <h:panelGrid rowClasses="rowStyle" columns="4"
+                                 columnClasses="panel_label1,panel_value,panel_label1,panel_value">
+                        <h:outputText value="产品码: "/>
+                        <h:inputText id="productcode" style="width:150px;"/>
+                        <h:outputText value="事件码:"/>
+                        <h:inputText id="eventcode" style="width:150px;"/>
+                        <h:outputText value="客户类型码: "/>
+                        <h:inputText id="custtypecode" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="细分类码:"/>
+                        <h:inputText id="detltypecode" style="width:150px;"/>
+                        <h:outputText value="分录内顺序号:"/>
+                        <h:inputText id="flsxcode" style="width:150px;"/>
+                       <h:outputText value="机构号:"/>
+                        <h:inputText id="orgidt" style="width:150px;"/>
+                        <h:outputText value="客户号或其标识:"/>
+                        <h:inputText id="custorno" style="width:150px;"/>
+                        <h:outputText value="核算码或其标识:"/>
+                        <h:inputText id="apcodeorno" style="width:150px;"/>
+                        <h:outputText value="货币码或其标识:"/>
+                        <h:inputText id="curcdeorno" style="width:150px;"/>
+                        <h:outputText value="金额标识:"/>
+                        <h:inputText id="amtflag" style="width:150px;"/>
+                        <h:outputText value="借贷标识:"/>
+                        <h:inputText id="lordflag" style="width:150px;"/>
+                        <h:outputText value="分录总笔数:"/>
+                        <h:inputText id="fltotalcnt" style="width:150px;"/>
+                        <h:outputText value="对应货币:"/>
+                        <h:inputText id="correncurcde" style="width:150px;"/>
+                        <h:outputText value="汇率标识:"/>
+                        <h:inputText id="exchrateflag" style="width:150px;"/>
+                        <h:outputText value="对应核算码:"/>
+                        <h:inputText id="correnapcode" style="width:150px;"/>
+                        <h:outputText value="第一货币金额标识:"/>
+                        <h:inputText id="no1curflag" style="width:150px;"/>
+                        <h:outputText value="第二货币金额标识:"/>
+                        <h:inputText id="no2curflag" style="width:150px;"/>
+                       <h:outputText value="修改柜员:"/>
+                        <h:inputText id="altertlrnum" style="width:150px;"/>
+                        <h:outputText value="最后修改日期:"/>
+                        <p:calendar id="lastalterdate" style="width:150px;"/>
+                        <h:outputText value="记录情况:"/>
+                        <h:inputText id="recordinfo" style="width:150px;"/>
+                        <h:outputText value="系统标识:"/>
+                        <h:inputText id="sysidt" value="8" style="width:150px;"/>
+                        <h:outputText value="缺省摘要:"/>
+                        <h:inputText id="defaultremark" style="width:150px;"/>
+                        <h:outputText value="说明:"/>
+                        <h:inputText id="explain" style="width:150px;"/>
+                    </h:panelGrid>
+                    <p:separator/>
+                    <h:panelGrid columns="1" style="text-align:center;padding-top:10px;" width="70%">
+                        <h:panelGroup>
+                            <p:commandButton id="savbtn" value="修改" onclick="alert('未连接数据库');"
+                                             style="padding-left:10px;padding-right:10px;margin-right:10px;"/>
+                            <p:commandButton id="delbtn" value="删除"  onclick="alert('未连接数据库');"
+                                             style="padding-left:10px;padding-right:10px;margin-right:10px;"/>
+                            <p:commandButton value="重置" type="reset"
+                                             style="padding-left:10px;padding-right:10px;margin-left:10px;"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

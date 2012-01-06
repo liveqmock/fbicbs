@@ -1,0 +1,99 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <script language="JavaScript" type="text/JavaScript">
+            function KeyDown() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'inputform:irtnam') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        document.forms['inputform']['inputform:query'].click();
+                    } else {
+                        event.keyCode = 9;
+                    }
+                }
+            }
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="entry">
+            <h:form id="inputform">
+                <p:focus for="effdat"/>
+                <p:messages id="msgs" showSummary="false" showDetail="true"/>
+                <p:panel id="qryPanel" header="::查询条件::">
+                    <h:panelGrid columns="5">
+
+                        <h:outputText value="货币:"/>
+                            <h:selectOneMenu id="curcde" value="#{actirtBean.curcde}">
+                                <f:selectItems value="#{beanList.ccyList}"/>
+                            </h:selectOneMenu>
+
+                        <h:outputLabel value="日期 :" for="effdat"/>
+                        <p:inputMask id="effdat" mask="9999-99-99" value="#{actirtBean.effdat}" onkeydown="KeyDown()"/>
+
+                        <p:spacer/>
+
+                        <h:outputLabel value="利率种类码 :" for="irtkd"/>
+                        <h:inputText id="irtkd" value="#{actirtBean.irtkd}" onkeydown="KeyDown()"/>
+
+                        <h:outputLabel value="利率名称 :" for="irtnam"/>
+                        <h:inputText id="irtnam" value="#{actirtBean.irtnam}" onkeydown="KeyDown()"/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="1" style="text-align:left;padding-left:60px;padding-top:5px;" width="100%">
+                <h:panelGroup>
+                    <p:commandButton id="query" ajax="false" value="确认" action="#{actirtBean.queryRecords}"
+                                     style="padding-left:10px;padding-right:10px;margin-left:30px;margin-right:10px;"/>
+                    <p:commandButton value="重置" type="reset" style="padding-left:10px;padding-right:10px;margin-right:10px;"/>
+                </h:panelGroup>
+            </h:panelGrid>
+                </p:panel>
+            </h:form>
+            <h:form id="resultForm">
+                <p:dataTable id="resultDataTable" height="200" dblClickSelect="false"
+                             value="#{actirtBean.irtList}" var="record" selectionMode="single"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="both" rowsPerPageTemplate="100,50,15,10,5"
+                             emptyMessage="数据记录为空...">
+
+                    <p:column headerText="货币码" style="text-align:center">
+                        <h:outputText value="#{record.curcde}"/>
+                    </p:column>
+
+                    <p:column headerText="启用日期" style="text-align:center">
+                        <h:outputText value="#{record.effdat}">
+                            <f:convertDateTime pattern="yyyy-MM-dd" timeZone="GMT+8" locale="cn"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="利率名称" style="text-align:left">
+                        <h:outputText value="#{record.irtnam}"/>
+                    </p:column>
+                    <p:column headerText="利率大类" style="text-align:center">
+                        <h:outputText value="#{record.irtkd1}"/>
+                    </p:column>
+                    <p:column headerText="利率细类" style="text-align:center">
+                        <h:outputText value="#{record.irtkd2}"/>
+                    </p:column>
+                    <p:column headerText="基准利率值" style="text-align:right">
+                        <h:outputText value="#{record.irtval}"/>
+                    </p:column>
+                     <p:column headerText="操作" style="width:100px;text-align:center">
+                        <h:commandLink id="showDetail" immediate="true" value="详细" action="#{actirtBean.action}">
+                            <f:param value="showQryDetail" name="action"/>
+                            <f:param value="#{record.curcde}" name="curcde"/>
+                            <f:param value="#{record.effdat}" name="effdat"/>
+                            <f:param value="#{record.irtkd1}" name="irtkd1"/>
+                            <f:param value="#{record.irtkd2}" name="irtkd2"/>
+                            </h:commandLink>
+                </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,125 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                width: 160px;
+                text-align: right;
+            }
+
+            .col-input {
+            }
+        </style>
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                }
+            }
+
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="form">
+                <p:panel header="【批量代发与报销单笔查询】">
+                    <br/>
+                    <h:panelGrid columns="2">
+                        <h:panelGrid columns="2" cellspacing="5" columnClasses="col-label,col-input">
+                            <h:outputLabel value="索引号:" />
+                            <h:inputText size="30" required="true" requiredMessage="系统数据未初始化！"
+                                         value=""/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="2">
+                            <p:commandButton id="saveBtn" value="查询"
+                                             action="#" style="margin-left:155px;width:70px;"
+                                             update="msgs,form,pdt">
+                            </p:commandButton>
+                            <p:commandButton id="clsBtn" value="重置" style="width:70px;"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+
+                <p:ajaxStatus style="height:18px;text-align:center">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+
+                <p:fieldset>
+
+                    <h:panelGrid columns="4" cellspacing="5"
+                                 columnClasses="col-label,col-input,col-label,col-input">
+                        <h:outputLabel value="柜员号:" for="custname"/>
+                        <h:inputText id="custname" size="30" readonly="true" disabled="true"
+                                     value=""/>
+                        <h:outputLabel value="日期:" for="managerName"/>
+                        <h:inputText id="managerName" size="30"  readonly="true" disabled="true"
+                                     value=""/>
+                        <h:outputLabel value="时间:" for="managerPhone1"/>
+                        <h:inputText id="managerPhone1" size="30" readonly="true" disabled="true"
+                                     value=""/>
+
+                        <h:outputLabel value="货币号:" for="loanType"/>
+                        <h:inputText id="loanType" size="30" maxlength="2"  readonly="true" disabled="true"
+                                     value=""/>
+                        <h:outputLabel value="交易金额:" for="loanAmt"/>
+                        <h:inputText id="loanAmt" size="30" maxlength="19" readonly="true" disabled="true"
+                                     value=""/>
+                        <h:outputLabel value="付款人账号:"/>
+                        <h:inputText id="specialReq" size="30" maxlength="2"  readonly="true" disabled="true"
+                                     value=""/>
+                        <h:outputLabel value="付款人姓名:"/>
+                        <h:inputText id="paperType" size="30" maxlength="2"  readonly="true" disabled="true"
+                                     value=""/>
+
+                        <h:outputLabel value="交易类别:"/>
+                        <h:inputText size="30" maxlength="2" readonly="true" disabled="true"
+                                     value=""/>
+                        <h:outputLabel value="交易状态:"/>
+                        <h:inputText size="30" maxlength="2" readonly="true" disabled="true"
+                                     value=""/>
+                        <h:outputLabel value="请求序列号:"/>
+                        <h:inputText size="30" maxlength="2"  readonly="true" disabled="true"
+                                     value=""/>
+                        <h:outputLabel value="总笔数:"/>
+                        <h:inputText size="30"  value="" readonly="true" disabled="true"/>
+                        <h:outputLabel value="失败笔数:"/>
+                        <h:inputText size="30"  value="" readonly="true" disabled="true"/>
+                        <h:outputLabel value="失败金额:" />
+                        <h:inputText size="30"  value="" readonly="true" disabled="true"/>
+                        <h:outputLabel value="银行代码:"/>
+                        <h:inputText size="30"  value="" readonly="true" disabled="true"/>
+                        <h:outputLabel value="银行账号:"/>
+                        <h:inputText size="30"  value="" readonly="true" disabled="true"/>
+                        <h:outputLabel value="代发代扣编号:"/>
+                        <h:inputText size="30"  value="" readonly="true" disabled="true"/>
+                        <h:outputLabel value="凭证号:"/>
+                        <h:inputText size="30"  value="" readonly="true" disabled="true"/>
+                        <h:outputLabel value="处理日期:"/>
+                        <h:inputText size="30"  value="" readonly="true" disabled="true"/>
+                        <h:outputLabel value="处理柜员:"/>
+                        <h:inputText size="30"  value="" readonly="true" disabled="true"/>
+                        <h:outputLabel value="处理时间:"/>
+                        <h:inputText size="30"  value="" readonly="true" disabled="true"/>
+                        <h:outputLabel value="转账日期:"/>
+                        <h:inputText size="30"  value="" readonly="true" disabled="true"/>
+                        <h:outputLabel value="备注:"/>
+                        <h:inputText size="30"  value="" readonly="true" disabled="true"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <script language="JavaScript" type="text/JavaScript">
+            function KeyDown() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'inputform:cusnam') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        document.forms['inputform']['inputform:query'].click();
+                    } else {
+                        event.keyCode = 9;
+                    }
+                }
+            }
+        </script>
+    </ui:define>
+
+  <ui:define name="content">
+        <div class="entry">
+            <p:messages id="msgs" showSummary="" showDetail="true"/>
+          <h:form id="inputform">
+                <p:focus for="cusidt"/>               
+                <p:panel header="::查询条件::">
+                    <h:panelGrid columns="5">
+                        <h:outputLabel value="客户号 :" for="cusidt"/>
+                        <h:inputText id="cusidt" value="#{cusEntQry.cusidt}" onkeydown="KeyDown()"/>
+
+                        <h:outputLabel value="客户名称 :" for="cusnam"/>
+                        <h:inputText id="cusnam" size="50"  value="#{cusEntQry.cusnam}" onkeydown="KeyDown()"/>
+
+                 <h:panelGrid columns="1" style="text-align:center;padding-top:10px;" width="100%">
+                <h:panelGroup>
+                    <p:commandButton id="query" ajax="false" value="确认" action="#{cusEntQry.queryRecords}"
+                    style="margin-right:5px;margin-left:15px;"/>
+                    <p:commandButton value="重置" type="reset"
+                    style="margin-left:5px;"/>
+                </h:panelGroup>
+            </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+              <br/>
+             </h:form>
+            <h:form id="cusMsgForm">
+                <p:dataTable id="cusMsgDataTable" height="200" update="cusMsgForm:basicMsg,cusMsgForm:delpanel"
+                             value="#{cusEntQry.cusList}" var="record"  dblClickSelect="false"
+                             selection="#{cusEntQry.selectedCus}"  selectionMode="single"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="both" rowsPerPageTemplate="100,50,15,10,5"
+                             emptyMessage="数据记录为空...">
+                    
+                    <p:column  headerText="客户号   "   style="text-align:center">
+                        <h:outputText value="#{record.cusidt}"/>
+                    </p:column>
+
+                    <p:column  headerText="客户名称" style="text-align:left">
+                        <h:outputText value="#{record.cusnam}"/>
+                    </p:column>
+
+                    <p:column  headerText="证件类型" style="text-align:left">
+                        <h:outputText value="#{record.pastyp}"/>
+                    </p:column>
+
+                    <p:column headerText="证件号码" style="text-align:left" >
+                        <h:outputText value="#{record.passno}"/>
+                    </p:column>
+
+                    <p:column headerText="地址" style="text-align:left">
+                        <h:outputText value="#{record.coradd}"/>
+                    </p:column>
+
+                    <p:column headerText="电话号码" style="text-align:left">
+                        <h:outputText value="#{record.telnum}"/>
+                    </p:column>
+                     <p:column headerText="操作" style="width:100px;text-align:center">
+                        <h:commandLink id="showDetail" immediate="true" value="详细" action="#{cusEntQry.action}">
+                            <f:param value="#{record.cusidt}" name="param"/>
+                            <f:param value="showDetail" name="action"/>
+                            </h:commandLink>
+                        <p:spacer width="8"/>  
+                    <h:commandLink id="editContent" immediate="true" value="编辑"  action="#{cusEntQry.action}">
+                        <f:param value="#{record.cusidt}" name="param"/>
+                        <f:param value="editContent" name="action"/>
+                    </h:commandLink>
+                    <p:spacer width="8"/>
+                    <h:commandLink id="logicDelete" immediate="true" value="删除" action="#{cusEntQry.action}">
+                    <f:param value="#{record.cusidt}" name="param"/>
+                        <f:param value="logicDelete" name="action"/>
+                    </h:commandLink>
+                </p:column>
+                </p:dataTable>
+               </h:form>
+        </div>
+
+    </ui:define>
+</ui:composition>

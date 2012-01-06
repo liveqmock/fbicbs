@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+    <ui:define name="head">
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/css/fbicbs.css"/>
+    </ui:define>
+    <ui:define name="content">
+        <p:growl id="growl" showDetail="true"/>
+        <h:form id="queryForm">
+            <p:panel header="::查询条件::" id="input">
+                <h:panelGrid cellspacing="0" border="0" style="margin-left:0px;margin-top:10px;text-align:left;" columns="3"
+                             width="90%"
+                             columnClasses="lblWidth,data_input_width">
+                    <h:outputLabel value="客户号："/>
+                    <h:inputText binding="#{percustEdit.myCusidtTxt}" maxlength="7" id="cusidt" autocomplete="off"
+                                 style="width:90%;ime-mode:disabled;" value="#{percustEdit.actcus.cusidt}">
+                    </h:inputText>
+                    <h:panelGroup styleClass="btnWidth">
+                        <h:commandButton action="#{percustEdit.onQuery}" id="btnQuery" value="确 定"
+                                         type="submit"></h:commandButton>
+                        <p:spacer width="10"/>
+                        <h:commandButton type="reset" value="重 置"></h:commandButton>
+                    </h:panelGroup>
+                </h:panelGrid>
+            </p:panel>
+            <br></br>
+            <p:dataTable style="width:100%;" var="record" id="actcusInfo"
+                         height="400" value="#{percustEdit.actcusLst}"
+                         selection="#{percustEdit.selectRec}" selectionMode="single"
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         paginator="true" rows="15" paginatorPosition="both" rowsPerPageTemplate="100,50,30,15,5"
+                         emptyMessage="数据记录为空...">
+                <!--<p:column selectionMode="multiple"/>-->
+                <p:column style="width:40px;text-align:left;" styleClass="leftCellBorder">
+                    <f:facet name="header">
+                        <h:outputText value="客户号"/>
+                    </f:facet>
+                    <h:outputText value="#{record.cusidt}"/>
+                </p:column>
+                <p:column style="width:200px;text-align:left;">
+                    <f:facet name="header">
+                        <h:outputText value="客户名称"></h:outputText>
+                    </f:facet>
+                    <h:outputText value="#{record.cusnam}"/>
+                </p:column>
+                <p:column style="width:300px;">
+                    <f:facet name="header">
+                        <h:outputText value="通信地址"></h:outputText>
+                    </f:facet>
+                    <h:outputText value="#{record.coradd}"/>
+                </p:column>
+                <p:column style="width:40px;text-align:right;">
+                    <f:facet name="header">
+                        <h:outputText value="邮编"></h:outputText>
+                    </f:facet>
+                    <h:outputText value="#{record.zipcde}"/>
+                </p:column>
+                <p:column style="width:100px;">
+                    <f:facet name="header">
+                        <h:outputText value="电话"></h:outputText>
+                    </f:facet>
+                    <h:outputText value="#{record.telnum}"/>
+                </p:column>
+                <p:column style="width:60px;text-align:right;">
+                    <f:facet name="header">
+                        <h:outputText value="授信额度"></h:outputText>
+                    </f:facet>
+                    <h:outputText value="#{record.crdlim}"/>
+                </p:column>
+                <p:column style="width:60px;text-align:right;">
+                    <f:facet name="header">
+                        <h:outputText value="客户类别"></h:outputText>
+                    </f:facet>
+                    <h:outputText value="#{record.cuskid}"/>
+                </p:column>
+                <p:column style="width:90px;text-align:center;">
+                    <f:facet name="header">
+                        <h:outputText value="操作"/>
+                    </f:facet>
+                    <h:commandLink action="#{percustEdit.onQueryCustInfo}" immediate="true" value="编辑">
+                        <f:param name="cusidt" value="#{record.cusidt}"></f:param>
+                    </h:commandLink>
+                    <p:spacer width="10"/>
+                    <h:commandLink action="#{percustEdit.onDeleteRecClick}" value="删除">
+                        <f:param name="cusidt1" value="#{record.cusidt}"></f:param>
+
+                    </h:commandLink>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>

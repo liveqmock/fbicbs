@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//ibatis.apache.org//DTD Config 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-config.dtd">
+<configuration>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="UNPOOLED">
+				<property name="driver" value="oracle.jdbc.driver.OracleDriver" />
+				<property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl" />
+				<property name="username" value="cbs" />
+				<property name="password" value="cbs" />
+				<!--<property name="poolMaximumActiveConnections" value="10" />-->
+				<!--<property name="poolMaximumIdleConnections" value="20" />-->
+				<!--<property name="poolMaximumCheckoutTime" value="20000" />-->
+				<!--<property name="poolTimeToWait" value="1000" />-->
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="cbs/repository/account/maininfo/mapper/ActactMapper.xml" />
+		<mapper resource="cbs/repository/account/maininfo/mapper/ActoacMapper.xml" />
+		<mapper resource="cbs/repository/account/maininfo/mapper/ActobfMapper.xml" />
+        <mapper resource="cbs/repository/account/maininfo/mapper/ActoahMapper.xml" />
+		<mapper resource="cbs/repository/account/maininfo/mapper/ActvchMapper.xml" />
+		<mapper resource="cbs/repository/account/maininfo/mapper/CpSequenceMapper.xml" />
+        <mapper resource="cbs/repository/account/maininfo/mapper/ActstmMapper.xml" />
+        <mapper resource="cbs/repository/account/maininfo/mapper/ActplfMapper.xml" />
+        <mapper resource="cbs/repository/account/maininfo/mapper/ActcglMapper.xml" />
+        <mapper resource="cbs/repository/account/maininfo/mapper/ActglfMapper.xml" />
+        <mapper resource="cbs/repository/account/maininfo/mapper/ActblhMapper.xml" />
+        <mapper resource="cbs/repository/account/billinfo/mapper/ActlgcMapper.xml" />
+        <mapper resource="cbs/repository/account/billinfo/mapper/ActnsmMapper.xml" />
+
+        <mapper resource="cbs/repository/code/mapper/ActctrMapper.xml" />
+        <mapper resource="cbs/repository/code/mapper/ActaniMapper.xml" />
+        <mapper resource="cbs/repository/code/mapper/ActsctMapper.xml" />
+        <mapper resource="cbs/repository/code/mapper/ActdepMapper.xml" />
+        <mapper resource="cbs/repository/code/mapper/ActglcMapper.xml" />
+        <mapper resource="cbs/repository/code/mapper/ActapcMapper.xml"/>
+        <mapper resource="cbs/repository/code/mapper/ActirtMapper.xml"/>
+        <mapper resource="cbs/repository/code/mapper/ActccyMapper.xml"/>
+        <mapper resource="cbs/repository/code/mapper/ActtbcMapper.xml" />
+        <mapper resource="cbs/repository/code/mapper/ActtlrMapper.xml" />
+        <mapper resource="cbs/repository/code/mapper/ActorgMapper.xml" />
+
+        <mapper resource="cbs/repository/platform/mapper/PtenudetailMapper.xml" />
+        <mapper resource="cbs/repository/platform/mapper/ScttlrMapper.xml" />
+
+        <mapper resource="cbs/repository/customer/mapper/ActcusMapper.xml" />
+        <mapper resource="cbs/repository/customer/mapper/ActperMapper.xml" />
+        <mapper resource="cbs/repository/customer/mapper/ActentMapper.xml" />
+
+        <mapper resource="cbs/repository/account/other/mapper/ActtvcMapper.xml" />
+
+        <mapper resource="cbs/repository/account/maininfo/mapper/ActpleMapper.xml" />
+        <mapper resource="cbs/repository/account/maininfo/mapper/ActvthMapper.xml" />
+        <mapper resource="cbs/repository/account/maininfo/mapper/ActbvaMapper.xml" />
+
+        <mapper resource="cbs/repository/platform/mapper/PtdeptMapper.xml" />
+	</mappers>
+</configuration>

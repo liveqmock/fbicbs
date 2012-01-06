@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <link href="#{request.contextPath}/css/ccb.css" type="text/css" rel="stylesheet"/>
+        <link href="#{request.contextPath}/css/form.css" type="text/css" rel="stylesheet"/>
+        <style type="text/css">
+            .rowStyle {
+                height: 35px;
+            }
+        </style>
+        <script language="JavaScript" type="text/JavaScript">
+            function KeyDown() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'inputform:sbknum') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        document.forms['inputform']['inputform:savbtn'].click();
+                    } else {
+                        event.keyCode = 9;
+                    }
+                }
+            }
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <div class="entry">
+            <h:form id="inputform" style="padding-left:10px;padding-top:8px;padding-right:10px">
+                <p:messages id="msgs" showSummary="false" showDetail="true"/>
+                <p:focus for="txtApcode"/>
+                <p:panel header="核算码修改">
+                    <h:panelGrid style="margin-top: 20px;margin-bottom: 20px;" cellpadding="5"  columns="4" columnClasses="panel_label1,panel_value,panel_label1,panel_value">
+                        <h:outputText value="请输入核算码: "/>
+                        <h:inputText id="txtApcode" style="width:150px;">
+                        </h:inputText>
+                        <h:outputLabel/>
+                        <h:outputLabel/>
+                        <h:outputText value="个人/单位标志:"/>
+                        <h:selectOneMenu id="pwflag" style="width:158px;">
+                            <f:selectItem itemLabel="个人" itemValue="1"/>
+                            <f:selectItem itemLabel="单位" itemValue="0"/>
+                        </h:selectOneMenu>
+                        <h:outputText value="是否存款类标志:"/>
+                        <h:selectOneMenu id="depflag" style="width:158px;">
+                            <f:selectItem itemLabel="是" itemValue="1"/>
+                            <f:selectItem itemLabel="否" itemValue="0"/>
+                        </h:selectOneMenu>
+                        <h:outputText value="控借标志:"/>
+                        <h:selectOneMenu id="loanflag" style="width:158px;">
+                            <f:selectItem itemLabel="控" itemValue="1"/>
+                            <f:selectItem itemLabel="不控" itemValue="0"/>
+                        </h:selectOneMenu>
+                        <h:outputText value="控贷标志:"/>
+                        <h:selectOneMenu id="depositflag" style="width:158px;">
+                            <f:selectItem itemLabel="控" itemValue="1"/>
+                            <f:selectItem itemLabel="不控" itemValue="0"/>
+                        </h:selectOneMenu>
+                        <h:outputText value="控透支标志:"/>
+                        <h:selectOneMenu id="tzflag" style="width:158px;">
+                            <f:selectItem itemLabel="控" itemValue="1"/>
+                            <f:selectItem itemLabel="不控" itemValue="0"/>
+                        </h:selectOneMenu>
+                        <h:outputText value="记录状态:"/>
+                        <h:selectOneMenu id="rcdstatus" style="width:158px;">
+                            <f:selectItem itemLabel="正常" itemValue="1"/>
+                            <f:selectItem itemLabel="失效" itemValue="0"/>
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <p:separator/>
+                    <h:panelGrid columns="1" style="text-align:center;padding-top:10px;" width="70%">
+                        <h:panelGroup>
+                            <p:commandButton id="savbtn" value="修改" onclick="alert('未连接数据库');"
+                                             style="padding-left:10px;padding-right:10px;margin-right:10px;"/>
+                            <p:commandButton id="delbtn" value="删除"  onclick="alert('未连接数据库');"
+                                             style="padding-left:10px;padding-right:10px;margin-right:10px;"/>
+                            <p:commandButton value="重置" type="reset"
+                                             style="padding-left:10px;padding-right:10px;margin-left:10px;"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

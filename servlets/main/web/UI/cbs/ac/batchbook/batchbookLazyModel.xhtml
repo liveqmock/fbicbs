@@ -1,0 +1,153 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+            <script language="JavaScript" type="text/JavaScript">
+            // document.getElementByIdx("inputform:txt_title").focus();
+            function KeyDown() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'inputform:vchatt') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        //inputform.inputform:btnsubmit.click();
+                        //document.forms['inputform']['inputform:Go8101'].focus();
+                        document.forms['inputform']['inputform:Go8101'].click();
+                    } else {
+                        event.keyCode = 9;
+                    }
+                }
+            }
+        </script>
+    </ui:define>
+
+
+    <ui:define name="content">
+        <!--<h1 class="title">批量输入</h1>-->
+        <div class="entry">
+            <p>>批量输入交易：8401</p>
+            <h:form id="inputform">
+                <p:focus for="actno"/>
+                <p:messages/>
+                <p:panel header="Create a new record">
+                    <h:panelGrid columns="6">
+                        <h:outputLabel value="帐号* :" for="actno" />
+                        <h:inputText id="actno" value="#{batchBookAction.vo.actno}" required="true" onkeydown="KeyDown()" onfocus="this.select()">
+                        <!--<p:inputMask mask="99999999999999"/>-->
+                        </h:inputText>
+                        <h:outputLabel value="　类型* :" for="type"/>
+                        <h:inputText id="type" value="#{batchBookAction.vo.type}" required="true" onkeydown="KeyDown()"/>
+                        <h:outputLabel value="　金额* :" for="txnamt"/>
+                        <h:inputText id="txnamt" value="#{batchBookAction.vo.txnamt}" required="true" onkeydown="KeyDown()"/>
+
+                        <h:outputLabel value="冲补/起息日 :" for="valdat"/>
+                        <h:inputText id="valdat" value="#{batchBookAction.vo.valdat}"  onkeydown="KeyDown()"/>
+                        <h:outputLabel value="　统计码 :" for="anacde"/>
+                        <h:inputText id="anacde" value="#{batchBookAction.vo.anacde}"  onkeydown="KeyDown()"/>
+                        <h:outputLabel value="　摘要  :" for="furinf"/>
+                        <h:inputText id="furinf" value="#{batchBookAction.vo.furinf}"  onkeydown="KeyDown()"/>
+                        <h:outputLabel value="附件 :" for="vchatt"/>
+                        <h:inputText id="vchatt" value="#{batchBookAction.vo.vchatt}"  onkeydown="KeyDown()"/>
+
+
+                        <h:outputText value=""/>
+
+                        <h:panelGroup>
+                            <p:commandButton id="Go8101" value="确定" action="#{batchBookAction.onCreateNewRecord}"   >
+                            </p:commandButton>
+
+                            <p:commandButton value="重置" type="reset"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </p:panel>
+
+            </h:form>
+
+            <br/>
+
+            <h:form>
+                <p:dataTable id="pdt"
+                             value="#{batchBookAction.lazyModel}" var="record"
+                             lazy="true"
+                             dynamic="true"
+                             paginator="true" rows="10" paginatorPosition="bottom"
+                             selectionMode="single"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15" style="font-size:0.8em"
+                             emptyMessage="未发现查询记录...">
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="序号"/>
+                        </f:facet>
+                        <h:outputText value="#{record.setseq}"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="帐号"/>
+                        </f:facet>
+                        <h:outputText value="#{record.cusidt}"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="类型"/>
+                        </f:facet>
+                        <h:outputText value="#{record.rvslbl}"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="金额"/>
+                        </f:facet>
+                        <h:outputText value="#{record.txnamt}"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="起息日"/>
+                        </f:facet>
+                        <h:outputText value="#{record.valdat}"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="冲补日"/>
+                        </f:facet>
+                        <h:outputText value="#{record.valdat}"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="摘要"/>
+                        </f:facet>
+                        <h:outputText value="#{record.furinf}"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="附件"/>
+                        </f:facet>
+                        <h:outputText value="#{record.vchatt}"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Operation"/>
+                        </f:facet>
+                        <h:commandLink value="Remove">
+                            <p:collector value="#{record.actno}" removeFrom="#{batchBookAction.voList}"/>
+                        </h:commandLink>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+
+        </div>
+
+    </ui:define>
+</ui:composition>

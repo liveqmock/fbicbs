@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/css/ccb.css"/>
+        <!--<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/themes/redmond/skin.css"/>-->
+    </ui:define>
+    <ui:define name="content">
+        <p:growl id="growl" showDetail="true" life="3000" globalOnly="true"/>
+        <h:form id="contentform" style="margin-left:20px;margin-top:10px;">
+            <br></br>
+            <p:panel header="报表生成">
+                <h:panelGrid width="50%" cellspacing="0" border="0"
+                             style="margin-left:15px;" columns="2"
+                             columnClasses="lbl_right_padding lblWidth,data_input data_input_width">
+                    <h:outputLabel value="余额表"/>
+                    <h:panelGroup>
+                        <h:commandButton action="#{report.ExcelObf2}" value="抽 出 数 据" id="btnobf"></h:commandButton>
+                    </h:panelGroup>
+                    <h:outputLabel value="科目日结单"/>
+                    <h:panelGroup>
+                        <h:commandButton value="抽 出 数 据" action="#{report.ExcelActvch2}" id="btncgl"></h:commandButton>
+                    </h:panelGroup>
+                    <h:outputLabel value="日计表"/>
+                    <h:panelGroup>
+                        <h:commandButton value="抽 出 数 据" action="#{report.ExcelActcgl2}" id="btncglD"></h:commandButton>
+                    </h:panelGroup>
+                    <h:outputLabel value="月计表"/>
+                    <h:panelGroup>
+                        <h:commandButton value="抽 出 数 据" action="#{report.ExcelMonth2}" id="btncglM"></h:commandButton>
+                    </h:panelGroup>
+                    <h:outputLabel value="分户账"/>
+                    <h:panelGroup>
+                        <h:commandButton value="抽 出 数 据" action="#{report.ExcelActstm3}" id="btnstm"></h:commandButton>
+                    </h:panelGroup>
+                    <h:outputLabel value="对账单"/>
+                    <h:panelGroup>
+                        <h:commandButton value="抽 出 数 据" action="#{report.ExcelActnsm}" id="btnnsm"></h:commandButton>
+                    </h:panelGroup>
+                    <h:outputLabel value="总账"/>
+                    <h:panelGroup>
+                        <h:commandButton value="抽 出 数 据" action="#{report.ExcelActglf2}" id="btnglf"></h:commandButton>
+                    </h:panelGroup>
+
+                    <h:outputLabel value="损益表"/>
+                    <h:panelGroup>
+                        <h:commandButton value="抽 出 数 据" action="#{report.ExcelPlc}" id="btnplc"></h:commandButton>
+                    </h:panelGroup>
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <classPathEntry location="/svn-fbicbs/ref/ojdbc6.jar"/>
+
+    <!--帐户 主要信息-->
+    <context id="AccountMainInfo" targetRuntime="MyBatis3">
+        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+                        connectionURL="jdbc:oracle:thin:@localhost:1521:orcl"
+                        userId="cbs"
+                        password="cbs">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="cbs.repository.account.maininfo.model" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="cbs.repository.account.maininfo.mapper" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="cbs.repository.account.maininfo.dao" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <table tableName="actact">
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table tableName="actouf"/>
+        <table tableName="actfrz"/>
+        <table tableName="actfxe"/>
+        <table tableName="actglf"/>
+        <table tableName="actcgl"/>
+        <table tableName="actplf"/>
+        <table tableName="actalb"/>
+        <table tableName="actplb"/>
+        <table tableName="actalt"/>
+        <table tableName="actvch"/>
+        <table tableName="actobf"/>
+        <table tableName="actvth"/>
+        <table tableName="actoct"/>
+        <table tableName="actoac"/>
+
+        <table tableName="actoah"/>
+        <table tableName="actblh"/>
+        <table tableName="actcbh"/>
+        <table tableName="actibl"/>
+        <table tableName="actbva"/>
+        <table tableName="actbah"/>
+        <table tableName="actint"/>
+    </context>
+
+
+    <!--帐户 临时表 -->
+    <context id="AccountTempInfo" targetRuntime="MyBatis3">
+        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+                        connectionURL="jdbc:oracle:thin:@localhost:1521:orcl"
+                        userId="cbs"
+                        password="cbs">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="true"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="cbs.repository.account.tempinfo.model" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="cbs.repository.account.tempinfo.mapper" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="cbs.repository.account.tempinfo.dao" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <table tableName="actcir"/>
+        <table tableName="actcxr"/>
+        <table tableName="actfgl"/>
+        <table tableName="acttmp"/>
+        <table tableName="actclz"/>
+        <table tableName="actdlz"/>
+        <table tableName="actaln"/>
+        <table tableName="actatm"/>
+        <table tableName="actpmp"/>
+    </context>
+
+
+    <!--帐户 出帐相关信息 -->
+    <context id="AccountBillInfo" targetRuntime="MyBatis3">
+        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+                        connectionURL="jdbc:oracle:thin:@localhost:1521:orcl"
+                        userId="cbs"
+                        password="cbs">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="cbs.repository.account.billinfo.model" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="cbs.repository.account.billinfo.mapper" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="cbs.repository.account.billinfo.dao" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <table tableName="acfpgn"/>
+        <table tableName="actsbl"/>
+        <table tableName="actlbl"/>
+        <table tableName="actlgc"/>
+        <table tableName="actlgf"/>
+        <table tableName="actlgh"/>
+        <table tableName="actnsm"/>
+        <table tableName="actlsm"/>
+        <table tableName="actstm"/>
+    </context>
+
+    <!--客户信息表 -->
+    <context id="CustomerInfo" targetRuntime="MyBatis3">
+        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+                        connectionURL="jdbc:oracle:thin:@localhost:1521:orcl"
+                        userId="cbs"
+                        password="cbs">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="cbs.repository.customer.model" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="cbs.repository.customer.mapper" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="cbs.repository.customer.dao" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <table tableName="actcus"/>
+        <table tableName="actent"/>
+        <table tableName="actper"/>
+        <table tableName="actcuh"/>
+    </context>
+
+    <!--支票信息表 -->
+    <context id="CheckInfo" targetRuntime="MyBatis3">
+        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+                        connectionURL="jdbc:oracle:thin:@localhost:1521:orcl"
+                        userId="cbs"
+                        password="cbs">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="cbs.repository.check.model" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="cbs.repository.check.mapper" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="cbs.repository.check.dao" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <table tableName="acfctv"/>
+        <table tableName="acfcqe"/>
+        <table tableName="actcqe"/>
+        <table tableName="actsel"/>
+        <table tableName="actrep"/>
+        <table tableName="actocq"/>
+        <table tableName="actrrj"/>
+    </context>
+
+    <!--帐务其他信息  -->
+    <context id="AccountOtherInfo" targetRuntime="MyBatis3">
+        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+                        connectionURL="jdbc:oracle:thin:@localhost:1521:orcl"
+                        userId="cbs"
+                        password="cbs">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="cbs.repository.account.other.model" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="cbs.repository.account.other.mapper" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="cbs.repository.account.other.dao" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+        <!--定存定贷相关信息 -->
+        <table tableName="actosf"/>
+        <table tableName="actosh"/>
+        <table tableName="acttif"/>
+        <table tableName="actadp"/>
+        <table tableName="acttir"/>
+        <table tableName="actcit"/>
+        <!--通存通兑相关表 -->
+        <table tableName="actmac"/>
+        <table tableName="actmab"/>
+        <table tableName="actrst"/>
+        <table tableName="actrct"/>
+         <!--分部门核算码表 -->
+        <table tableName="actdgc"/>
+        <table tableName="actdgh"/>
+        <table tableName="actdgs"/>
+        <!--记帐临时表 -->
+        <table tableName="acttvc"/>
+    </context>
+
+
+
+    <!--   =============================系统表===================      -->
+    <!--码表 -->
+    <context id="CodeInfo" targetRuntime="MyBatis3">
+        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+                        connectionURL="jdbc:oracle:thin:@localhost:1521:orcl"
+                        userId="cbs"
+                        password="cbs">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="cbs.repository.code.model" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="cbs.repository.code.mapper" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="cbs.repository.code.dao" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <table tableName="actccy"/>
+        <table tableName="actxrt"/>
+        <table tableName="actirt"/>
+        <table tableName="actfrt"/>
+        <table tableName="actibk"/>
+        <table tableName="actglc"/>
+
+        <table tableName="actapc"/>
+        <table tableName="actpac"/>
+        <table tableName="actplc"/>
+        <table tableName="actalc"/>
+        <table tableName="actpll"/>
+        <table tableName="actagc"/>
+        <table tableName="acttac"/>
+        <table tableName="acttax"/>
+        <table tableName="acttbc"/>
+        <table tableName="acttmc"/>
+        <table tableName="acttsc"/>
+        <table tableName="actctp"/>
+        <table tableName="actanc"/>
+        <table tableName="actpdn"/>
+        <table tableName="actert"/>
+        <table tableName="actnvt"/>
+        <table tableName="actctr"/>
+        <table tableName="acthol"/>
+        <table tableName="actpdc"/>
+        <table tableName="actevc"/>
+        <table tableName="actcac"/>
+        <table tableName="actery"/>
+        <table tableName="acmery"/>
+        <table tableName="actcyt"/>
+        <table tableName="actatr"/>
+        <table tableName="acttrf"/>
+        <table tableName="actath"/>
+        <table tableName="actorg"/>
+        <table tableName="actsct"/>
+        <table tableName="actcmt"/>
+        <table tableName="actdep"/>
+        <table tableName="actsev"/>
+        <table tableName="acttlr"/>
+        <table tableName="actani"/>
+    </context>
+
+    <!--平台信息表 -->
+    <context id="PtTable" targetRuntime="MyBatis3">
+        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+                        connectionURL="jdbc:oracle:thin:@localhost:1521:orcl"
+                        userId="cbs"
+                        password="cbs">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="cbs.repository.platform.model" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="cbs.repository.platform.mapper" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="cbs.repository.platform.dao" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <table tableName="ptdept"/>
+        <table tableName="ptenudetail"/>
+        <table tableName="ptenumain"/>
+        <table tableName="pterror"/>
+        <table tableName="ptlogicact"/>
+        <table tableName="ptmenu"/>
+        <table tableName="ptoper"/>
+        <table tableName="ptoperrole"/>
+        <table tableName="ptrsource"/>
+        <table tableName="sys_lock"/>
+        <table tableName="sys_scheduler"/>
+        <table tableName="sys_scheduler_log"/>
+        <table tableName="sys_seq"/>
+        <table tableName="sys_seq_discard"/>
+        <table tableName="co_sequence"/>
+    </context>
+
+
+</generatorConfiguration>

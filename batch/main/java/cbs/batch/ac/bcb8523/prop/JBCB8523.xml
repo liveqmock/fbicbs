@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment><![CDATA[
+  -----------------------------------------------
+ 　2010/12/10 zhanrui
+  -----------------------------------------------
+]]></comment>
+
+    <!--<entry key="import">F:/svn-fbicbs/out/artifacts/fbicbs/WEB-INF/classes/cbs/batch</entry>-->
+    <entry key="jarPath1">basePath:/lib</entry>
+    <entry key="jarPath1.jarName1">commons-beanutils.jar</entry>
+
+    <entry key="jarPath3">basePath:/lib</entry>
+
+
+    <entry key="classPath1">basePath:/classes/cbs/batch/ac/bcb8523/prop</entry>
+
+    <entry key="applicationContext1">cbs/batch/ac/bcb8523/prop/mybatis-batch.xml</entry>
+
+    <entry key="executeLogicClass">cbs.batch.ac.bcb8523.BCB8523Handler</entry>
+
+    <entry key="notuseDb">false</entry>
+
+</properties>

@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+<ui:define name="head">
+</ui:define>
+
+<ui:define name="content">
+    <div class="entry">
+
+        <h:form id="dtform">
+            <p:dataTable id="pdt"   
+                         value="#{batchBookAction.acttvcList}" var="record"
+                         selection="#{batchBookAction.selectedRecords}" paginator="true" rows="10"
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                    rowsPerPageTemplate="5,10,15">
+
+                <p:column selectionMode="multiple" />
+                
+                <p:column  headerText="序号" style="width:60px">
+                    <h:outputText value="#{record.setseq}"/>
+                </p:column>
+
+                <p:column  headerText="帐  号">
+                    <h:outputText value="#{record.cusidt}"/>
+                </p:column>
+
+                <p:column headerText="类型">
+                    <h:outputText value="#{record.rvslbl}"/>
+                </p:column>
+
+                <p:column headerText="金额">
+                    <h:outputText value="#{record.txnamt}"/>
+                </p:column>
+
+                <p:column headerText="起息日">
+                    <h:outputText value="#{record.valdat}"/>
+                </p:column>
+
+                <p:column headerText="冲补日">
+                    <h:outputText value="#{record.valdat}"/>
+                </p:column>
+
+                <p:column headerText="摘要" >
+                    <h:outputText value="#{record.furinf}"/>
+                </p:column>
+
+                <p:column headerText="附件" style="width:10%">
+                    <h:outputText value="#{record.vchatt}"/>
+                </p:column>
+
+
+            </p:dataTable>
+        </h:form>
+
+    </div>
+
+</ui:define>
+</ui:composition>

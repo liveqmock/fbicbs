@@ -1,0 +1,116 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <link href="#{request.contextPath}/css/ccb.css" type="text/css" rel="stylesheet"/>
+        <link href="#{request.contextPath}/css/form.css" type="text/css" rel="stylesheet"/>
+        <style type="text/css">
+            .rowStyle {
+                height: 28px;
+            }
+        </style>
+        <script language="JavaScript" type="text/JavaScript">
+            function KeyDown() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'inputform:sbknum') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        document.forms['inputform']['inputform:savbtn'].click();
+                    } else {
+                        event.keyCode = 9;
+                    }
+                }
+            }
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <div class="entry">
+            <h:form id="inputform" style="padding-left:10px;padding-top:8px;padding-right:10px">
+                <p:messages id="msgs" showSummary="false" showDetail="true"/>
+                <p:focus for="actnoType"/>
+                <p:panel header="定期部分支取">
+                    <h:panelGrid rowClasses="rowStyle" columns="4" columnClasses="panel_label1,panel_value,panel_label1,panel_value">
+                        <h:outputText value="账户号类型: "/>
+                        <h:inputText id="actnoType" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="账户号:"/>
+                        <h:inputText id="actno" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="是否强制到期: "/>
+                        <h:inputText id="reDateFlag" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="取款方式: "/>
+                        <h:inputText id="accptType" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="客户密码: "/>
+                        <h:inputSecret id="reDateFlag" style="width:150px;">
+                        </h:inputSecret>
+                        <h:outputText value="帐户类型: "/>
+                        <h:inputText id="acttype" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="原凭证种类: "/>
+                        <h:inputText id="orienVchType" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="原凭证印刷号: "/>
+                        <h:inputText id="orienVchPrtno" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="新存期: "/>
+                        <h:inputText id="newDepDate" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="起息日期: "/>
+                        <p:calendar id="startirtDate" style="width:150px;"/>
+                        <h:outputText value="本金: "/>
+                        <h:inputText id="orienAmt" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="支取金额: "/>
+                        <h:inputText id="payAmt" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="应付利息: "/>
+                        <h:inputText id="payirtamt" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="凭证种类: "/>
+                        <h:inputText id="vchType" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="户名: "/>
+                        <h:inputText id="actname" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="凭证印刷号: "/>
+                        <h:inputText id="vchPrtno" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="证件号码: "/>
+                        <h:inputText id="idno" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="地址: "/>
+                        <h:inputText id="addr" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="货币名称: "/>
+                        <h:inputText id="curname" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="转入帐户号: "/>
+                        <h:inputText id="tunactno" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="摘要: "/>
+                        <h:inputText id="remark" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="分析号: "/>
+                        <h:inputText id="alyno" style="width:150px;">
+                        </h:inputText>
+                    </h:panelGrid>
+                    <p:separator/>
+                    <h:panelGrid columns="1" style="text-align:center;padding-top:10px;" width="70%">
+                        <h:panelGroup>
+                            <p:commandButton id="savbtn" value="支取"  onclick="alert('未连接数据库');"
+                                             style="padding-left:10px;padding-right:10px;margin-right:10px;"/>
+                            <p:commandButton value="重置" type="reset"
+                                             style="padding-left:10px;padding-right:10px;margin-left:10px;"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

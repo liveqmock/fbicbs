@@ -1,0 +1,369 @@
+<!--旧版本界面 haier -->
+        
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+<ui:define name="head">
+    <style type="text/css">
+        .panellabel {
+            width: 6em;
+        }
+
+        .tablebg {
+            background-color: #D0D0A0;
+        }
+
+        .text {
+            text-align: left;
+        }
+
+        .number {
+            text-align: right;
+        }
+
+        .graybg {
+            background-color: #DDDDDD;
+        }
+
+        .whitebg {
+            background-color: #FFFFFF;
+        }
+    </style>
+    <script language="JavaScript" type="text/JavaScript">
+        //<![CDATA[
+        function KeyDown() {
+            if (event.keyCode == 13) {
+                if (event.srcElement.id == 'inputform:actno') {
+                    checkactno();
+                    event.keyCode = 9;
+                } else if (event.srcElement.id == 'inputform:type') {
+                    checktype();
+                    event.keyCode = 9;
+                } else if (event.srcElement.id == 'inputform:txnamt') {
+                    checktxnamt();
+                    event.keyCode = 9;
+                } else if (event.srcElement.id == 'inputform:valdat') {
+                    checkvaldat();
+                    event.keyCode = 9;
+                } else if (event.srcElement.id == 'inputform:vchatt') {
+                    //                  event.returnValue = false;
+                    //                event.cancel = true;
+                    //                    event.keyCode = 9;
+                    //document.forms['inputform']['inputform:save'].click();
+                } else if (event.srcElement.id == 'authform:password') {
+                    event.returnValue = false;
+                    event.cancel = true;
+                    document.forms['authform']['authform:authlogin'].click();
+                } else {
+                    event.keyCode = 9;
+                }
+            }
+        }
+
+        function handleConfirmDeleteAll() {
+            confirmDeleteAll.show();
+            window.event.keyCode = 9;
+            //jQuery(PrimeFaces.escapeClientId('confirmform:canceldeleteall')).focus();
+
+        }
+
+        function handleInputComplete(xhr, status, args, id, nextid) {
+            if (args) {
+                var isValid = args.isValid;
+                if (!isValid) {
+                    document.forms['inputform']['inputform:' + id].focus();
+                } else {
+                    if (id == 'valdat') {
+                        var inputvaldat = document.forms['inputform']['inputform:valdat'].value;
+                        var lastvaldat = document.forms['inputform']['inputform:lastvaldat'].value;
+                        var vchaut = document.forms['inputform']['inputform:vchaut'].value;
+                        var sysdate = document.forms['inputform']['inputform:sysdate'].value;
+                        var tlrnum = document.forms['inputform']['inputform:tlrnum'].value;
+                        if ((inputvaldat != "") && (inputvaldat != sysdate)
+                                && (vchaut == "" || (vchaut != "" && inputvaldat != lastvaldat))) {
+                            document.forms['authform']['authform:workuser'].value = tlrnum;
+                            authdlg.show();
+                            //jQuery(function(){jQuery(PrimeFaces.escapeClientId('authform:username')).focus();});
+                            event.keyCode = 46;
+                            //document.forms['authform']['authform:username'].focus;
+                            jQuery(PrimeFaces.escapeClientId('authform:username')).focus();
+                        }
+                        if (inputvaldat == "") {
+                            document.forms['inputform']['inputform:vchaut'].value = "";
+                        }
+                    }
+                }
+            }
+        }
+
+        function handleVchsetRequest(xhr, status, args) {
+            if (args.validationFailed || !args.result) {
+                jQuery('#dialog').effect("shake", { times:3 }, 100);
+            } else {
+                vchsetdlg.hide();
+            }
+        }
+
+        function handleLoginRequest(xhr, status, args) {
+            if (args.validationFailed || !args.loggedIn) {
+                jQuery('#authdialog').effect("shake", { times:3 }, 100);
+            } else {
+                authdlg.hide();
+                var vchaut = document.forms['authform']['authform:username'].value;
+                document.forms['inputform']['inputform:lastvaldat'].value = document.forms['inputform']['inputform:valdat'].value;
+                document.forms['inputform']['inputform:vchaut'].value = vchaut;
+                document.forms['inputform']['inputform:anacde'].focus();
+            }
+        }
+
+        var submitted = false;
+        function checkDoubleSubmit(f) {
+            //alert(submitted);
+            if (submitted) {
+                window.alert("请勿重复提交!");
+                return false;
+            } else {
+                submitted = true;
+                return true;
+            }
+        }
+
+        //]]>
+    </script>
+</ui:define>
+
+<ui:define name="content">
+<div class="entry" id="top">
+<p:messages id="msgs" showDetail="true"/>
+<h:form id="inputform" onsubmit="return checkDoubleSubmit(this);">
+    <p:focus for="actno"/>
+    <p:panel header="::传票录入::" id="input">
+        <h:panelGroup>
+            <h:panelGrid columns="8" cellspacing="2">
+                <h:outputLabel value="帐号* :" for="actno"/>
+                <h:inputText id="actno" value="#{batchBookAction.vo.actno}"
+                             required="true" onkeydown="KeyDown()" onfocus="this.select()">
+                    <f:validator validatorId="actnoValidator"/>
+                </h:inputText>
+                <h:outputLabel value="类型* :" for="type"/>
+                <h:inputText id="type" value="#{batchBookAction.vo.type}"
+                             required="true" onkeydown="KeyDown()" onfocus="this.select()">
+                </h:inputText>
+                <h:outputLabel value="金额* :" for="txnamt"/>
+                <h:inputText id="txnamt" value="#{batchBookAction.vo.txnamt}"
+                             onkeydown="KeyDown()" onfocus="this.select()" style="text-align:right">
+                </h:inputText>
+                <h:outputLabel value="冲补/起息日 :" for="valdat"/>
+                <h:inputText id="valdat" value="#{batchBookAction.vo.valdat}" onfocus="this.select()" onkeydown="KeyDown()"/>
+                <h:outputLabel value="统计码 :" for="anacde"/>
+                <h:inputText id="anacde" value="#{batchBookAction.vo.anacde}" onfocus="this.select()" onkeydown="KeyDown()"/>
+                <h:outputLabel value="摘要  :" for="furinf"/>
+                <h:inputText id="furinf" value="#{batchBookAction.vo.furinf}" onfocus="this.select()" onkeydown="KeyDown()"/>
+                <h:outputLabel value="附件 :" for="vchatt"/>
+                <h:inputText id="vchatt" value="#{batchBookAction.vo.vchatt}" onfocus="this.select()" onkeydown="KeyDown()"
+                             style="text-align:right">
+                </h:inputText>
+                <h:panelGroup>
+                    <h:inputHidden id="setseq" value="#{batchBookAction.vo.setseq}"/>
+                    <h:inputHidden id="sysdate" value="#{batchBookAction.sysdate}"/>
+                    <h:inputHidden id="vchaut" value="#{batchBookAction.vo.vchaut}"/>
+                    <h:inputHidden id="lastvaldat" value="#{batchBookAction.vo.lastvaldat}"/>
+                    <h:inputHidden id="tlrnum" value="#{batchBookAction.vo.tlrnum}"/>
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:commandButton id="save" value="确定" action="#{batchBookAction.onCreateNewRecord}" ajax="false"/>
+                    <p:commandButton value="重置" id="reset" immediate="true" action="#{batchBookAction.onReset}" ajax="false"/>
+                </h:panelGroup>
+            </h:panelGrid>
+        </h:panelGroup>
+        <p:separator/>
+        <h:panelGroup>
+            <h:panelGrid columns="8">
+                <h:outputLabel value="借方发生额 :"/>
+                <h:inputText id="debitamt" value="#{batchBookAction.totalDebitAmt/100}" disabled="true"
+                             style="text-align:right">
+                    <f:convertNumber type="number" pattern="###,###,###,###,##0.00"/>
+                </h:inputText>
+                <h:outputLabel value="贷方发生额 :"/>
+                <h:inputText id="creditamt" value="#{batchBookAction.totalCreditAmt/100}" disabled="true"
+                             style="text-align:right">
+                    <f:convertNumber type="number" pattern="###,###,###,###,##0.00"/>
+                </h:inputText>
+                <h:outputLabel value="发生额轧差 :"/>
+                <h:inputText id="totalamt" value="#{batchBookAction.totalAmt/100}" disabled="true"
+                             style="text-align:right">
+                    <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
+                </h:inputText>
+                <h:outputLabel value="传票套号 :"/>
+                <h:inputText id="vchset" value="#{batchBookAction.vchset}" disabled="true"
+                             style="width:48px;text-align:right">
+                    <f:convertNumber type="number" pattern="0000"/>
+                </h:inputText>
+            </h:panelGrid>
+
+        </h:panelGroup>
+    </p:panel>
+
+    <p:remoteCommand name="checkactno" id="checkactno" async="false" actionListener="#{batchBookAction.onCheckActno}"
+                     update="msgs" process="@form"
+                     oncomplete="handleInputComplete(xhr, status, args, 'actno', 'type')"/>
+    <p:remoteCommand name="checktype" id="checktype" async="false" actionListener="#{batchBookAction.onCheckType}"
+                     update="msgs" process="@form"
+                     oncomplete="handleInputComplete(xhr, status, args, 'type', 'txnamt')"/>
+    <p:remoteCommand name="checktxnamt" id="checktxnamt" async="false"
+                     actionListener="#{batchBookAction.onCheckTxnamt}"
+                     update="msgs" process="@form"
+                     oncomplete="handleInputComplete(xhr, status, args, 'txnamt', 'valdat')"/>
+    <p:remoteCommand name="checkvaldat" id="checkvaldat" async="false"
+                     actionListener="#{batchBookAction.onCheckValdat}"
+                     update="msgs" process="@form"
+                     oncomplete="handleInputComplete(xhr, status, args, 'valdat', null)"/>
+
+</h:form>
+
+<br/>
+
+
+<h:form id="dtform">
+    <p:menubar>
+        <p:submenu>
+            <f:facet name="label">
+                <p:menuitem value="【套平】" actionListener="#{batchBookAction.onBalanceAct}" ajax="false"/>
+            </f:facet>
+        </p:submenu>
+        <p:submenu>
+            <f:facet name="label">
+                <p:menuitem value="【套修改】" onclick="vchsetdlg.show()"/>
+            </f:facet>
+        </p:submenu>
+        <p:submenu>
+            <f:facet name="label">
+                <p:menuitem value="【套删除】" onclick="handleConfirmDeleteAll()"/>
+            </f:facet>
+        </p:submenu>
+        <p:submenu>
+            <f:facet name="label">
+                <p:menuitem icon="add" value="【多笔删除】" actionListener="#{batchBookAction.onMultiDelete}"
+                            ajax="false"/>
+            </f:facet>
+        </p:submenu>
+    </p:menubar>
+    <br/>
+    <p:dataTable id="pdt" height="200"
+                 value="#{batchBookAction.voList}" var="record"
+                 selection="#{batchBookAction.selectedRecords}"
+                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 paginator="true" rows="10" paginatorPosition="both" rowsPerPageTemplate="100,50,15,10,5"
+                 emptyMessage="传票记录为空...">
+
+        <!--<f:event name="preRenderComponent" listener="#{batchBook.init}"  type="preRenderComponent"/>-->
+
+        <p:column selectionMode="multiple"/>
+
+        <p:column sortBy="#{record.setseq}" headerText="序号" style="width:40px;text-align:center">
+            <h:outputText value="#{record.setseq}"/>
+        </p:column>
+
+        <p:column sortBy="#{record.actno}" headerText="帐号" style="width:10%;text-align:center">
+            <h:outputText value="#{record.formatedActno}"/>
+        </p:column>
+        <p:column sortBy="#{record.actnam}" headerText="户名" style="width:15%;">
+            <h:outputText value="#{record.actnam}"/>
+        </p:column>
+        <p:column sortBy="#{record.type}" headerText="类型" style="width:40px;text-align:center">
+            <h:outputText value="#{record.type}"/>
+        </p:column>
+        <p:column sortBy="#{record.txnamt}" headerText="金额" style="text-align:right">
+            <h:outputText value="#{record.txnamt/100}">
+                <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="起息日" style="width:60px;text-align:center">
+            <h:outputText value="#{record.valdat}">
+                <f:convertDateTime pattern="yyyy/MM/dd"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="统计码" style="text-align:center">
+            <h:outputText value="#{record.anacde}"/>
+        </p:column>
+        <p:column headerText="摘要" style="text-align:center">
+            <h:outputText value="#{record.furinf}"/>
+        </p:column>
+        <p:column headerText="附件" style="width:40px;text-align:right">
+            <h:outputText value="#{record.vchatt}"/>
+        </p:column>
+
+        <p:column headerText="操作" style="width:100px;text-align:center">
+            <h:commandLink immediate="true" value="修改" action="#{batchBookAction.onEditRecord}">
+                <f:setPropertyActionListener value="#{record}" target="#{batchBookAction.selectedRecord}"/>
+            </h:commandLink>
+            <p:spacer width="10"/>
+            <h:commandLink immediate="true" value="删除" action="#{batchBookAction.onDeleteRecord}">
+                <f:setPropertyActionListener value="#{record}" target="#{batchBookAction.selectedRecord}"/>
+            </h:commandLink>
+        </p:column>
+
+    </p:dataTable>
+</h:form>
+
+<h:form id="confirmForm">
+    <p:confirmDialog message="确认全部删除当前套的传票吗?" modal="true"
+                     header="功能确认" severity="alert" widgetVar="confirmDeleteAll">
+
+        <p:commandButton value="确认" update="dtform:pdt, inputform:input,  msgs"
+                         oncomplete="confirmDeleteAll.hide()"
+                         actionListener="#{batchBookAction.onDeleteVchset}"/>
+        <p:commandButton id="canceldeleteall" value="取消" onclick="confirmDeleteAll.hide()" type="button"/>
+
+    </p:confirmDialog>
+</h:form>
+
+
+<p:dialog id="dialog" header="已套平传票修改" widgetVar="vchsetdlg" modal="true">
+    <h:form id="vchset">
+        <p:growl id="vchsetgrowl" globalOnly="true" showDetail="true"/>
+        <h:panelGrid columns="1" cellpadding="5">
+            <h:outputLabel for="vchset" value="请输入传票套号: *"/>
+            <h:inputText value="#{batchBookAction.vchsetTemp}"
+                         id="vchset" required="true" label="vchset">
+            </h:inputText>
+            <f:facet name="footer">
+                <p:commandButton value="确定" update="dtform:pdt, inputform:input, vchsetgrowl" ajax="true"
+                                 actionListener="#{batchBookAction.onModifyVchset}"
+                                 oncomplete="vchsetdlg.hide();"/>
+                <p:commandButton value="取消" onclick="vchsetdlg.hide()" type="button"/>
+
+            </f:facet>
+        </h:panelGrid>
+    </h:form>
+</p:dialog>
+
+<p:dialog id="authdialog" header="主管授权" widgetVar="authdlg" modal="true">
+    <h:form id="authform">
+        <p:growl id="authgrowl" globalOnly="true" showDetail="true"/>
+        <h:inputHidden value="#{authLoginBean.workuser}" id="workuser"/>
+        <h:panelGrid columns="2" cellpadding="5">
+            <h:outputLabel for="username" value="主管柜员号: *"/>
+            <h:inputText value="#{authLoginBean.username}"
+                         id="username" required="true" label="username" onkeydown="KeyDown()"/>
+            <h:outputLabel for="password" value="密码: * "/>
+            <h:inputSecret value="#{authLoginBean.password}"
+                           id="password" required="true" label="password" onkeydown="KeyDown()"/>
+            <f:facet name="footer">
+                <p:commandButton id="authlogin" value="确定" update="authgrowl"
+                                 actionListener="#{authLoginBean.authLogin}"
+                                 oncomplete="handleLoginRequest(xhr, status, args)"/>
+                <p:commandButton value="取消" onclick="authdlg.hide()" type="button"/>
+            </f:facet>
+        </h:panelGrid>
+    </h:form>
+</p:dialog>
+
+</div>
+
+</ui:define>
+</ui:composition>

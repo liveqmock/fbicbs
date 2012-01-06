@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <classPathEntry location="/svn-fbicbs/ref/ojdbc6.jar"/>
+
+    <!--帐户 主要信息-->
+    <context id="AccountMainInfo" targetRuntime="MyBatis3">
+        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+                        connectionURL="jdbc:oracle:thin:@localhost:1521:orcl"
+                        userId="cbs"
+                        password="cbs">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="cbs.repository.account.maininfo.model" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="cbs.repository.account.maininfo.mapper" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="cbs.repository.account.maininfo.dao" targetProject="src">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!--<table tableName="actglf"/>-->
+        <!--20101206 zhanrui <table tableName="actple"/>-->
+        <!--20101210 zhanrui <table tableName="actblh"/>-->
+        <!--20101214 zhanrui <table tableName="actbva"/>-->
+        <!--20101223 zhanrui <table tableName="actbah"/>-->
+        <!--20101228 zhanrui <table tableName="actcmt"/>-->
+        <!--<table tableName="actibl"/>-->
+        <table tableName=""/>
+
+
+    </context>
+
+
+</generatorConfiguration>

@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <script language="JavaScript" type="text/JavaScript">
+            function KeyDown() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'inputform:apcnam') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        document.forms['inputform']['inputform:query'].click();
+                    } else {
+                        event.keyCode = 9;
+                    }
+                }
+            }
+        </script>
+    </ui:define>
+
+  <ui:define name="content">
+        <div class="entry">
+          <h:form id="inputform">
+                <p:focus for="glcode"/>
+                <p:messages id="msgs" showSummary="false" showDetail="true"/>
+                <p:panel header="::查询条件::">
+                    <h:panelGrid columns="5">
+                        <h:outputLabel value="总账码 :" for="glcode"/>
+                        <h:inputText id="glcode" value="#{actapcBean.glcode}" onkeydown="KeyDown()"/>
+
+                        <h:outputLabel value="核算码类别 :" for="apctyp"/>
+                        <h:inputText id="apctyp" value="#{actapcBean.apctyp}" onkeydown="KeyDown()"/>
+                         <p:spacer/>
+                        <h:outputLabel value="核算码 :" for="apcode"/>
+                        <h:inputText id="apcode" value="#{actapcBean.apcode}" onkeydown="KeyDown()"/>
+
+                        <h:outputLabel value="核算码名称 :" for="apcnam"/>
+                        <h:inputText id="apcnam" value="#{actapcBean.apcnam}" onkeydown="KeyDown()"/>
+                    </h:panelGrid>
+                   <h:panelGrid columns="1" style="text-align:left;padding-left:60px;padding-top:5px;" width="100%">
+                <h:panelGroup>
+                    <p:commandButton id="query" ajax="false" value="确认" action="#{actapcBean.queryRecords}"
+                                     style="padding-left:10px;padding-right:10px;margin-right:10px;"/>
+                    <p:commandButton value="重置" type="reset" style="padding-left:10px;padding-right:10px;margin-right:10px;"/>
+                </h:panelGroup>
+            </h:panelGrid>
+                </p:panel>
+              <br/>
+             </h:form>
+            <h:form id="resultForm">
+                <p:dataTable id="resultDataTable" height="200" dblClickSelect="false"
+                             value="#{actapcBean.apcList}" var="record"  selectionMode="single"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="both" rowsPerPageTemplate="100,50,15,10,5"
+                             emptyMessage="数据记录为空...">
+
+                    <p:column  headerText="所属总账码"   style="text-align:center">
+                        <h:outputText value="#{record.glcode}"/>
+                    </p:column>
+
+                    <p:column  headerText="类别"   style="text-align:center">
+                        <h:outputText value="#{record.apctyp}"/>
+                    </p:column>
+                    <p:column  headerText="核算码"   style="text-align:center">
+                        <h:outputText value="#{record.apcode}"/>
+                    </p:column>
+                    <p:column  headerText="核算码名称" style="text-align:left">
+                        <h:outputText value="#{record.apcnam}"/>
+                    </p:column>
+
+                    <p:column headerText="操作" style="width:100px;text-align:center">
+                        <h:commandLink id="showDetail" immediate="true" value="详细" action="#{actapcBean.action}">
+                            <f:param value="#{record.apcode}" name="param"/>
+                            <f:param value="showQryDetail" name="action"/>
+                            </h:commandLink>
+                </p:column>
+                </p:dataTable>
+               </h:form>
+        </div>
+
+    </ui:define>
+</ui:composition>

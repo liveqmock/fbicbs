@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+<ui:define name="head">
+<link href="#{request.contextPath}/css/ccb.css" type="text/css" rel="stylesheet"/>
+<link href="#{request.contextPath}/css/form.css" type="text/css" rel="stylesheet"/>
+<script language="JavaScript" type="text/JavaScript">
+            function KeyDown() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'inputform:apckid') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        if(document.forms['inputform']['inputform:actionbtn']==null){
+                            document.forms['inputform']['inputform:back'].click();
+                        }else{
+                            document.forms['inputform']['inputform:actionbtn'].click();
+                        }                       
+                    } else {
+                        event.keyCode = 9;
+                    }
+                }
+        }
+        </script>
+</ui:define>
+<ui:define name="content">
+<div class="entry">
+<h:form id="inputform" onkeydown="KeyDown()" style="padding-left:10px;padding-top:8px;padding-right:10px">
+        <p:messages id="msgs" showSummary="false"  showDetail="true"/>
+        <p:focus for="glcode"/>
+             <p:panel id="basePanel" header="总账码信息">
+             <h:panelGrid id="basePanelGrid" columns="4"  columnClasses="panel_label2,panel_value,panel_label2,panel_value">
+            <h:outputText value="总账码:*"/>
+            <h:inputText id="glcode" value="#{actglcBean.actglc.glcode}" label="总账码" maxlength="4" validator="#{codeValidator.checkExistGlcode}"/>
+            <h:outputText value="名称:*"/>
+            <h:inputText value="#{actglcBean.actglc.glcnam}" label="名称"  maxlength="34" validator="#{codeValidator.mustValidateLength}"/>
+            <h:outputText value="总账码级别:"/>
+            <h:inputText value="#{actglcBean.actglc.glccls}" label="总账码级别" maxlength="1" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="并入总账码:"/>
+            <h:inputText value="#{actglcBean.actglc.glcgrp}" label="并入总账码" maxlength="4" validator="#{codeValidator.orValidateLength}" />
+            <h:outputText value="总账码属性:"/>
+            <h:inputText value="#{actglcBean.actglc.glctyp}" label="总账码属性" maxlength="1" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="总账码类别:"/>
+            <h:inputText value="#{actglcBean.actglc.glccat}" label="总账码类别" maxlength="1" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="允许货币标志:"/>
+            <h:inputText value="#{actglcBean.actglc.glcccy}" label="允许货币标志" maxlength="1" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="余额方向标志:"/>
+            <h:inputText value="#{actglcBean.actglc.glcbal}" label="余额方向标志" maxlength="1" validator="#{codeValidator.orValidateLength}" />
+            <h:outputText value="发生额方向标志:"/>
+            <h:inputText value="#{actglcBean.actglc.glcocc}" label="发生额方向标志" maxlength="1" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="计息种类:"/>
+            <h:inputText value="#{actglcBean.actglc.glcint}" label="计息种类" maxlength="1" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="利率种类:"/>
+            <h:inputText value="#{actglcBean.actglc.glcrat}" label="利率种类" maxlength="3" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="自动开户允许标志:"/>
+            <h:inputText value="#{actglcBean.actglc.glcopn}" label="自动开户允许标志" maxlength="1" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="冲账允许标志:"/>
+            <h:inputText value="#{actglcBean.actglc.glcrvs}" label="冲账允许标志" maxlength="1" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="报表余额方向:"/>
+            <h:inputText value="#{actglcBean.actglc.rsvfg1}" label="报表余额方向" maxlength="1" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="科目所属:"/>
+            <h:inputText value="#{actglcBean.actglc.glcbel}" label="科目所属" maxlength="1" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="科目启用日期:"/>
+            <p:inputMask mask="9999-99-99" value="#{actglcBean.actglc.effdat}" >
+                <f:convertDateTime pattern="yyyy-MM-dd"/>
+            </p:inputMask>
+            <h:outputText value="科目使用到期日:"/>
+            <p:inputMask id="addExpdat" mask="9999-99-99" value="#{actglcBean.actglc.expdat}">
+                <f:convertDateTime pattern="yyyy-MM-dd"/>
+            </p:inputMask>
+             </h:panelGrid>
+                 <p:separator/>
+            <h:panelGrid columns="1" style="text-align:center;padding-top:10px;" width="98%">
+                <h:panelGroup>
+                    <p:commandButton id="actionbtn" ajax="false" value="确认保存" action="#{actglcBean.beanAction}"
+                    style="padding-left:10px;padding-right:10px;margin-right:10px;"/>
+                    <p:commandButton id="back" ajax="false" value="返回" immediate="true" action="#{actglcBean.back}"
+                    style="padding-left:10px;padding-right:10px;margin-left:10px;"/>
+                    <p:commandButton id="reset" value="重置" type="reset"
+                    style="padding-left:10px;padding-right:10px;margin-left:10px;"/>
+                </h:panelGroup>
+            </h:panelGrid>
+            </p:panel>
+</h:form>
+</div>
+</ui:define>
+</ui:composition>

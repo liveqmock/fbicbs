@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <link href="#{request.contextPath}/css/ccb.css" type="text/css" rel="stylesheet"/>
+        <link href="#{request.contextPath}/css/form.css" type="text/css" rel="stylesheet"/>
+        <style type="text/css">
+            .rowStyle {
+                height: 35px;
+            }
+        </style>
+        <script language="JavaScript" type="text/JavaScript">
+            function KeyDown() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'inputform:sbknum') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        document.forms['inputform']['inputform:savbtn'].click();
+                    } else {
+                        event.keyCode = 9;
+                    }
+                }
+            }
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <div class="entry">
+            <h:form id="inputform" style="padding-left:10px;padding-top:8px;padding-right:10px">
+                <p:messages id="msgs" showSummary="false" showDetail="true"/>
+                <p:focus for="depType"/>
+                <p:panel header="存款种类码与利率码对照增加">
+                    <h:panelGrid style="margin-top: 20px;margin-bottom: 20px;" cellpadding="5" columns="4" columnClasses="panel_label1,panel_value,panel_label1,panel_value">
+                        <h:outputText value="存款种类: "/>
+                        <h:inputText id="depType" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="货币代码: "/>
+                        <h:inputText id="curcde" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="账户类型:"/>
+                        <h:inputText id="acttype" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="存期种类: "/>
+                        <h:inputText id="depDateType" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="对应存期: "/>
+                        <h:inputText id="vDepDate" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="对应利率码: "/>
+                        <h:inputText id="irtType" style="width:150px;">
+                        </h:inputText>
+                        <h:outputText value="记录状态:"/>
+                        <h:selectOneMenu id="rcdstatus" style="width:150px;">
+                            <f:selectItem itemLabel="正常" itemValue="1"/>
+                            <f:selectItem itemLabel="失效" itemValue="0"/>
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <p:separator/>
+                    <h:panelGrid columns="1" style="text-align:center;padding-top:10px;" width="70%">
+                        <h:panelGroup>
+                            <p:commandButton id="savbtn" value="添加"  onclick="alert('未连接数据库');"
+                                             style="padding-left:10px;padding-right:10px;margin-right:10px;"/>
+                            <p:commandButton value="重置" type="reset"
+                                             style="padding-left:10px;padding-right:10px;margin-left:10px;"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

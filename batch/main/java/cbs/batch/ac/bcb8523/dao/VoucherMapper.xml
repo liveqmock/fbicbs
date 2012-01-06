@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cbs.batch.ac.bcb8523.dao.VoucherMapper">
+
+    <select id="selectActvchByRecsts" parameterType="java.lang.String"
+            resultType="cbs.repository.account.maininfo.model.Actvch">
+        select * from actvch where recsts = #{recsts} order by orgid3,cusidt,apcode,curcde,tlrnum,vchset,setseq
+    </select>
+
+</mapper>

@@ -1,0 +1,114 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+    <ui:define name="head">
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/css/fbicbs.css"/>
+        <script language="javascript" type="text/javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    //                        alert(event.srcElement.tagName);
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                    else
+                        event.srcElement.click();
+                }
+            }
+
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <div class="entry" id="top">
+            <p:growl id="growl" showDetail="true"/>
+            <h:form id="queryForm">
+                <p:focus for="oldacn"/>
+                <p:panel header="::查询条件::" id="input">
+                    <h:panelGrid cellspacing="0" border="0" style="margin-left:0px;margin-top:10px;" columns="5"
+                                 width="90%"
+                                 columnClasses="lblWidth,data_input_width,lblWidth,data_input_width1">
+                        <h:outputLabel value="账户号："/>
+                        <h:inputText maxlength="12" id="oldacn" autocomplete="off"
+                                     style="width:90%;ime-mode:disabled;" value="#{actedition.actani.oldacn}">
+                        </h:inputText>
+                        <h:outputLabel value="客户名称：" for="cusnam"/>
+                        <h:inputText style="width:90%" id="cusnam" maxlength="72" value="#{actedition.actoac.actnam}"/>
+                        <h:panelGroup styleClass="btnWidth">
+                            <p:commandButton ajax="false" action="#{actedition.onBtnQueryClick}" id="btnQuery"
+                                             value="确 定"
+                                    ></p:commandButton>
+                            <p:spacer width="5"/>
+                            <p:commandButton type="reset" value="重 置"></p:commandButton>
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+                </p:panel>
+                <br></br>
+                <p:dataTable style="width:100%;" var="record" id="actoacInfo"
+                             height="400" value="#{actedition.oacInfoLst}"
+                             selection="#{actedition.selectRec}" selectionMode="single"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="both" rowsPerPageTemplate="100,50,30,15,5"
+                             emptyMessage="数据记录为空...">
+                    <p:column style="width:40px;" styleClass="leftCellBorder">
+                        <f:facet name="header">
+                            <h:outputText value="账号"/>
+                        </f:facet>
+                        <h:outputText value="#{record.oldacn}"/>
+                    </p:column>
+                    <p:column style="width:150px;" styleClass="leftCellBorder">
+                        <f:facet name="header">
+                            <h:outputText value="账户名"/>
+                        </f:facet>
+                        <h:outputText value="#{record.actnam}"/>
+                    </p:column>
+                    <p:column style="width:40px;" styleClass="leftCellBorder">
+                        <f:facet name="header">
+                            <h:outputText value="客户号"/>
+                        </f:facet>
+                        <h:outputText value="#{record.cusidt}"/>
+                    </p:column>
+                    <p:column style="width:150px;">
+                        <f:facet name="header">
+                            <h:outputText value="客户名称"></h:outputText>
+                        </f:facet>
+                        <h:outputText value="#{record.actnam}"/>
+                    </p:column>
+                    <p:column style="width:20px;">
+                        <f:facet name="header">
+                            <h:outputText value="核算码"></h:outputText>
+                        </f:facet>
+                        <h:outputText value="#{record.apcode}"/>
+                    </p:column>
+                    <p:column style="width:10px;">
+                        <f:facet name="header">
+                            <h:outputText value="币种"></h:outputText>
+                        </f:facet>
+                        <h:outputText value="#{record.curcde}"/>
+                    </p:column>
+                    <p:column style="width:80px;text-align:right">
+                        <f:facet name="header">
+                            <h:outputText value="账面余额"></h:outputText>
+                        </f:facet>
+                        <h:outputText value="#{record.strBokbal}"/>
+                    </p:column>
+                    <p:column style="width:50px;text-align:center;">
+                        <f:facet name="header">
+                            <h:outputText value="操作"/>
+                        </f:facet>
+                        <h:commandLink action="#{actedition.onQueryActInfo}" immediate="true" value="修改">
+                            <f:param name="oldacn" value="#{record.oldacn}"></f:param>
+                            <f:param name="cusidt" value="#{record.cusidt}"></f:param>
+                            <f:param name="apcode" value="#{record.apcode}"></f:param>
+                            <f:param name="curcde" value="#{record.curcde}"></f:param>
+                            <f:param name="orgidt" value="#{record.orgidt}"></f:param>
+                            <f:param name="action" value="edit"/>
+                        </h:commandLink>
+                    </p:column>
+                </p:dataTable>
+
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

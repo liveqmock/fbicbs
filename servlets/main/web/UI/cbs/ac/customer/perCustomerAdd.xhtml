@@ -1,0 +1,291 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+<ui:define name="head">
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/css/ccb.css"/>
+    <script language="javascript" type="text/javascript">
+        /**
+         客户号输入左侧补零*/
+        function pattern(obj, len) {
+            var str = obj.value;
+            var strTemp = "";
+            if (str != "") {
+                for (i = 1; (len - str.length) >= i; i++) {
+                    strTemp += "0";
+                }
+                var str = strTemp + str;
+                if (str == "0000000") {
+                    obj.value = "";
+                } else {
+                    obj.value = str;
+                }
+            }
+            if (obj.value == "") {
+                obj.value = document.getElementById("addForm:hidCusidt").value;
+                return false;
+            }
+        }
+        document.onkeydown = function TabReplace() {
+            if (event.keyCode == 13) {
+                if (event.srcElement.tagName != 'BUTTON' &amp;&amp; event.srcElement.type != 'submit')
+                    event.keyCode = 9;
+                else
+                    event.srcElement.click();
+            }
+        }
+
+    </script>
+</ui:define>
+<ui:define name="content">
+<p:growl id="growl" showDetail="true" life="3000" globalOnly="true"/>
+<h:form  id="addForm" name="addForm">
+<p:panel header="基本信息"  style="margin-left:10px;margin-top:5px;margin-right:5px;">
+    <h:panelGrid width="96%" cellspacing="0" border="0" columns="6"
+                 columnClasses="lbl_right_padding lblWidth,data_input data_input_width,msg_input_width,lbl_right_padding lblWidth,data_input data_input_width,msg_input_width">
+        <h:outputLabel value="客户号"/>
+        <h:panelGroup>
+            <h:inputText autocomplete="off" onblur="pattern(this,7)" maxlength="7" id="cusidt" style="width:88%;ime-mode:disabled;"
+                         validatorMessage="请输入数字" validator="#{actperAdd.validateCusidt}"
+                         value="#{actperAdd.actcus.cusidt}">
+            </h:inputText>
+            <span class="red_star">*</span>
+            <h:inputHidden id="hidCusidt" value="#{actperAdd.actcus.cusidt}"></h:inputHidden>
+        </h:panelGroup>
+        <p:message for="cusidt"/>
+        <h:outputLabel value="客户名称"/>
+        <h:panelGroup>
+            <h:inputText required="true" id="cusname" requiredMessage="不能为空！" maxlength="72"
+                         style="width:88%" value="#{actperAdd.actcus.cusnam}">
+            </h:inputText>
+            <span class="red_star">*</span>
+        </h:panelGroup>
+        <p:message for="cusname"/>
+        <h:outputLabel value="客户简名"/>
+        <h:panelGroup>
+            <h:inputText maxlength="16" style="width:88%" value="#{actperAdd.actcus.shtnam}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="客户英文名"/>
+        <h:panelGroup>
+            <h:inputText maxlength="120" style="width:88%;ime-mode:disabled;" value="#{actperAdd.actcus.engnam}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="简名索引"/>
+        <h:panelGroup>
+            <h:inputText maxlength="4" style="width:88%" value="#{actperAdd.actcus.cusidx}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="注册国家码"/>
+        <h:panelGroup>
+            <h:selectOneMenu required="true" requiredMessage="不能为空！" style="width:90%" id="rsdctrlist"
+                             value="#{actperAdd.actcus.rsdctr}">
+                <f:selectItems value="#{listbond.ctr}"></f:selectItems>
+            </h:selectOneMenu>
+            <span class="red_star">*</span>
+        </h:panelGroup>
+        <p:message for="rsdctrlist"/>
+        <h:outputLabel value="所在国家码"/>
+        <h:panelGroup>
+            <h:selectOneMenu required="true" requiredMessage="不能为空！" style="width:90%" id="oprctrlist"
+                             value="#{actperAdd.actcus.oprctr}">
+                <f:selectItems value="#{listbond.ctr}"></f:selectItems>
+            </h:selectOneMenu>
+            <span class="red_star">*</span>
+        </h:panelGroup>
+        <p:message for="oprctrlist"/>
+        <h:outputLabel value="通信地址"/>
+        <h:panelGroup>
+            <h:inputText required="true" requiredMessage="不能为空！" id="coraddr" maxlength="122" style="width:88%"
+                         value="#{actperAdd.actcus.coradd}"/>
+            <span class="red_star">*</span>
+        </h:panelGroup>
+        <p:message for="coraddr"/>
+        <h:outputLabel value="邮编"/>
+        <h:panelGroup>
+            <p:inputMask mask="999999" required="true" requiredMessage="不能为空！" id="zipcde"
+                         style="width:88%;" value="#{actperAdd.actcus.zipcde}"></p:inputMask>
+            <span class="red_star">*</span>
+        </h:panelGroup>
+        <p:message for="zipcde"/>
+        <h:outputLabel value="电话号码"/>
+        <h:panelGroup>
+            <p:inputMask required="true" requiredMessage="不能为空！" id="telnum" mask="(9999)99999999"
+                         style="width:88%" value="#{actperAdd.actcus.telnum}"/>
+            <span class="red_star">*</span>
+        </h:panelGroup>
+        <p:message for="telnum"/>
+        <h:outputLabel value="电传"/>
+        <h:panelGroup>
+            <p:inputMask mask="9999999999" style="width:88%" value="#{actperAdd.actcus.telexn}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="信用级别"/>
+        <h:panelGroup>
+            <h:inputText maxlength="8" style="width:88%" value="#{actperAdd.actcus.tstrnk}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="证件类别"/>
+        <h:panelGroup>
+            <h:selectOneMenu required="true" requiredMessage="不能为空！" style="width:90%"
+                             value="#{actperAdd.actcus.pastyp}" id="pastype">
+                <f:selectItems value="#{listbond.passtype}"></f:selectItems>
+            </h:selectOneMenu>
+            <span class="red_star">*</span>
+        </h:panelGroup>
+        <p:message for="pastype"/>
+        <h:outputLabel value="证件号码"/>
+        <h:panelGroup>
+            <h:inputText id="passno" required="true" requiredMessage="不能为空！" maxlength="18"
+                         style="width:88%;ime-mode:disabled;" value="#{actperAdd.actcus.passno}"/>
+            <span class="red_star">*</span>
+        </h:panelGroup>
+        <p:message for="passno"/>
+        <h:outputLabel value="授信额度"/>
+        <h:panelGroup>
+            <h:inputText validatorMessage="请输入数字" id="crdlim"
+                         maxlength="15" style="width:88%;ime-mode:disabled;"
+                         value="#{actperAdd.actcus.crdlim}">
+                <f:validateLongRange maximum="999999999999999" minimum="0"/>
+            </h:inputText>
+        </h:panelGroup>
+        <p:message for="crdlim"/>
+        <h:outputLabel value="风险组别"/>
+        <h:panelGroup>
+            <h:inputText maxlength="8" style="width:88%" value="#{actperAdd.actcus.rskgrp}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="相关客户"/>
+        <h:panelGroup>
+            <h:inputText maxlength="8" style="width:88%" value="#{actperAdd.actcus.relcus}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="开始日期"/>
+        <h:panelGroup>
+            <p:inputMask converterMessage="日期不正确" style="width:88%" value="#{actperAdd.actcus.opndat}"
+                         required="true" id="opndat"
+                         requiredMessage="不能为空！" mask="9999-99-99">
+                <f:convertDateTime pattern="yyyy-MM-dd"/>
+            </p:inputMask>
+            <span class="red_star">*</span>
+        </h:panelGroup>
+        <p:message for="opndat"/>
+        <h:outputLabel value="客户密码"/>
+        <h:panelGroup>
+            <h:inputSecret style="width:88%" value="#{actperAdd.actcus.cuspwd}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="客户类别"/>
+        <h:panelGroup>
+            <h:selectOneMenu required="true" requiredMessage="不能为空！" style="width:90%"
+                             value="#{actperAdd.actcus.cuskid}" id="cuskid">
+                <f:selectItems value="#{listbond.customerkid}"></f:selectItems>
+            </h:selectOneMenu>
+            <span class="red_star">*</span>
+        </h:panelGroup>
+        <p:message for="cuskid"/>
+    </h:panelGrid>
+</p:panel>
+<br></br>
+<p:panel header="个人信息" style="margin-left:10px;margin-top:5px;">
+    <h:panelGrid width="96%" cellspacing="0" border="0" columns="6"
+                 columnClasses="lbl_right_padding lblWidth,data_input data_input_width,msg_input_width,lbl_right_padding lblWidth,data_input data_input_width,msg_input_width">
+        <h:outputLabel value="性别"/>
+        <h:panelGroup>
+            <h:selectOneMenu style="width:90%"
+                             value="#{actperAdd.actper.cussex}" id="cussex">
+                <f:selectItems value="#{listbond.alcussex}"></f:selectItems>
+            </h:selectOneMenu>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="出生日期"/>
+        <h:panelGroup>
+            <p:inputMask style="width:88%" value="#{actperAdd.actper.birday}" id="birday" required="true"
+                         requiredMessage="不能为空！" converterMessage="日期不正确" mask="9999-99-99">
+                <f:convertDateTime pattern="yyyy-MM-dd"/>
+            </p:inputMask>
+            <span class="red_star">*</span>
+        </h:panelGroup>
+        <p:message for="birday"/>
+        <h:outputLabel value="职业"/>
+        <h:panelGroup>
+            <h:selectOneMenu style="width:90%" value="#{actperAdd.actper.profsn}" id="profsn">
+                <f:selectItems value="#{listbond.alprofsn}"></f:selectItems>
+            </h:selectOneMenu>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="职务"/>
+        <h:panelGroup>
+            <h:selectOneMenu style="width:90%" value="#{actperAdd.actper.poston}" id="poston">
+                <f:selectItems value="#{listbond.alposton}"></f:selectItems>
+            </h:selectOneMenu>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="工作单位"/>
+        <h:panelGroup>
+            <h:inputText maxlength="34" style="width:88%" value="#{actperAdd.actper.wrkunt}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="月收入"/>
+        <h:panelGroup>
+            <h:inputText maxlength="7" style="width:88%;ime-mode:disabled;" value="#{actperAdd.actper.monsla}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="其他收入"/>
+        <h:panelGroup>
+            <h:inputText maxlength="7" style="width:88%" value="#{actperAdd.actper.othinc}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="纳税号码"/>
+        <h:panelGroup>
+            <h:inputText maxlength="15" style="width:88%" value="#{actperAdd.actper.taxnum}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="国民保险号"/>
+        <h:panelGroup>
+            <h:inputText maxlength="15" style="width:88%" value="#{actperAdd.actper.isrnum}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="婚姻状况"/>
+        <h:panelGroup>
+            <h:selectOneMenu style="width:90%" value="#{actperAdd.actper.marsts}" id="marsts">
+                <f:selectItems value="#{listbond.almarsts}"></f:selectItems>
+            </h:selectOneMenu>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="家庭人口"/>
+        <h:panelGroup>
+            <h:inputText maxlength="3" style="width:88%" value="#{actperAdd.actper.famper}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="客户类型1"/>
+        <h:panelGroup>
+            <h:inputText maxlength="4" style="width:88%" value="#{actperAdd.actper.custy1}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="客户类型2"/>
+        <h:panelGroup>
+            <h:inputText maxlength="4" style="width:88%" value="#{actperAdd.actper.custy2}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+        <h:outputLabel value="客户类型3"/>
+        <h:panelGroup>
+            <h:inputText maxlength="4" style="width:88%" value="#{actperAdd.actper.custy3}"/>
+        </h:panelGroup>
+        <h:outputLabel/>
+    </h:panelGrid>
+</p:panel>
+<br></br>
+<table style="margin-left:15px;" width="96%" class="title1" cellspacing="0">
+    <tr>
+        <td align="center">
+            <h:commandButton type="submit" id="post" style="padding:3px;width:100px;" value="保存" action="#{actperAdd.perAddjsf}"/>
+            <input type="reset" style="padding:3px;width:100px;" value="重填"></input>
+        </td>
+    </tr>
+</table>
+</h:form>
+</ui:define>
+</ui:composition>

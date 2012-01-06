@@ -1,0 +1,398 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+<ui:define name="head">
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/css/ccb.css"/>
+    <script type="text/javascript" src="#{request.contextPath}/js/cbsCommon.js"/>
+    <script language="javascript" type="text/javascript">
+        document.onkeydown = function TabReplace() {
+            if (event.keyCode == 13) {
+                if (event.srcElement.tagName != 'BUTTON' &amp;&amp; event.srcElement.type != 'submit')
+                    event.keyCode = 9;
+                else
+                    event.srcElement.click();
+            }
+        }
+        /**/
+        function setStmMessage(obj) {
+            if (obj.value == "S") {
+                document.getElementById("addForm:msgStmP").style.display = "inline";
+                document.getElementById("addForm:msgStmP").innerText = "前2位:01-03;后2位：01-31";
+            } else if (obj.value == "M") {
+                document.getElementById("addForm:msgStmP").style.display = "inline";
+                document.getElementById("addForm:msgStmP").innerText = "取值范围：0001-0031";
+            } else if (obj.value == "T") {
+                document.getElementById("addForm:msgStmP").style.display = "inline";
+                document.getElementById("addForm:msgStmP").innerText = "取值范围：0001-0010";
+            } else {
+                document.getElementById("addForm:msgStmP").style.display = "none";
+                document.getElementById("addForm:msgStmP").innerText = "";
+            }
+
+        }
+
+        function setLegMessage(obj) {
+            //            msgLegP
+            if (obj.value == "S") {
+                document.getElementById("addForm:msgLegP").style.display = "inline";
+                document.getElementById("addForm:msgLegP").innerText = "前2位:01-03;后2位：01-31";
+            } else if (obj.value == "M") {
+                document.getElementById("addForm:msgLegP").style.display = "inline";
+                document.getElementById("addForm:msgLegP").innerText = "取值范围：0001-0031";
+            } else if (obj.value == "T") {
+                document.getElementById("addForm:msgLegP").style.display = "inline";
+                document.getElementById("addForm:msgLegP").innerText = "取值范围：0001-0010";
+            } else {
+                document.getElementById("addForm:msgLegP").style.display = "none";
+                document.getElementById("addForm:msgLegP").innerText = "";
+            }
+        }
+
+        /*对账单出账周期日期判断*/
+        function validateStm(obj) {
+            alert(11);
+            if (obj.value != "____") {
+                var cyc = document.getElementById("addForm:stmcyc").value;
+                if (cyc != "") {
+                    if (validateVal(cyc, obj.value)) {
+
+                    } else {
+                        alert("格式错误!");
+                        obj.value = "";
+                    }
+                } else {
+                    alert("请输入出账周期");
+                    obj.value = "";
+                }
+            }
+        }
+
+        /*分户账出账周期日期判断*/
+        function validateLeg(obj) {
+            if (obj.value != "____") {
+                var cyc = document.getElementById("addForm:legcyc").value;
+                if (cyc != "") {
+                    if (validateVal(cyc, obj.value)) {
+
+                    } else {
+                        alert("格式错误!");
+                        obj.value = "";
+                    }
+                } else {
+                    alert("请输入出账周期");
+                    obj.value = "";
+                }
+            }
+        }
+
+        function validateVal(cyc, val) {
+            if (cyc == "S") {
+                var fVal = val.substr(0, 2);
+                var lVal = val.substr(3, 2);
+                if (fVal != "03" &amp;&amp; fVal != "02" &amp;&amp; fVal != "01") {
+                    return false;
+                } else if (1 > lVal || lVal > 31) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else if (cyc == "M") {
+                if (1 > val || val > 31) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else if (cyc == "T") {
+                if (1 > val || val > 10) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+
+    </script>
+</ui:define>
+<ui:define name="content">
+<p:growl id="growl" showDetail="true" life="3000" globalOnly="true"/>
+<h:form style="margin-left:20px;" id="addForm">
+<p:panel id="basePanel" header="账户信息">
+<h:panelGrid width="96%" cellspacing="0" border="0" style="margin-left:15px;" columns="6"
+             columnClasses="lblWidth,data_input_width,msg_input_width,lblWidth,data_input_width,msg_input_width">
+    <h:outputLabel value="账号:"/>
+    <h:panelGroup>
+        <h:inputText disabled="true" readonly="true" value="#{actupdate.actchd.oldacn}"
+                    style="width:88%;ime-mode:disabled;">
+        </h:inputText>
+    </h:panelGroup>
+    <h:outputLabel/>
+    <h:outputLabel value="账面余额:"/>
+    <h:panelGroup>
+        <h:inputText value="#{actupdate.actchd.strBokbal}" disabled="true" style="width:88%;"/>
+    </h:panelGroup>
+    <h:outputLabel/>
+    <h:outputLabel value="可用余额:"/>
+    <h:panelGroup>
+        <h:inputText value="#{actupdate.actchd.strAvabal}" disabled="true" style="width:88%;"/>
+    </h:panelGroup>
+    <h:outputLabel/>
+</h:panelGrid>
+<h:panelGrid id="basePaneltabContent" width="96%" cellspacing="0" border="0" style="margin-left:15px;" columns="6"
+             columnClasses="lblWidth,data_input_width,msg_input_width,lblWidth,data_input_width,msg_input_width">
+<h:outputLabel value="客户号:"/>
+<h:panelGroup>
+    <h:inputText disabled="true" readonly="true" value="#{actupdate.actoac.cusidt}"
+                 id="cusidt" style="width:88%;ime-mode:disabled;">
+    </h:inputText>
+    <h:outputLabel styleClass="red_star" value="*"/>
+</h:panelGroup>
+<p:message for="cusidt"/>
+<h:outputLabel value="账户名称:"/>
+<h:panelGroup>
+    <h:inputText required="true" id="actname" requiredMessage="不能为空！" maxlength="72"
+                 value="#{actupdate.actoac.actnam}" style="width:88%">
+    </h:inputText>
+    <h:outputLabel styleClass="red_star" value="*"/>
+</h:panelGroup>
+<p:message for="actname"/>
+<h:outputLabel value="核算码:"/>
+<h:panelGroup>
+    <h:selectOneMenu disabled="true" value="#{actupdate.actoac.apcode}"
+                     style="width:90%" id="actapc">
+        <f:selectItems value="#{listbond.alapc}"></f:selectItems>
+    </h:selectOneMenu>
+    <h:inputHidden value="#{actupdate.actoac.apcode}"/>
+    <h:outputLabel styleClass="red_star" value="*"/>
+</h:panelGroup>
+<p:message for="actapc"/>
+<h:outputLabel value="币别:"/>
+<h:panelGroup>
+    <h:selectOneMenu disabled="true" value="#{actupdate.actoac.curcde}"
+                     style="width:90%" id="actccy">
+        <f:selectItems value="#{listbond.alccy}"></f:selectItems>
+    </h:selectOneMenu>
+    <h:inputHidden value="#{actupdate.actoac.curcde}"/>
+    <h:outputLabel styleClass="red_star" value="*"/>
+</h:panelGroup>
+<p:message for="actccy"/>
+<h:outputLabel value="账户类型:"/>
+<h:panelGroup>
+    <h:selectOneMenu disabled="true" value="#{actupdate.actoac.acttyp}" style="width:90%" id="acttype" required="true"
+                     requiredMessage="不能为空！">
+        <f:selectItems value="#{listbond.alacttype}"></f:selectItems>
+    </h:selectOneMenu>
+    <h:outputLabel styleClass="red_star" value="*"/>
+</h:panelGroup>
+<p:message for="acttype"/>
+<h:outputLabel value="计息标志:"/>
+<h:panelGroup>
+    <h:selectOneMenu value="#{actupdate.actoac.intflg}" required="true" requiredMessage="不能为空！" style="width:90%"
+                     id="intflg">
+        <f:selectItems value="#{listbond.alintflg}"></f:selectItems>
+    </h:selectOneMenu>
+    <h:outputLabel styleClass="red_star" value="*"/>
+</h:panelGroup>
+<p:message for="intflg"/>
+<h:outputLabel value="计息周期码:"/>
+<h:selectOneMenu value="#{actupdate.actoac.intcyc}" style="width:90%" id="infcyc">
+    <f:selectItems value="#{listbond.alinfcyc}"></f:selectItems>
+</h:selectOneMenu>
+<h:outputLabel/>
+<h:outputLabel value="转息账户:"/>
+<h:panelGroup>
+    <p:inputMask mask="999999999999999999" value="#{actupdate.actoac.inttra}" style="width:88%;"/>
+</h:panelGroup>
+<h:outputLabel/>
+<h:outputLabel value="支票存折标志:"/>
+<h:panelGroup>
+    <h:selectOneMenu value="#{actupdate.actoac.cqeflg}" style="width:90%" id="cqeflg">
+        <f:selectItems value="#{listbond.alcqeflg}"></f:selectItems>
+    </h:selectOneMenu>
+</h:panelGroup>
+<h:outputLabel/>
+<h:outputLabel value="对帐单帐页形式:"/>
+<h:panelGroup>
+    <h:selectOneMenu value="#{actupdate.actoac.stmfmt}" required="true" requiredMessage="不能为空！" style="width:90%"
+                     id="stmfmt">
+        <f:selectItems value="#{listbond.allegfmt}"></f:selectItems>
+    </h:selectOneMenu>
+    <h:outputLabel styleClass="red_star" value="*"/>
+</h:panelGroup>
+<p:message for="stmfmt"/>
+<h:outputLabel value="对帐单帐页分发部门:"/>
+<h:panelGroup>
+    <p:inputMask mask="99999" value="#{actupdate.actoac.stmdep}" style="width:88%;"/>
+</h:panelGroup>
+<h:outputLabel/>
+<h:outputLabel value="对帐单出帐份数:"/>
+<h:panelGroup>
+    <h:inputText required="true" maxlength="3" requiredMessage="不能为空" size="20" onblur="numBlur(this)"
+                 value="#{actupdate.actoac.stmsht}" id="stmsht" style="width:88%;ime-mode:disabled;"/>
+    <h:outputLabel styleClass="red_star" value="*"/>
+</h:panelGroup>
+<p:message for="stmsht"/>
+<h:outputLabel value="对帐单地址邮编:"/>
+<h:panelGroup>
+    <p:inputMask mask="99999" value="#{actupdate.actoac.stmzip}" style="width:88%;"/>
+</h:panelGroup>
+<h:outputLabel/>
+<h:outputLabel value="对帐单地址:"/>
+<h:panelGroup>
+    <h:inputText size="20" value="#{actupdate.actoac.stmadd}" style="width:88%;"/>
+</h:panelGroup>
+<h:outputLabel/>
+<h:outputLabel value="对账单出账周期:"/>
+<h:panelGroup>
+    <h:selectOneMenu value="#{actupdate.actoac.stmcyc}" required="true" requiredMessage="不能为空！"
+                     style="width:90%" id="stmcyc" onclick="setStmMessage(this)">
+        <f:selectItems value="#{listbond.alstmcyc}"></f:selectItems>
+        <p:ajax update="txtStmcdt" actionListener="#{actupdate.handleStmcdt}"/>
+    </h:selectOneMenu>
+    <h:outputLabel styleClass="red_star" value="*"/>
+</h:panelGroup>
+<p:message for="stmcyc"/>
+<h:outputLabel value="对账单出账周期日期:"/>
+<h:panelGroup>
+    <p:inputMask mask="9999" value="#{actupdate.actoac.stmcdt}" style="width:88%;"
+                 required="true" requiredMessage="不能为空！" id="txtStmcdt" onblur="validateStm(this)"/>
+    <h:outputLabel styleClass="red_star" value="*"/>
+    <!--<p id="msgStmP" style="display:none;color:blue;">
+    </p>-->
+    <p:panel id="msgStmP" style="display:none;color:blue;"/>
+</h:panelGroup>
+<p:message for="txtStmcdt"/>
+<h:outputLabel value="分户账账页形式:"/>
+<h:panelGroup>
+    <h:selectOneMenu value="#{actupdate.actoac.legfmt}" required="true" requiredMessage="不能为空！" style="width:90%"
+                     id="legfmt">
+        <f:selectItems value="#{listbond.alstmfmt}"></f:selectItems>
+    </h:selectOneMenu>
+    <h:outputLabel styleClass="red_star" value="*"/>
+</h:panelGroup>
+<p:message for="legfmt"/>
+<h:outputLabel value="分户账出账份数:"/>
+<h:panelGroup>
+    <h:inputText maxlength="3" onblur="numBlur(this)" required="true" requiredMessage="不能为空！"
+                 value="#{actupdate.actoac.legsht}" id="legsht" style="width:88%;ime-mode:disabled;"/>
+    <h:outputLabel styleClass="red_star" value="*"/>
+</h:panelGroup>
+<p:message for="legsht"/>
+<h:outputLabel value="分户账账页分发部门:"/>
+<h:panelGroup>
+    <p:inputMask mask="99999" value="#{actupdate.actoac.legdep}" style="width:88%;"/>
+</h:panelGroup>
+<h:outputLabel/>
+<h:outputLabel value="分户账地址:"/>
+<h:panelGroup>
+    <h:inputText size="20" value="#{actupdate.actoac.legadd}" style="width:88%;"/>
+</h:panelGroup>
+<h:outputLabel/>
+<h:outputLabel value="分户账地址邮编:"/>
+<h:panelGroup>
+    <p:inputMask mask="99999" value="#{actupdate.actoac.legzip}" style="width:88%;"/>
+</h:panelGroup>
+<h:outputLabel/>
+<h:outputLabel value="分户账出账周期:"/>
+<h:panelGroup>
+    <h:selectOneMenu value="#{actupdate.actoac.legcyc}" required="true" requiredMessage="不能为空！"
+                     style="width:90%" id="legcyc" onclick="setLegMessage(this)">
+        <f:selectItems value="#{listbond.alstmcyc}"></f:selectItems>
+        <p:ajax update="legcdt" actionListener="#{actupdate.handleLegcdt}"/>
+    </h:selectOneMenu>
+    <h:outputLabel styleClass="red_star" value="*"/>
+</h:panelGroup>
+<p:message for="legcyc"/>
+<h:outputLabel value="分户账出账周期日期:"/>
+<h:panelGroup>
+    <p:inputMask mask="9999" value="#{actupdate.actoac.legcdt}" style="width:88%;"
+                 required="true" requiredMessage="不能为空！" id="legcdt" onblur="validateLeg(this)"/>
+    <h:outputLabel styleClass="red_star" value="*"/>
+    <!--<p id="msgLegP" style="display:none;color:blue;">
+    </p>-->
+    <p:panel id="msgLegP" style="display:none;color:blue;"/>
+</h:panelGroup>
+<p:message for="legcdt"/>
+<h:outputLabel value="协定账户余额限:"/>
+<h:panelGroup>
+    <h:inputText onblur="amtBlur(this)" onkeyup="amtKeydown(this)" onkeypress="amtKeypress(this)"
+                 maxlength="16" value="#{actupdate.actchd.ballimD}" style="width:88%;"/>
+</h:panelGroup>
+<h:outputLabel/>
+<h:outputLabel value="所属部门:"/>
+<h:panelGroup>
+    <p:inputMask mask="99" value="#{actupdate.actoac.depnum}" style="width:88%;"
+                 required="true" requiredMessage="不能为空！" id="depnum"/>
+    <h:outputLabel styleClass="red_star" value="*"/>
+</h:panelGroup>
+<p:message for="depnum"/>
+<h:outputLabel value="借方利率代码:"/>
+<h:panelGroup>
+    <h:selectOneMenu value="#{actupdate.actoac.dinrat}"
+                     style="width:90%" id="selDinrat">
+        <f:selectItems value="#{actupdate.alirt}"></f:selectItems>
+        <p:ajax update="txtDratsf" actionListener="#{actupdate.getDratsfValue}"/>
+    </h:selectOneMenu>
+</h:panelGroup>
+<h:outputLabel/>
+<h:outputLabel value="贷方利率代码:"/>
+<h:panelGroup>
+    <h:selectOneMenu value="#{actupdate.actoac.cinrat}"
+                     style="width:90%" id="selCinrat">
+        <f:selectItems value="#{actupdate.alirt}"></f:selectItems>
+        <p:ajax update="txtCratsf" actionListener="#{actupdate.getCratsfValue}"></p:ajax>
+    </h:selectOneMenu>
+</h:panelGroup>
+<h:outputLabel/>
+<h:outputLabel value="借方利率:"/>
+<h:panelGroup>
+    <h:inputText onblur="numBlur(this)" id="txtDratsf" size="9" value="#{actupdate.actoac.dratsf}"
+                 style="width:88%;"/>
+</h:panelGroup>
+<p:message for="txtDratsf"/>
+<h:outputLabel value="贷方利率:"/>
+<h:panelGroup>
+    <h:inputText onblur="numBlur(this)" id="txtCratsf" size="9" value="#{actupdate.actoac.cratsf}"
+                 style="width:88%;"/>
+</h:panelGroup>
+<p:message for="txtCratsf"/>
+<h:outputLabel value="透支限额:"/>
+<h:panelGroup>
+    <h:inputText maxlength="16" onblur="amtBlur(this)" onkeyup="amtKeydown(this)" onkeypress="amtKeypress(this)"
+                 value="#{actupdate.actchd.ovelimD}" style="width:88%;"/>
+</h:panelGroup>
+<h:outputLabel/>
+<h:outputLabel value="额度到期日:"/>
+<h:panelGroup>
+    <p:inputMask style="width:88%" value="#{actupdate.actoac.oveexp}" id="oveexp"
+                 converterMessage="日期不正确" mask="9999-99-99">
+        <f:convertDateTime pattern="yyyy-MM-dd"/>
+    </p:inputMask>
+</h:panelGroup>
+<p:message for="oveexp"/>
+</h:panelGrid>
+</p:panel>
+<br></br>
+<h:panelGrid columns="1" style="text-align:center;padding-top:10px;" width="96%">
+    <h:panelGroup>
+        <h:commandButton id="btnSave" action="#{actupdate.onBtnSaveClick}" style="padding:3px;width:100px;"
+                         value="保 存"/>
+        <h:commandButton id="btnReset" type="reset" value="重 置" style="padding:3px;width:100px;"/>
+        <h:commandButton id="btnDelete" value="关 闭" action="#{actupdate.onlkBtnCloseClick}"
+                         style="padding:3px;width:100px;"></h:commandButton>
+        <h:commandButton type="button" id="btnQryReback" value="返 回"
+                         onclick="window.location.replace('accountQuery.xhtml');"
+                         style="padding:3px;width:100px;"></h:commandButton>
+        <h:commandButton type="button" id="btnEdtReback" value="返 回"
+                         onclick="window.location.replace('accountEdition.xhtml');"
+                         style="padding:3px;width:100px;"></h:commandButton>
+        <h:commandButton type="button" id="btnClsReback" value="返 回"
+                         onclick="window.location.replace('accountClose.xhtml');"
+                         style="padding:3px;width:100px;"></h:commandButton>
+    </h:panelGroup>
+</h:panelGrid>
+</h:form>
+</ui:define>
+</ui:composition>

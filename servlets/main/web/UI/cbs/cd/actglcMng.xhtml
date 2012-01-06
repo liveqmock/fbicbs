@@ -1,0 +1,143 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+<ui:define name="head">
+    <script language="JavaScript" type="text/JavaScript">
+        function KeyDown() {
+            if (event.keyCode == 13) {
+                if (event.srcElement.id == 'inputform:glcnam') {
+                    event.returnValue = false;
+                    event.cancel = true;
+                    document.forms['inputform']['inputform:query'].click();
+                } else {
+                    event.keyCode = 9;
+                }
+            }
+        }
+    </script>
+</ui:define>
+
+<ui:define name="content">
+<div class="entry">
+<h:form id="inputform">
+    <p:focus for="glcode"/>
+    <p:messages id="msgs" showSummary="false" showDetail="true"/>
+    <p:panel header="::查询条件::">
+        <h:panelGrid columns="5">
+            <h:outputLabel value="总账码 :" for="glcode"/>
+            <h:inputText id="glcode" value="#{actglcBean.glcode}" onkeydown="KeyDown()"/>
+
+            <h:outputLabel value="名称 :" for="glcnam"/>
+            <h:inputText id="glcnam" size="50" value="#{actglcBean.glcnam}" onkeydown="KeyDown()"/>
+
+            <h:panelGrid columns="1" style="text-align:center;padding-top:10px;" width="100%">
+                <h:panelGroup>
+                    <p:commandButton id="query" ajax="false" value="确认" action="#{actglcBean.queryRecords}"
+                                     style="padding-left:15px;margin-right:5px;margin-left:15px;padding-right:15px;"/>
+                    <p:commandButton value="重置" type="reset" style="padding-left:15px;padding-right:15px;margin-left:5px;"/>
+                    <p:commandButton id="addBean" ajax="false" value="添加" update="msgs" action="#{actglcBean.action}"
+                                     style="padding-left:15px;margin-right:5px;margin-left:15px;padding-right:15px;">
+                        <f:param value="addBean" name="action"/>
+                        </p:commandButton>
+                </h:panelGroup>
+            </h:panelGrid>
+        </h:panelGrid>
+    </p:panel>
+    <br/>
+</h:form>
+
+<p:dialog id="dlg" header="添加总账码" widgetVar="insertDialog" resizable="false"
+          width="700" modal="true" showEffect="clip" hideEffect="fold">
+    <h:form id="insertForm">
+        <h:panelGrid id="addDialog" columns="4" cellpadding="8">
+            <h:outputText value="总账码:*"/>
+            <h:inputText value="#{actglcBean.actglc.glcode}" required="true" requiredMessage="必须输入总账码！" maxlength="4"
+                         onkeydown="addDialogKeyDown()"/>
+            <h:outputText value="名称:*"/>
+            <h:inputText value="#{actglcBean.actglc.glcnam}" required="true" requiredMessage="必须输入名称！" maxlength="34"
+                         onkeydown="addDialogKeyDown()"/>
+            <h:outputText value="总账码级别:"/>
+            <h:inputText value="#{actglcBean.actglc.glccls}" maxlength="1" onkeydown="addDialogKeyDown()"/>
+            <h:outputText value="并入总账码:"/>
+            <h:inputText value="#{actglcBean.actglc.glcgrp}" maxlength="4" onkeydown="addDialogKeyDown()"/>
+            <h:outputText value="总账码属性:"/>
+            <h:inputText value="#{actglcBean.actglc.glctyp}" maxlength="1" onkeydown="addDialogKeyDown()"/>
+            <h:outputText value="总账码类别:"/>
+            <h:inputText value="#{actglcBean.actglc.glccat}" maxlength="1" onkeydown="addDialogKeyDown()"/>
+            <h:outputText value="允许货币标志:"/>
+            <h:inputText value="#{actglcBean.actglc.glcccy}" maxlength="1" onkeydown="addDialogKeyDown()"/>
+            <h:outputText value="余额方向标志:"/>
+            <h:inputText value="#{actglcBean.actglc.glcbal}" maxlength="1" onkeydown="addDialogKeyDown()"/>
+            <h:outputText value="发生额方向标志:"/>
+            <h:inputText value="#{actglcBean.actglc.glcocc}" maxlength="1" onkeydown="addDialogKeyDown()"/>
+            <h:outputText value="计息种类:"/>
+            <h:inputText value="#{actglcBean.actglc.glcint}" maxlength="1" onkeydown="addDialogKeyDown()"/>
+            <h:outputText value="利率种类:"/>
+            <h:inputText value="#{actglcBean.actglc.glcrat}" maxlength="3" onkeydown="addDialogKeyDown()"/>
+            <h:outputText value="自动开户允许标志:"/>
+            <h:inputText value="#{actglcBean.actglc.glcopn}" maxlength="1" onkeydown="addDialogKeyDown()"/>
+            <h:outputText value="冲账允许标志:"/>
+            <h:inputText value="#{actglcBean.actglc.glcrvs}" maxlength="1" onkeydown="addDialogKeyDown()"/>
+            <h:outputText value="报表余额方向:"/>
+            <h:inputText value="#{actglcBean.actglc.rsvfg1}" maxlength="1" onkeydown="addDialogKeyDown()"/>
+            <h:outputText value="科目所属:"/>
+            <h:inputText value="#{actglcBean.actglc.glcbel}" maxlength="1" onkeydown="addDialogKeyDown()"/>
+            <h:outputText value="科目启用日期:"/>
+            <p:inputMask mask="9999-99-99" value="#{actglcBean.actglc.effdat}" onkeydown="addDialogKeyDown()">
+                <f:convertDateTime pattern="yyyy-mm-dd"/>
+            </p:inputMask>
+            <h:outputText value="科目使用到期日:"/>
+            <p:inputMask id="addExpdat" mask="9999-99-99" value="#{actglcBean.actglc.expdat}"
+                         onkeydown="addDialogKeyDown()">
+                <f:convertDateTime pattern="yyyy-mm-dd"/>
+            </p:inputMask>
+            <f:facet name="footer">
+                <p:commandButton id="add" ajax="false" value="添加" action="#{actglcBean.insert}"
+                                 style="margin-right:5px;margin-left:265px;"
+                                 oncomplete="handleAddRequest(xhr, status, args)"/>
+                <p:commandButton value="取消" style="margin-left:5px;" onclick="insertDialog.hide()"/>
+            </f:facet>
+        </h:panelGrid>
+    </h:form>
+</p:dialog>
+
+<h:form id="glcMsgForm">
+    <p:dataTable id="glcMsgDataTable" height="200" dblClickSelect="false"
+                 value="#{actglcBean.glcList}" var="record" selectionMode="single"
+                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 paginator="true" rows="15" paginatorPosition="both" rowsPerPageTemplate="100,50,15,10,5"
+                 emptyMessage="数据记录为空...">
+
+        <p:column headerText="总账码" style="text-align:center">
+            <h:outputText value="#{record.glcode}"/>
+        </p:column>
+
+        <p:column headerText="名称" style="text-align:left">
+            <h:outputText value="#{record.glcnam}"/>
+        </p:column>
+
+        <p:column headerText="操作" style="width:100px;text-align:center">
+            <h:commandLink immediate="true" value="详细" action="#{actglcBean.action}" >
+            <f:param value="#{record.glcode}" name="param"/>
+            <f:param value="showDetail" name="action"/>
+            </h:commandLink>
+            <p:spacer width="8"/>
+            <h:commandLink immediate="true" value="编辑" action="#{actglcBean.action}">
+            <f:param value="#{record.glcode}" name="param"/>
+            <f:param value="editContent" name="action"/>
+            </h:commandLink>
+            <p:spacer width="8"/>
+            <h:commandLink immediate="true" value="删除" action="#{actglcBean.action}">
+            <f:param value="#{record.glcode}" name="param"/>
+            <f:param value="logicDelete" name="action"/>
+            </h:commandLink>
+        </p:column>
+    </p:dataTable>
+</h:form>
+</div>
+</ui:define>
+</ui:composition>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment><![CDATA[
+  -----------------------------------------------
+ 　2011/03/17 HAIYU
+  -----------------------------------------------
+]]></comment>
+
+    <!--<entry key="import">F:/svn-fbicbs/out/artifacts/fbicbs/WEB-INF/classes/cbs/batch</entry>-->
+
+    <entry key="jarPath1">basePath:/lib</entry>
+    <entry key="jarPath1.jarName1">commons-beanutils.jar</entry>
+    <entry key="jarPath1.jarName2">commons-digester-1.8.jar</entry>
+    <entry key="jarPath1.jarName3">commons-io-1.4.jar</entry>
+    <entry key="jarPath1.jarName4">commons-lang-2.5.jar</entry>
+    <entry key="jarPath1.jarName5">commons-logging.jar</entry>
+    <entry key="jarPath1.jarName6">commons-collections-3.1.jar</entry>
+    <entry key="jarPath1.jarName7">commons-dbcp.jar</entry>
+    <entry key="jarPath1.jarName8">commons-pool-1.5.jar</entry>
+    <entry key="jarPath1.jarName9">log4j-1.2.14.jar</entry>
+    <entry key="jarPath1.jarName10">ojdbc6.jar</entry>
+    <entry key="jarPath1.jarName11">mybatis-3.0.4.jar</entry>
+
+
+    <entry key="jarPath2">basePath:/lib</entry>
+    <!--<entry key="jarPath2">F:/svn-fbicbs/out/artifacts/fbicbs/WEB-INF/lib</entry>-->
+    <entry key="jarPath2.jarName1">org.springframework.aop-3.0.4.RELEASE.jar</entry>
+    <entry key="jarPath2.jarName2">org.springframework.asm-3.0.4.RELEASE.jar</entry>
+    <entry key="jarPath2.jarName3">org.springframework.beans-3.0.4.RELEASE.jar</entry>
+    <entry key="jarPath2.jarName4">org.springframework.context-3.0.4.RELEASE.jar</entry>
+    <entry key="jarPath2.jarName5">org.springframework.context.support-3.0.4.RELEASE.jar</entry>
+    <entry key="jarPath2.jarName6">org.springframework.core-3.0.4.RELEASE.jar</entry>
+    <entry key="jarPath2.jarName7">org.springframework.expression-3.0.4.RELEASE.jar</entry>
+    <entry key="jarPath2.jarName8">org.springframework.jdbc-3.0.4.RELEASE.jar</entry>
+    <entry key="jarPath2.jarName9">org.springframework.transaction-3.0.4.RELEASE.jar</entry>
+    <entry key="jarPath2.jarName10">org.springframework.web-3.0.4.RELEASE.jar</entry>
+
+    <entry key="jarPath3">basePath:/lib</entry>
+    <entry key="jarPath3.jarName1">aopalliance.jar</entry>
+    <entry key="jarPath3.jarName2">asm-3.3.1.jar</entry>
+    <entry key="jarPath3.jarName3">cglib-2.2.jar</entry>
+
+    <entry key="classPath1">basePath:/classes/cbs/batch/report/rpactstm/prop</entry>
+    <!--<entry key="classPath1">F:/svn-fbicbs/out/artifacts/fbicbs/WEB-INF/classes/cbs/batch/ac/bcb8523/prop</entry>-->
+    <entry key="applicationContext1">cbs/batch/report/rpactstm/prop/mybatis-batch.xml</entry>
+    <entry key="executeLogicClass">cbs.batch.report.rpactstm.RPACTSTMHandler</entry>
+
+    <!--<entry key="applicationContext1">/applicationContext.xml</entry>
+    <entry key="executeLogicClass">RPACTSTM</entry>-->
+
+    <entry key="notuseDb">false</entry>
+
+</properties>

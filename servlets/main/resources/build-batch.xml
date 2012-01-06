@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project default="jar" basedir="F:/svn-fbicbs">
+
+    <property name="src.dir" value="${basedir}/source/fbicbs/src/cbs"/>
+    <!--<property name="resources.dir" value="resources"/>-->
+    <property name="lib.dir" value="${basedir}/out/artifacts/fbicbs/WEB-INF/lib"/>
+    <property name="dist.dir" value="${basedir}/batch"/>
+    <property name="classes.dir" value="${dist.dir}/classes"/>
+
+
+    <target name="copydirs">
+        <copy todir="${dist.dir}/lib">
+            <fileset dir="${lib.dir}"/>
+        </copy>
+        <!--<copy todir="${dist.dir}/resources">-->
+            <!--<fileset dir="${resources.dir}"/>-->
+        <!--</copy>-->
+    </target>
+
+    <path id="dist.classpath">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="compile">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}"
+               classpathref="dist.classpath"/>
+    </target>
+
+    <target name="jar" depends="compile">
+        <fileset dir="${lib.dir}" id="lib.dist.fileset">
+            <include name="**/*.jar"/>
+        </fileset>
+
+        <pathconvert pathsep=" " property="dist.classpath" refid="lib.dist.fileset">
+            <map from="${lib.dir}" to="./lib" />
+        </pathconvert>
+
+        <jar destfile="release_orginal.jar" basedir="${classes.dir}" >
+            <manifest>
+                <attribute name="Main-Class" value="project.Main"/>
+                <attribute name="Class-Path" value=". ${dist.classpath}"/>
+            </manifest>
+        </jar>
+    </target>
+</project>

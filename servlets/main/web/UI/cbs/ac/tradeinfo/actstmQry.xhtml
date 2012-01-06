@@ -1,0 +1,193 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui" xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+       .panel_label1{
+     padding-left :60px;
+     text-align:left;
+}
+     .panel_value{
+     text-align:left;
+}
+    .panel_label2{
+     text-align:left;
+     padding-left :70px;
+}
+
+    </style>
+        <script language="JavaScript" type="text/JavaScript">
+            function KeyDown() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'inputform:enddat') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        document.forms['inputform']['inputform:query'].click();
+                    } else {
+                        event.keyCode = 9;
+                    }
+                }
+            }
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="entry">
+            <h:form id="inputform">
+                <p:focus for="accode"/>
+                <p:messages id="msgs" showSummary="false" showDetail="true"/>
+                <p:panel header="::查询条件::">
+                    <h:panelGrid columns="3">
+
+                        <h:panelGroup>
+                            <h:outputLabel value="* 账号 :" style="padding-left:44px" for="accode"/>
+                            <h:inputText id="accode" required="true" requiredMessage="必须输入账号！"
+                                         value="#{actstmBean.vo.accode}" onkeydown="KeyDown()"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <h:outputLabel value="柜员号 :" style="padding-left:40px" for="tlrnum"/>
+                            <h:inputText id="tlrnum" value="#{actstmBean.vo.tlrnum}" onkeydown="KeyDown()"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup style="text-align:right">
+                            <h:outputLabel value="金额 :" style="padding-left:20px" for="txnamt"/>
+                            <h:inputText id="txnamt" value="#{actstmBean.vo.txnamt}" onkeydown="KeyDown()"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <h:outputLabel value="起始记账日期 :" for="bgndat"/>
+                            <p:inputMask id="bgndat" mask="9999-99-99" value="#{actstmBean.vo.bgndat}"
+                                         onkeydown="KeyDown()">
+                            </p:inputMask>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <h:outputLabel value="截止记账日期 :" for="enddat"/>
+                            <p:inputMask id="enddat" mask="9999-99-99" value="#{actstmBean.vo.enddat}"
+                                         onkeydown="KeyDown()">
+                            </p:inputMask>
+                        </h:panelGroup>
+
+
+                        <h:panelGroup>
+                            <p:commandButton id="query" ajax="false" value="确认" action="#{actstmBean.queryRecords}"
+                                             style="margin-left:52px;"/>
+                            <p:commandButton value="重置" style="margin-left:22px;"/>
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+            </h:form>
+            <h:form id="resultForm">
+                <p:dataTable id="resultDataTable" height="200" update="resultForm:display" dblClickSelect="true"
+                             value="#{actstmBean.stmList}" var="record" onRowSelectComplete="selectedDialog.show()"
+                             selection="#{actstmBean.selectedRecord}" selectionMode="single"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="both" rowsPerPageTemplate="100,50,15,10,5"
+                             emptyMessage="数据记录为空...">
+                    <f:facet name="header">
+                        <h:outputText value="::  账号:#{actstmBean.act.accode}    户名:#{actstmBean.act.actnam}::"/>
+                    </f:facet>
+
+                    <p:column headerText="记账日期" style="text-align:left">
+                        <h:outputText value="#{record.stmdat}"/>
+                    </p:column>
+
+                    <p:column headerText="起息日期" style="text-align:center">
+                        <h:outputText value="#{record.valdat}"/>
+                    </p:column>
+
+                    <p:column headerText="借贷别 " style="text-align:center">
+                        <h:outputText value="#{record.borlen}"/>
+                    </p:column>
+
+                    <p:column headerText="金额" style="text-align:right">
+                        <h:outputText value="#{record.txnamt/100}" style="float: right">
+                    <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="冲账标志" style="text-align:center">
+                        <h:outputText value="#{record.rvslbl}"/>
+                    </p:column>
+
+                    <p:column headerText="交易后余额 " style="text-align:right">
+                        <h:outputText value="#{record.actbal/100}" style="float: right">
+                        <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="摘要 " style="text-align:left">
+                        <h:outputText value="#{record.thrref}"/>
+                    </p:column>
+
+                    <p:column headerText="柜员号" style="text-align:center">
+                        <h:outputText value="#{record.tlrnum}"/>
+                    </p:column>
+
+                    <p:column headerText="传票套号" style="text-align:center">
+                        <h:outputText value="#{record.vchset}"/>
+                    </p:column>
+
+                    <p:column headerText="交易时间 " style="text-align:center">
+                        <h:outputText value="#{record.stmtim}"/>
+                    </p:column>
+
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column colspan="10" footerText="查询到#{fn:length(actstmBean.stmList)}条记录"
+                                      style="text-align:right"/>
+                        </p:row>
+                    </p:columnGroup>
+
+                </p:dataTable>
+                <p:dialog header="单笔传票详细信息" widgetVar="selectedDialog" resizable="false"
+                          width="500" showEffect="clip" hideEffect="fold" modal="true" >
+
+                    <h:panelGrid id="display" columns="4" columnClasses="panel_label1,panel_value,panel_label2,panel_value" cellpadding="8">
+
+                        <h:outputText value="记账日期:"/>
+                        <h:outputText value="#{actstmBean.selectedRecord.stmdat}"/>
+
+                        <h:outputText value="起息日期:"/>
+                        <h:outputText value="#{actstmBean.selectedRecord.valdat}"/>
+
+                        <h:outputText value="借贷别:"/>
+                        <h:outputText value="#{actstmBean.selectedRecord.borlen}"/>
+
+                        <h:outputText value="金额:"/>
+                        <h:outputText value="#{actstmBean.selectedRecord.txnamt/100}"/>
+
+                        <h:outputText value="冲账标志:"/>
+                        <h:outputText value="#{actstmBean.selectedRecord.rvslbl}"/>
+
+                        <h:outputText value="交易后余额:"/>
+                        <h:outputText value="#{actstmBean.selectedRecord.actbal/100}" style="float: left">
+                    <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
+                        </h:outputText>
+
+                        <h:outputText value="摘要:"/>
+                        <h:outputText value="#{actstmBean.selectedRecord.furinf}"/>
+
+                        <h:outputText value="柜员号:"/>
+                        <h:outputText value="#{actstmBean.selectedRecord.tlrnum}"/>
+
+                        <h:outputText value="传票套号:"/>
+                        <h:outputText value="#{actstmBean.selectedRecord.vchset}"/>
+
+                        <h:outputText value="交易时间:"/>
+                        <h:outputText value="#{actstmBean.selectedRecord.stmtim}"/>
+
+                    </h:panelGrid>
+                </p:dialog>
+            </h:form>
+        </div>
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,53 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+    <ui:define name="head">
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/css/fbicbs.css"/>
+        <script language="javascript" type="text/javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    //                        alert(event.srcElement.tagName);
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                    else
+                        event.srcElement.click();
+                }
+            }
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <div class="entry" id="top">
+            <p:growl id="growl" showDetail="true"/>
+            <h:form id="queryForm">
+                <p:focus for="oldacn"/>
+                <p:panel header="::结清查询::" style="margin-top:10px" id="input">
+                    <table width="100%" style="height:100px;">
+                        <tr>
+                            <td  >
+                                <h:panelGrid cellspacing="0" border="0" columns="3"
+                                             style="margin-left:0px;margin-top:10px;height:40px;width:400px;">
+                                    <h:outputLabel value="账户号："/>
+                                    <h:inputText maxlength="12" id="oldacn" autocomplete="off"
+                                                 style="width:90%;ime-mode:disabled;" value="#{actclear.actani.oldacn}">
+                                    </h:inputText>
+                                    <h:panelGroup styleClass="btnWidth">
+                                        <p:commandButton ajax="false" action="#{actclear.onBtnClearClick}" id="btnQuery"
+                                                         value="确 定"
+                                                ></p:commandButton>
+                                        <p:spacer width="5"/>
+                                        <p:commandButton type="reset" value="重 置"></p:commandButton>
+                                    </h:panelGroup>
+                                </h:panelGrid>
+                            </td>
+                        </tr>
+                    </table>
+
+
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

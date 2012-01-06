@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+<ui:define name="head">
+<link href="#{request.contextPath}/css/ccb.css" type="text/css" rel="stylesheet"/>
+<link href="#{request.contextPath}/css/form.css" type="text/css" rel="stylesheet"/>
+<script language="JavaScript" type="text/JavaScript">
+            function KeyDown() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'inputform:apckid') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        if(document.forms['inputform']['inputform:actionbtn']==null){
+                            document.forms['inputform']['inputform:back'].click();
+                        }else{
+                            document.forms['inputform']['inputform:actionbtn'].click();
+                        }                       
+                    } else {
+                        event.keyCode = 9;
+                    }
+                }
+        }
+        </script>
+</ui:define>
+<ui:define name="content">
+<div class="entry">
+<h:form id="inputform" onkeydown="KeyDown()" style="padding-left:10px;padding-top:8px;padding-right:10px">
+        <p:messages id="msgs" showSummary="false"  showDetail="true"/>
+        <p:focus for="irtkd1"/>
+             <p:panel id="basePanel" header="利率码信息">
+             <h:panelGrid id="basePanelGrid" columns="4"  columnClasses="panel_label2,panel_value,panel_label2,panel_value">
+            <h:outputText value="货币:*"/>
+            <h:selectOneMenu value="#{actirtBean.actirt.curcde}">
+                <f:selectItems value="#{beanList.ccyList}"/>
+            </h:selectOneMenu>
+
+            <h:outputText value="利率大类:*"/>
+            <h:inputText id="irtkd1" value="#{actirtBean.actirt.irtkd1}" label="利率大类" maxlength="1" validator="#{codeValidator.mustValidateLength}"/>
+            <h:outputText value="利率细类*:"/>
+            <h:inputText value="#{actirtBean.actirt.irtkd2}"  label="利率细类"  maxlength="2" validator="#{codeValidator.mustValidateLength}"/>
+            <h:outputText value="启用日期:*"/>
+            <p:inputMask mask="9999-99-99" required="true" requiredMessage="请正确输入启用日期！"
+                         value="#{actirtBean.actirt.effdat}">
+                <f:convertDateTime pattern="yyyy-MM-dd" timeZone="GMT+8" locale="cn"></f:convertDateTime>
+            </p:inputMask>
+            <h:outputText value="利率名称:"/>
+            <h:inputText value="#{actirtBean.actirt.irtnam}" label="利率名称" maxlength="24" validator="#{codeValidator.orValidateLength}"/>
+
+            <h:outputText value="基准利率值:"/>
+            <h:inputText value="#{actirtBean.actirt.irtval}" label="基准利率值" maxlength="10" validator="#{codeValidator.validateRealNumber}"/>
+            <h:outputText value="浮动上限值:"/>
+            <h:inputText value="#{actirtBean.actirt.irtsph}" label="浮动上限值" maxlength="4" validator="#{codeValidator.validateRealNumber}"/>
+            <h:outputText value="浮动下限值:"/>
+            <h:inputText value="#{actirtBean.actirt.irtspl}" label="浮动下限值" maxlength="4" validator="#{codeValidator.validateRealNumber}"/>
+            <h:outputText value="浮动标记:"/>
+            <h:inputText value="#{actirtBean.actirt.sprflg}" label="浮动标记" maxlength="1" validator="#{codeValidator.orValidateLength}"/>
+                 <h:outputText value="借贷标记:"/>
+            <h:inputText value="#{actirtBean.actirt.cdflag}" label="借贷标记" maxlength="1" validator="#{codeValidator.orValidateLength}"/>
+                 <h:outputText value="期限:"/>
+            <h:inputText value="#{actirtBean.actirt.irttrm}" label="期限" maxlength="3" validator="#{codeValidator.orValidateLength}"/>
+
+                 <h:outputText value="期限单位:"/>
+            <h:inputText id="addTrmunt" value="#{actirtBean.actirt.trmunt}" label="期限单位" maxlength="1" validator="#{codeValidator.orValidateLength}"/>
+
+                 <h:outputText/>
+                 <h:outputText value="年期限为360"/>
+                 <h:outputText/>
+                 <h:outputText value="年-Y 季-S 月-M 日-D"/>
+
+             </h:panelGrid>
+                 <p:separator/>
+            <h:panelGrid columns="1" style="text-align:center;padding-top:10px;" width="98%">
+                <h:panelGroup>
+                    <p:commandButton id="actionbtn" ajax="false" value="确认保存" action="#{actirtBean.beanAction}"
+                    style="padding-left:10px;padding-right:10px;margin-right:10px;"/>
+                    <p:commandButton id="back" ajax="false" value="返回" immediate="true" action="#{actirtBean.back}"
+                    style="padding-left:10px;padding-right:10px;margin-left:10px;"/>
+                    <p:commandButton id="reset" value="重置" type="reset"
+                    style="padding-left:10px;padding-right:10px;margin-left:10px;"/>
+                </h:panelGroup>
+            </h:panelGrid>
+            </p:panel>
+    <p:panel>
+    <h:outputText value="活期存款利率实例 : 利率大类A、利率细类AA、启用日期应大于当前业务日期、利率名称活期存款、基准利率值0.5、
+                                          浮动上下限均为0、浮动标记0、借贷标记C、       期限360、期限单位Y"/>
+</p:panel>
+</h:form>
+
+</div>
+</ui:define>
+</ui:composition>

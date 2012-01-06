@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                width: 160px;
+                text-align: right;
+            }
+
+            .col-input {
+            }
+        </style>
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                }
+            }
+
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="form">
+                <p:panel header="【外围交易落地条件维护】">
+                    <br/>
+                    <h:inputHidden required="true" requiredMessage="系统数据未初始化！"/>
+                    <h:panelGrid columns="4" cellspacing="5"
+                                 columnClasses="col-label,col-input,col-label,col-input">
+
+                        <h:outputLabel value="交易类别:" />
+                        <h:selectOneMenu id="rsdCtr" value="#{extPayMngAction.txnType}">
+                            <f:selectItems value="#{extPayMngAction.txnTypeList}"/>
+                        </h:selectOneMenu>
+
+                        <h:outputText/><h:outputText/>
+                        <h:outputLabel value="单笔最大金额:"/>
+                        <h:selectBooleanCheckbox required="true" requiredMessage="系统数据未初始化！"/>
+                        <h:outputLabel value="每日累计最大笔数:"/>
+                        <h:selectBooleanCheckbox/>
+
+                        <h:outputLabel value="每日累计最大金额:" for="managerPhone1"/>
+                        <h:selectBooleanCheckbox id="managerPhone1"/>
+
+                        <h:outputLabel value="历史最大金额:"/>
+                        <h:selectBooleanCheckbox/>
+
+                        <h:outputLabel value="同户名转账:"/>
+                        <h:selectBooleanCheckbox/>
+
+                        <h:outputLabel value="重复付款:"/>
+                        <h:selectBooleanCheckbox/>
+                    </h:panelGrid>
+                    <br/>
+                    <p:separator/>
+                    <h:panelGrid columns="2">
+                        <p:commandButton id="saveBtn" style="margin-left:302px;width:80px;" value="保存"
+                                         action="#"
+                                         update="msgs,form,pdt">
+                        </p:commandButton>
+                        <p:commandButton id="clsBtn" style="margin-left:10px;width:80px;" value="重置"/>
+                    </h:panelGrid>
+                </p:panel>
+
+                <p:ajaxStatus style="height:18px;text-align:center">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

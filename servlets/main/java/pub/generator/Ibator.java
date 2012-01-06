@@ -1,0 +1,72 @@
+package pub.generator;
+
+import org.mybatis.generator.api.MyBatisGenerator;
+import org.mybatis.generator.config.Configuration;
+import org.mybatis.generator.config.xml.ConfigurationParser;
+import org.mybatis.generator.exception.InvalidConfigurationException;
+import org.mybatis.generator.exception.XMLParserException;
+import org.mybatis.generator.internal.DefaultShellCallback;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: zhanrui
+ * Date: 2010-11-1
+ * Time: 14:47:13
+ * To change this template use File | Settings | File Templates.
+ */
+public class Ibator {
+    public static void main(String[] argv) {
+        Ibator ibator = new Ibator();
+
+        //基础表 已生成完毕
+        //ibator.run("resources/generatorConfig.xml");
+
+        //平台类
+        //ibator.run("resources/generatorConfig4Platform.xml");
+
+        //出帐类
+//        ibator.run("resources/generatorConfig4BillInfo.xml");
+
+        //对公类 主表
+//        ibator.run("resources/generatorConfig4AcMainInfo.xml");
+
+    }
+
+    public void run(String configfile) {
+        List<String> warnings = new ArrayList<String>();
+        boolean overwrite = true;
+        String path = this.getClass().getResource("").getPath();
+        File configFile = new File(path + configfile);
+        ConfigurationParser cp = new ConfigurationParser(warnings);
+        Configuration config = null;
+        try {
+            config = cp.parseConfiguration(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (XMLParserException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        DefaultShellCallback callback = new DefaultShellCallback(overwrite);
+        MyBatisGenerator myBatisGenerator = null;
+        try {
+            myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
+        } catch (InvalidConfigurationException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        try {
+            myBatisGenerator.generate(null);
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+}

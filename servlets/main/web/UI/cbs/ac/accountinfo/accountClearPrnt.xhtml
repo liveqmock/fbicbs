@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+    <ui:define name="head">
+        <script language="javascript" type="text/javascript">
+
+            //用于设置打印参数
+            function printBase() {
+                factory.printing.header = "" //页眉
+                factory.printing.footer = "" //页脚
+                factory.printing.portrait = true //true为纵向打印，false为横向打印
+                factory.printing.leftMargin = 0.5
+                factory.printing.topMargin = 1.5
+                factory.printing.rightMargin = 0.5
+                factory.printing.bottomMargin = 1.5
+            }
+
+            function printTure()
+            {
+                printBase();
+                document.getElementById("btnPrint").style.display = "none";//隐藏按钮
+                //factory.printing.Preview();
+                factory.printing.Print(false);
+                document.getElementById("btnPrint").style.display = "inline";//显示按钮
+            }
+
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <OBJECT id="factory" codeBase="http://localhost:8080/fbicbs/redist/smsx.cab#Version=6,6,440,20"
+                height="0" width="0" classid="clsid:1663ed61-23eb-11d2-b92f-008048fdd814" viewastext="true">
+        </OBJECT>
+        <div class="entry" id="top">
+            <h:form id="displayForm">
+                <p:dataTable style="width:100%;border:#000000 solid 0px;"
+                             var="record" value="#{actclearprnt.clearbeans}">
+                    <p:column style="width:30%;border:#000000 solid 0px;">
+                        
+                        <h:outputLabel value="#{record.rowStr1}"></h:outputLabel>
+                    </p:column>
+                    <p:column style="border:#000000 solid 0px;">
+                        <h:outputLabel value="#{record.rowStr2}"></h:outputLabel>
+                    </p:column>
+                </p:dataTable>
+                <h:panelGrid columns="1" style="text-align:center;padding-top:10px;" width="56%">
+                    <h:panelGroup>
+                        <input type="button" id="btnPrint" onclick="printTure()" value="打 印"></input>
+                    </h:panelGroup>
+                </h:panelGrid>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

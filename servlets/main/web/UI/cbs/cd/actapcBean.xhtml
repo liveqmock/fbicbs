@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+<ui:define name="head">
+<link href="#{request.contextPath}/css/ccb.css" type="text/css" rel="stylesheet"/>
+<link href="#{request.contextPath}/css/form.css" type="text/css" rel="stylesheet"/>
+<script language="JavaScript" type="text/JavaScript">
+            function KeyDown() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'inputform:apckid') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        if(document.forms['inputform']['inputform:actionbtn']==null){
+                            document.forms['inputform']['inputform:back'].click();
+                        }else{
+                            document.forms['inputform']['inputform:actionbtn'].click();
+                        }                       
+                    } else {
+                        event.keyCode = 9;
+                    }
+                }
+        }
+        </script>
+</ui:define>
+<ui:define name="content">
+<div class="entry">
+<h:form id="inputform" onkeydown="KeyDown()" style="padding-left:10px;padding-top:8px;padding-right:10px">
+        <p:messages id="msgs" showSummary="false"  showDetail="true"/>
+        <p:focus for="apcode"/>
+             <p:panel id="basePanel" header="核算码信息">
+             <h:panelGrid id="basePanelGrid" columns="4"  columnClasses="panel_label2,panel_value,panel_label2,panel_value">
+            <h:outputText value="核算码:*"/>
+            <h:inputText id="apcode" value="#{actapcBean.actapc.apcode}" label="核算码"  maxlength="4" validator="#{codeValidator.checkExistApcode}"/>
+            <h:outputText value="核算码名称:*"/>
+            <h:inputText value="#{actapcBean.actapc.apcnam}" label="核算码名称"  maxlength="34" validator="#{codeValidator.mustValidateLength}"/>
+            <h:outputText value="核算码类型:"/>
+            <h:inputText value="#{actapcBean.actapc.apctyp}" label="核算码类型" maxlength="1" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="总账码:"/>
+            <h:inputText value="#{actapcBean.actapc.glcode}" label="总账码" maxlength="4" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="对应损益码:"/>
+            <h:inputText value="#{actapcBean.actapc.plcode}" label="对应损益码" maxlength="4" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="利息支出帐户核算码:"/>
+            <h:inputText value="#{actapcBean.actapc.intexp}" label="利息支出帐户核算码"  maxlength="4" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="利息收入帐户核算码:"/>
+            <h:inputText value="#{actapcBean.actapc.intinc}" label="利息收入帐户核算码" maxlength="4" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="对转核算码:"/>
+            <h:inputText value="#{actapcBean.actapc.opsapc}" label="对转核算码" maxlength="4" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="核算码描述:"/>
+            <h:inputText value="#{actapcBean.actapc.apcdcr}" label="核算码描述"  maxlength="50" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="应付利息帐户核算码:"/>
+            <h:inputText value="#{actapcBean.actapc.intdac}" label="应付利息帐户核算码" maxlength="4" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="应收利息帐户核算码:"/>
+            <h:inputText value="#{actapcBean.actapc.intcac}" label="应收利息帐户核算码" maxlength="4" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="未实现利息支出账户核算码:"/>
+            <h:inputText value="#{actapcBean.actapc.ndrint}" label="未实现利息支出账户核算码" maxlength="4" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="未实现利息收入账户核算码:"/>
+            <h:inputText value="#{actapcBean.actapc.ncrint}" label="未实现利息收入账户核算码" maxlength="4" validator="#{codeValidator.orValidateLength}"/>
+            <h:outputText value="APCKID:"/>
+            <h:inputText id="apckid" value="#{actapcBean.actapc.apckid}" label="APCKID" maxlength="1" validator="#{codeValidator.orValidateLength}"/>
+             </h:panelGrid>
+                 <p:separator/>
+            <h:panelGrid columns="1" style="text-align:center;padding-top:10px;" width="98%">
+                <h:panelGroup>
+                    <p:commandButton id="actionbtn" ajax="false" value="确认保存" action="#{actapcBean.beanAction}"
+                    style="padding-left:10px;padding-right:10px;margin-right:10px;"/>
+                    <p:commandButton id="back" ajax="false" value="返回" immediate="true" action="#{actapcBean.back}"
+                    style="padding-left:10px;padding-right:10px;margin-left:10px;"/>
+                    <p:commandButton id="reset" value="重置" type="reset"
+                    style="padding-left:10px;padding-right:10px;margin-left:10px;"/>
+                </h:panelGroup>
+            </h:panelGrid>
+            </p:panel>
+</h:form>
+</div>
+</ui:define>
+</ui:composition>
