@@ -202,6 +202,7 @@ public class CommonBatch {
         String path = this.getClass().getClassLoader().getResource(log4jFilename).getFile();
 
         System.setProperty("jobId", jobId);
+        //TODO    !!
         System.setProperty("prjPath", "d:/cbs/log");
         PropertyConfigurator.configure(path);
 
