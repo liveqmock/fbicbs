@@ -630,7 +630,7 @@
         on stm.cusidt = ani.cusidt
         and stm.curcde = ani.curcde
         and stm.apcode = ani.apcode
-        where stm.recsts = ' ' and trim(oldacn) = #{accode}
+        where (stm.recsts = ' '  or  stm.recsts = 'N' ) and trim(oldacn) = #{accode}
         <if test="bgndat != null">
             <![CDATA[  and stmdat >= to_date(#{bgndat},'yyyy-mm-dd') ]]>
         </if>
@@ -650,7 +650,7 @@
         on nsm.cusidt = ani2.cusidt
         and nsm.curcde = ani2.curcde
         and nsm.apcode = ani2.apcode
-        where nsm.recsts = ' ' and trim(oldacn) = #{accode}
+        where (nsm.recsts = ' ' or nsm.recsts = 'N') and trim(oldacn) = #{accode}
         <if test="bgndat != null">
             <![CDATA[  and stmdat >= to_date(#{bgndat},'yyyy-mm-dd') ]]>
         </if>
@@ -785,7 +785,7 @@
             and stm.cusidt=lbl.cusidt
             and stm.apcode=lbl.apcode
             and stm.curcde=lbl.curcde
-            and stm.secccy=lbl.secccy
+             and nvl(trim(stm.secccy), ' ')=nvl(trim(lbl.secccy), ' ')
         where
              stm.orgidt=#{orgidt}
         order by cusidt

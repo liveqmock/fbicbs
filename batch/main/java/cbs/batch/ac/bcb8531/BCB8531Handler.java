@@ -69,6 +69,8 @@ public class BCB8531Handler extends AbstractACBatchJobLogic {
                 oldActglc = act.getActglc();
                 oldCurcde = act.getCurcde();
                 while (wkFlag == 0) {
+                    logger.info("act.getOrgidt =" + act.getOrgidt() +
+                            " act.getActglc =" + act.getActglc() + " act.getCurcde =" + act.getCurcde());
                     if (!act.getOrgidt().equalsIgnoreCase(oldOrgidt) ||
                             !act.getActglc().equalsIgnoreCase(oldActglc) ||
                             !act.getCurcde().equalsIgnoreCase(oldCurcde)) {

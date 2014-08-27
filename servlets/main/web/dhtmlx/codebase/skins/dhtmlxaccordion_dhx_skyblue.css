@@ -40,7 +40,7 @@ div.dhx_acc_base_dhx_skyblue div.dhx_acc_item div.dhx_acc_item_label {
 	position: relative;
 	color: #000000;
 	font-family: Tahoma;
-	font-size: 11px;
+	font-size: 12px;
 	font-weight: bold;
 	height: 27px;
 	line-height: 27px;
@@ -105,7 +105,7 @@ div.dhx_acc_base_dhx_skyblue div.dhxcont_statusbar {
 	width: 100%;
 	overflow: hidden;
 	font-family: Tahoma;
-	font-size: 11px;
+	font-size: 12px;
 	vertical-align: middle;
 	line-height: 19px;
 	-moz-user-select: none;

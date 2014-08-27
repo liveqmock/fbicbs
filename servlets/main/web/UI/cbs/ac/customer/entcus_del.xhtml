@@ -1,0 +1,250 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+<ui:define name="head">
+<link href="#{request.contextPath}/css/ccb.css" type="text/css" rel="stylesheet"/>
+<link href="#{request.contextPath}/css/form.css" type="text/css" rel="stylesheet"/>
+<script language="JavaScript" type="text/JavaScript">
+            function KeyDown() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'inputform:sbknum') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        document.forms['inputform']['inputform:savbtn'].click();
+                    } else {
+                        event.keyCode = 9;
+                    }
+                }
+            }
+             function pattern(obj,len) {
+                        var str = obj.value;
+                        var strTemp = "";
+                        if (str == "")
+                        return false;
+                        for (i=1;(len - str.length) >= i;i++)  {
+                            strTemp += "0";
+                        }
+                        if((strTemp + str) !="0000000"){
+                           obj.value=strTemp + str;
+                        }else{
+                            obj.value="";
+                        }
+                    }
+        </script>
+</ui:define>
+<ui:define name="content">
+<div class="entry">
+<h:form id="inputform" onkeydown="KeyDown()" style="padding-left:10px;padding-top:8px;padding-right:10px">
+        <p:messages id="msgs" showSummary="false"  showDetail="true"/>
+        <p:focus for="cusnam"/>
+        <p:panel header="客户基本信息">
+           <h:panelGrid columns="4"  columnClasses="panel_label1,panel_value,panel_label1,panel_value">
+
+                <h:outputText value="*客户号: " />
+                <h:inputText label="客户号" onblur="pattern(this,7)" validator="#{cusEntValidator.validateCusidt}"
+                             id="cusidt" maxlength="7" value="#{cusEntBean.actcus.cusidt}" >
+               </h:inputText>
+
+                <h:outputText value="*客户名称: " />
+                <h:inputText id="cusnam"  label="客户名称" maxlength="72" validator="#{cusEntValidator.mustValidateLength}"
+                             value="#{cusEntBean.actcus.cusnam}" size="30"/>
+
+                <h:outputText value=" 客户简称: " />
+                <h:inputText id="shtnam"  label="客户简称" maxlength="16"  validator="#{cusEntValidator.orValidateLength}"
+                             value="#{cusEntBean.actcus.shtnam}"/>
+
+                <h:outputText value="注册国家码: " />
+                <h:selectOneMenu id="rsdCtr" value="#{cusEntBean.actcus.rsdctr}" >
+                    <f:selectItems value="#{cusEntlist.ctrList}"/>
+                </h:selectOneMenu>
+
+                  <h:outputText value="客户英文名: " />
+                <h:inputText label="客户英文名"  maxlength="120" value="#{cusEntBean.actcus.engnam}"
+                        validator="#{cusEntValidator.validateNoChineseAndLength}"/>
+
+                <h:outputText value="所在国家码: " />
+                <h:selectOneMenu id="oprCtr" value="#{cusEntBean.actcus.oprctr}" >
+                    <f:selectItems value="#{cusEntlist.ctrList}"></f:selectItems>
+                </h:selectOneMenu>
+
+                <h:outputText value="证件类型: " />
+                <h:selectOneMenu id="pasTyp" value="#{cusEntBean.actcus.pastyp}" >
+                    <f:selectItems value="#{cusEntlist.pasTypList}"/>
+                </h:selectOneMenu>
+
+                <h:outputText value="* 证件号码: " />
+                <h:inputText id="passno" label="证件号码" maxlength="18"
+                             validator="#{cusEntValidator.mustValidateLength}"
+                             value="#{cusEntBean.actcus.passno}"/>
+
+                <h:outputText value="客户类型: " />
+                <h:selectOneMenu id="cusKid" value="#{cusEntBean.actcus.cuskid}" >
+                    <f:selectItems value="#{cusEntlist.cusKidList}"/>
+                </h:selectOneMenu>
+
+
+                <h:outputText value="* 电话号码: " />
+                <h:inputText label="电话号码" id="telnum" maxlength="18" value="#{cusEntBean.actcus.telnum}"
+                             validator="#{cusEntValidator.validatePhoneAndLength}">
+               </h:inputText>
+
+                <h:outputText value="电传: " />
+                <h:inputText id="telexn" label="电传" maxlength="10"
+                             value="#{cusEntBean.actcus.telexn}"
+                        validator="#{cusEntValidator.orValidateLength}">
+                 </h:inputText>
+
+                <h:outputText value="* 地址: " />
+                <h:inputText id="coradd"  label="地址" maxlength="122"
+                             validator="#{cusEntValidator.mustValidateLength}"
+                             value="#{cusEntBean.actcus.coradd}" size="50"/>
+
+                <h:outputText value="邮编: " />
+                <p:inputMask id="zipcde" label="邮编" maxlength="6" mask="999999"
+                             value="#{cusEntBean.actcus.zipcde}">
+                 </p:inputMask>
+
+               <h:outputText value="信用级别: " />
+                <h:inputText id="tstrnk"  label="信用级别" maxlength="8"
+                             validator="#{cusEntValidator.orValidateLength}"
+                             value="#{cusEntBean.actcus.tstrnk}"/>
+
+               <h:outputText value="授信额度(元): " />
+                <h:inputText id="crdlim"  label="授信额度" maxlength="16"
+                             validator="#{cusEntValidator.validateMoneyLength}"
+                             value="#{cusEntBean.dbl_crdlim}"/>
+
+               <h:outputText value="风险组别: " />
+                <h:inputText id="rskgrp"  label="风险组别" maxlength="8"
+                             validator="#{cusEntValidator.orValidateLength}"
+                             value="#{cusEntBean.actcus.rskgrp}"/>
+
+               <h:outputText value="相关客户: " />
+                <h:inputText id="relcus"  label="相关客户" maxlength="8"
+                             validator="#{cusEntValidator.orValidateLength}"
+                             value="#{cusEntBean.actcus.relcus}"/>
+
+                <h:outputText value="开户日期: " />
+                <p:inputMask id="opndat" mask="9999-99-99"    converterMessage="请输入正确的开户日期！" value="#{cusEntBean.actcus.opndat}">
+                <f:convertDateTime pattern="yyyy-MM-dd"/>
+                </p:inputMask>
+
+            </h:panelGrid>
+            </p:panel>
+             <p:panel header="公司客户信息">
+             <h:panelGrid columns="4"  columnClasses="panel_label2,panel_value,panel_label2,panel_value">
+                <h:outputText value="法人姓名: "  />
+                <h:inputText label="法人姓名"  maxlength="24" value="#{cusEntBean.actent.legbdy}"
+                        validator="#{cusEntValidator.orValidateLength}"/>
+
+                <h:outputText value="财务负责人姓名: " />
+                <h:inputText label="财务负责人姓名" maxlength="24" value="#{cusEntBean.actent.actbdy}"
+                        validator="#{cusEntValidator.orValidateLength}"/>
+
+                <h:outputText value="注册外币资本: " />
+                <h:inputText id="regcap" label="注册外币资本" maxlength="16"
+                             validator="#{cusEntValidator.validateMoneyLength}" value="#{cusEntBean.dbl_reglap}">
+                </h:inputText>
+
+                 <h:outputText value="注册外币: " />
+                <h:selectOneMenu id="regccy" value="#{cusEntBean.actent.regccy}" >
+                    <f:selectItems value="#{cusEntlist.ccyList}"/>
+                </h:selectOneMenu>
+
+
+                <h:outputText value="注册本币资本(元): " />
+                <h:inputText id="loccap" label="注册本币资本" maxlength="16"
+                             validator="#{cusEntValidator.validateMoneyLength}"
+                             value="#{cusEntBean.dbl_loclap}">
+                </h:inputText>
+
+                <h:outputText value="注册地址: " />
+                <h:inputText id="regadd" label="注册地址"  maxlength="122"
+                             validator="#{cusEntValidator.orValidateLength}"  size="50"
+                             value="#{cusEntBean.actent.regadd}"/>
+
+                 <h:outputText value="效期(月数): " />
+                <h:inputText id="effdur" label="效期" maxlength="3" validator="#{cusEntValidator.validateNumber}"
+                             value="#{cusEntBean.sh_eff}">
+                </h:inputText>
+
+                <h:outputText value="注册日期: " />
+                <p:inputMask id="regdat" mask="9999-99-99" converterMessage="请输入正确的注册日期！" value="#{cusEntBean.actent.regdat}">
+                <f:convertDateTime pattern="yyyy-MM-dd"/>
+                </p:inputMask>
+
+                <h:outputText value="主管部门: " />
+                <h:inputText label="主管部门"  maxlength="8"
+                             validator="#{cusEntValidator.orValidateLength}"
+                             value="#{cusEntBean.actent.supdep}"/>
+
+                <h:outputText value="* 行业代码: " />
+                <h:selectOneMenu id="busCde" value="#{cusEntBean.actent.buscde}" >
+                    <f:selectItems value="#{cusEntlist.busCdeList}"/>
+                </h:selectOneMenu>
+
+                <h:outputText value="企业性质: " />
+                <h:selectOneMenu id="enttyp" value="#{cusEntBean.actent.enttyp}" >
+                    <f:selectItems value="#{cusEntlist.entTypList}"/>
+                </h:selectOneMenu>
+
+                <h:outputText value="国家税务号: " />
+                <h:inputText id="ctxnum" label="国家税务号"  maxlength="15"
+                             validator="#{cusEntValidator.orValidateLength}"
+                             value="#{cusEntBean.actent.ctxnum}">
+                 </h:inputText>
+
+                <h:outputText value="地方税务号: " />
+                <h:inputText id="ltxnum" label="地方税务号"  maxlength="15"
+                             validator="#{cusEntValidator.orValidateLength}"
+                             value="#{cusEntBean.actent.ltxnum}">
+                </h:inputText>
+
+                <h:outputText value="客户类型1: " />
+                <h:inputText id="custy1" label="客户类型1"  maxlength="4"
+                             validator="#{cusEntValidator.orValidateLength}"
+                             value="#{cusEntBean.actent.custy1}"/>
+
+                <h:outputText value="客户类型2: " />
+                <h:inputText id="custy2" label="客户类型2"  maxlength="4"
+                             validator="#{cusEntValidator.orValidateLength}"
+                             value="#{cusEntBean.actent.custy2}"/>
+
+                <h:outputText value="INTERNET号: " />
+                <h:inputText id="intnet" label="INTERNET号"  maxlength="50"
+                             validator="#{cusEntValidator.orValidateLength}"
+                             value="#{cusEntBean.actent.intnet}"/>
+
+                <h:outputText value="企业标准号: " />
+                <h:inputText id="entcde" label="企业标准号"  maxlength="25"
+                             validator="#{cusEntValidator.orValidateLength}"
+                             value="#{cusEntBean.actent.entcde}"/>
+
+                <h:outputText value="联行行号: " />
+                <h:inputText id="ibkcde" label="联行行号"  maxlength="5"
+                             validator="#{cusEntValidator.orValidateLength}"
+                             value="#{cusEntBean.actent.ibkcde}"/>
+
+                <h:outputText value="辖内行号: " />
+                <h:inputText id="sbknum" label="辖内行号"  maxlength="2"
+                             validator="#{cusEntValidator.orValidateLength}"
+                             value="#{cusEntBean.actent.sbknum}"/>
+
+            </h:panelGrid>
+            <h:panelGrid columns="1" style="text-align:center;padding-top:10px;" width="98%">
+                <h:panelGroup>
+                    <p:commandButton id="savbtn" ajax="false" value="保存" action="#{cusEntBean.insert}"
+                    style="padding-left:10px;padding-right:10px;margin-right:10px;"/>
+                    <p:commandButton value="重置" type="reset"
+                    style="padding-left:10px;padding-right:10px;margin-left:10px;"/>
+                </h:panelGroup>
+            </h:panelGrid>
+            </p:panel>
+</h:form>
+</div>
+</ui:define>
+</ui:composition>

@@ -1,11 +1,11 @@
 package cbs.repository.code.dao;
 
-import cbs.repository.code.model.Actapc;
 import cbs.repository.code.model.Actirt;
 import cbs.repository.code.model.ActirtExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 public interface ActirtMapper {
     /**
@@ -64,9 +64,11 @@ public interface ActirtMapper {
      */
     int updateByExample(@Param("record") Actirt record, @Param("example") ActirtExample example);
 
-     List<Actirt> selectIrtByCondition(@Param("curcde") String curcde,@Param("effdat") String effdat,@Param("irtkd") String irtkd,@Param("irtnam") String irtnam);
+    List<Actirt> selectIrtByCondition(@Param("curcde") String curcde, @Param("irtkd") String irtkd, @Param("irtnam") String irtnam);
 
     @Select("select * from actirt where curcde = #{curcde} and effdat=to_date(#{effdat},'yyyy-MM-dd HH24:mi:ss') and irtkd1=#{irtkd1} and irtkd2=#{irtkd2} and recsts=#{recsts}")
-    Actirt selectUniqueIrt(@Param("curcde") String curcde,@Param("effdat") String effdat,@Param("irtkd1") String irtkd1,@Param("irtkd2") String irtkd2,@Param("recsts")String recsts);
+    Actirt selectUniqueIrt(@Param("curcde") String curcde, @Param("effdat") String effdat, @Param("irtkd1") String irtkd1, @Param("irtkd2") String irtkd2, @Param("recsts") String recsts);
 
+    @Select("select * from actirt where curcde = #{curcde} and curflg = '1' and irtkd1=#{irtkd1} and irtkd2=#{irtkd2} ")
+    Actirt selectCurIrt(@Param("curcde") String curcde, @Param("irtkd1") String irtkd1, @Param("irtkd2") String irtkd2);
 }

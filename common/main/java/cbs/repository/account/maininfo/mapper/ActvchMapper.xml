@@ -633,6 +633,12 @@
         <if test="accode != null">
             and trim(oldacn) = #{accode}
         </if>
+        <if test="borlen == 0">
+            and 0 > vch.txnamt
+        </if>
+        <if test="borlen == 1">
+            and vch.txnamt > 0
+        </if>
         order by tlrnum,vchset,setseq
     </select>
     <resultMap id="ActvchResult2Map" type="cbs.repository.account.maininfo.model.ActvchForGlDRpt">

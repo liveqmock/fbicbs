@@ -80,6 +80,10 @@ public class CusEntBean {
             }
             int cusNum = cusMapper.insertSelective(actcus);
             ActentMapper entMapper = session.getMapper(ActentMapper.class);
+
+            logger.info("Cusidt : " + actent.getCusidt());
+            logger.info("Cusidt : " + actcus.getCusidt());
+            actent.setCusidt(actcus.getCusidt());
             int entNum = entMapper.insertSelective(actent);
             if (cusNum == 1) {
                 if (entNum == 1) {
@@ -98,7 +102,8 @@ public class CusEntBean {
         } catch (Exception e) {
             session.rollback();
             MessageUtil.addError("M802");
-            logger.error(e.getMessage());
+            this.showMsgsInfo("","客户号:" + actcus.getCusidt() + "  客户姓名:" + actcus.getCusnam());
+            logger.error(e.getMessage(), e);
         }
         finally {
             closeSession(session);

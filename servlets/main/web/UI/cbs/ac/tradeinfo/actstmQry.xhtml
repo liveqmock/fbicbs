@@ -75,9 +75,8 @@
 
 
                         <h:panelGroup>
-                            <p:commandButton id="query" ajax="false" value="确认" action="#{actstmBean.queryRecords}"
+                            <p:commandButton id="query" ajax="false" value="查询" action="#{actstmBean.queryRecords}"
                                              style="margin-left:52px;"/>
-                            <p:commandButton value="重置" style="margin-left:22px;"/>
                         </h:panelGroup>
 
                     </h:panelGrid>
@@ -118,7 +117,7 @@
                     </p:column>
 
                     <p:column headerText="交易后余额 " style="text-align:right">
-                        <h:outputText value="#{record.actbal/100}" style="float: right">
+                        <h:outputText value="#{record.actbal}" style="float: right">
                         <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
                         </h:outputText>
                     </p:column>

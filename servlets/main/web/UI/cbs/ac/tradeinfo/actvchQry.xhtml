@@ -7,17 +7,17 @@
 
 <ui:define name="head">
     <style type="text/css">
-       .panel_label1{
-     padding-left :60px;
-     text-align:left;
-}
-     .panel_value{
-     text-align:left;
-}
-    .panel_label2{
-     text-align:left;
-     padding-left :70px;
-}
+        .panel_label1{
+            padding-left :60px;
+            text-align:left;
+        }
+        .panel_value{
+            text-align:left;
+        }
+        .panel_label2{
+            text-align:left;
+            padding-left :70px;
+        }
 
     </style>
     <script language="JavaScript" type="text/JavaScript">
@@ -35,13 +35,13 @@
                     event.keyCode = 9;
                 }
             }
-             if (event.keyCode == 9) {
-                   if (event.srcElement.id == 'inputform:vchset') {
+            if (event.keyCode == 9) {
+                if (event.srcElement.id == 'inputform:vchset') {
                     event.returnValue = false;
                     event.cancel = true;
                     document.forms['inputform']['inputform:glcode'].focus();
                 }
-             }
+            }
         }
     </script>
 </ui:define>
@@ -52,7 +52,7 @@
             <p:focus for="tlrnum"/>
             <p:messages id="msgs" showSummary="false" showDetail="true"/>
             <p:panel header="::查询条件::">
-                <h:panelGrid columns="5">
+                <h:panelGrid columns="5" border="0" style="width: 90%">
                     <h:panelGroup>
                         <h:outputLabel value="柜员号 :" for="tlrnum"/>
                         <h:inputText id="tlrnum" value="#{actvchBean.vo.tlrnum}" onkeydown="KeyDown()"/>
@@ -73,8 +73,8 @@
                         <h:inputText id="vchset" value="#{actvchBean.vo.vchset}" onkeydown="KeyDown()"/>
                     </h:panelGroup>
 
-                    <p:commandButton id="query" ajax="false" value="确认" action="#{actvchBean.queryRecords}"
-                                         style="padding-left:15px;padding-right:15px;margin-left:15px;"/>
+                    <p:commandButton id="query" ajax="false" value="查询" action="#{actvchBean.queryRecords}"
+                                     style="margin-left:15px;width: 80px;"/>
 
                     <h:panelGroup>
                         <h:outputLabel style="padding-left:13px;text-align:right;" value="科目 :" for="glcode"/>
@@ -97,11 +97,18 @@
                         <h:outputLabel value="金额 :" style="text-align:right;padding-left:25px" for="txnamt"/>
                         <h:inputText id="txnamt" value="#{actvchBean.vo.txnamt}" onkeydown="KeyDown()"/>
                     </h:panelGroup>
-                    <p:commandButton id="resetBtn" value="重置" type="reset" action="#{actvchBean.reset}"
-                                         style="padding-left:15px;padding-right:15px;margin-left:15px;"/>
+                    <p:commandButton id="directPrint" ajax="false" value="导出"
+                                     actionListener="#{actvchBean.onExpExcel}"
+                                     style="margin-left:15px;width: 80px;"/>
+                    <h:panelGroup>
+                        <h:outputLabel value="借贷 :" style="padding-left:13px;text-align:right;" for="borlen"/>
+                        <h:selectOneMenu style="width:100px;" id="borlen" value="#{actvchBean.paramBorlen}">
+                            <f:selectItems value="#{actvchBean.cdOptions}"/>
+                        </h:selectOneMenu>
+                    </h:panelGroup>
 
                 </h:panelGrid>
-            
+
             </p:panel>
             <br/>
         </h:form>
@@ -152,7 +159,7 @@
 
                 <p:column headerText="交易金额" style="text-align:right">
                     <h:outputText value="#{record.txnamt/100}" style="float: right">
-                    <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
+                        <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
                     </h:outputText>
                 </p:column>
 
@@ -177,11 +184,11 @@
                 </p:column>
 
                 <p:columnGroup type="footer">
-                        <p:row>
-                            <p:column colspan="50" footerText="查询到#{fn:length(actvchBean.vchList)}条记录"
-                                      style="text-align:right"/>
-                        </p:row>
-                    </p:columnGroup>
+                    <p:row>
+                        <p:column colspan="50" footerText="传票笔数：#{fn:length(actvchBean.vchList)}  贷方总金额：#{actvchBean.vchTotalAmt}"
+                                  style="text-align:right"/>
+                    </p:row>
+                </p:columnGroup>
 
             </p:dataTable>
             <p:dialog header="单笔传票详细信息" widgetVar="selectedDialog" resizable="false"
@@ -217,10 +224,10 @@
 
                     <h:outputText value="交易金额:"/>
                     <h:outputText value="#{actvchBean.selectedRecord.txnamt/100}" style="float: left">
-                    <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
+                        <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
                     </h:outputText>
 
-                    <h:outputText value="冲账标志:"/>
+                    <h:outputText value="交易类型:"/>
                     <h:outputText value="#{actvchBean.selectedRecord.rvslbl}"/>
 
                     <h:outputText value="入账时间:"/>

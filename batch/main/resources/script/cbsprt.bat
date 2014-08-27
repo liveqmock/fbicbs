@@ -69,7 +69,7 @@ set /p BusinessDate=«Î ‰»Î“™¥Ú”°µƒ±®±Ì»’∆⁄£®¿˝:20110314£¨ƒ¨»œŒ™…œ“ª“µŒÒ÷¥––»’∆⁄£
 if %BusinessDate%=="" set BusinessDate=%SYSDATE%
 echo »’∆⁄£∫ %BusinessDate%
 @echo ±®±Ìø™ º¥Ú”°...
-    print /d:lpt1 D:\fbicbs\batch\report\%BusinessDate%\010\»’Ω·µ•.txt
+    print /d:%PRINTERPORT% %BATCHROOTPATH%\report\%BusinessDate%\010\»’Ω·µ•.txt
 
 @echo.
 @echo »’Ω·µ•¥Ú”°Ω· ¯...
@@ -86,7 +86,7 @@ if %BusinessDate%=="" set BusinessDate=%SYSDATE%
 echo »’∆⁄£∫ %BusinessDate%
 @echo ±®±Ìø™ º¥Ú”°...
 
-    print /d:lpt1 D:\fbicbs\batch\report\%BusinessDate%\010\ºÚ√˜”‡∂Ó±Ì.txt
+    print /d:%PRINTERPORT% %BATCHROOTPATH%\report\%BusinessDate%\010\ºÚ√˜”‡∂Ó±Ì.txt
 
 @echo.
 @echo ”‡∂Ó±Ì¥Ú”°Ω· ¯...
@@ -102,7 +102,7 @@ set /p BusinessDate=«Î ‰»Î“™¥Ú”°µƒ±®±Ì»’∆⁄£®¿˝:20110314£¨ƒ¨»œŒ™…œ“ª“µŒÒ÷¥––»’∆⁄£
 if %BusinessDate%=="" set BusinessDate=%SYSDATE%
 echo »’∆⁄£∫ %BusinessDate%
 @echo ±®±Ìø™ º¥Ú”°...
-    print /d:lpt1 D:\fbicbs\batch\report\%BusinessDate%\010\‘¬º∆±Ì.txt
+    print /d:%PRINTERPORT% %BATCHROOTPATH%\report\%BusinessDate%\010\‘¬º∆±Ì.txt
 
 @echo.
 @echo ‘¬º∆±Ì¥Ú”°Ω· ¯...
@@ -118,7 +118,7 @@ set /p BusinessDate=«Î ‰»Î“™¥Ú”°µƒ±®±Ì»’∆⁄£®¿˝:20110314£¨ƒ¨»œŒ™…œ“ª“µŒÒ÷¥––»’∆⁄£
 if %BusinessDate%=="" set BusinessDate=%SYSDATE%
 echo »’∆⁄£∫ %BusinessDate%
 @echo ±®±Ìø™ º¥Ú”°...
-    print /d:lpt1 D:\fbicbs\batch\report\%BusinessDate%\010\◊‹’À.txt
+    print /d:%PRINTERPORT% %BATCHROOTPATH%\report\%BusinessDate%\010\◊‹’À.txt
 
 @echo.
 @echo ◊‹’À±Ì¥Ú”°Ω· ¯...
@@ -134,7 +134,7 @@ set /p BusinessDate=«Î ‰»Î“™¥Ú”°µƒ±®±Ì»’∆⁄£®¿˝:20110314£¨ƒ¨»œŒ™…œ“ª“µŒÒ÷¥––»’∆⁄£
 if %BusinessDate%=="" set BusinessDate=%SYSDATE%
 echo »’∆⁄£∫ %BusinessDate%
 @echo ±®±Ìø™ º¥Ú”°...
-    print /d:lpt1 D:\fbicbs\batch\report\%BusinessDate%\010\∂‘’Àµ•.txt
+    print /d:%PRINTERPORT% %BATCHROOTPATH%\report\%BusinessDate%\010\∂‘’Àµ•.txt
 
 @echo.
 @echo ∂‘’Àµ•¥Ú”°Ω· ¯...
@@ -150,7 +150,7 @@ set /p BusinessDate=«Î ‰»Î“™¥Ú”°µƒ±®±Ì»’∆⁄£®¿˝:20110314£¨ƒ¨»œŒ™…œ“ª“µŒÒ÷¥––»’∆⁄£
 if %BusinessDate%=="" set BusinessDate=%SYSDATE%
 echo »’∆⁄£∫ %BusinessDate%
 @echo ±®±Ìø™ º¥Ú”°...
-    print /d:lpt1 D:\fbicbs\batch\report\%BusinessDate%\010\¥ÊøÓ∂‘’Àµ•ªÿ÷¥.txt
+    print /d:%PRINTERPORT% %BATCHROOTPATH%\report\%BusinessDate%\010\¥ÊøÓ∂‘’Àµ•ªÿ÷¥.txt
 
 @echo.
 @echo ∂‘’Àµ•ªÿ÷¥¥Ú”°Ω· ¯...
@@ -166,7 +166,7 @@ set /p BusinessDate=«Î ‰»Î“™¥Ú”°µƒ±®±Ì»’∆⁄£®¿˝:20110314£¨ƒ¨»œŒ™…œ“ª“µŒÒ÷¥––»’∆⁄£
 if %BusinessDate%=="" set BusinessDate=%SYSDATE%
 echo »’∆⁄£∫ %BusinessDate%
 @echo ±®±Ìø™ º¥Ú”°...
-    print /d:lpt1 D:\fbicbs\batch\report\%BusinessDate%\010\À“Ê±Ì.txt
+    print /d:%PRINTERPORT% %BATCHROOTPATH%\report\%BusinessDate%\010\À“Ê±Ì.txt
 
 @echo.
 @echo À“Ê±Ì¥Ú”°Ω· ¯...
@@ -200,7 +200,7 @@ set filename="◊‹’À"
 @echo ±®±Ìø™ º¥Ú”°...
     call job_invokerRpt.bat saveprtfile %BusinessDate% %filename% %beginPnum% %endPnum% > %BATCHROOTPATH%/tmp/SAVEPRTFILE
     set return_code=%1
-    if "%return_code%" == "0" print /d:lpt1 D:\fbicbs\batch\report\tmp\prttmp.txt
+    if "%return_code%" == "0" print /d:%PRINTERPORT% %BATCHROOTPATH%\report\tmp\prttmp.txt
 @echo.
 @echo ◊‹’À±Ì¥Ú”°Ω· ¯...
 @pause
@@ -223,7 +223,7 @@ set filename="∂‘’Àµ•ªÿ÷¥"
 @echo ±®±Ìø™ º¥Ú”°...
     call job_invokerRpt.bat saveprtfile %BusinessDate% %filename% %beginPnum% %endPnum% > %BATCHROOTPATH%/tmp/SAVEPRTFILE
     set return_code=%1
-    if "%return_code%" == "0" print /d:lpt1 D:\fbicbs\batch\report\tmp\prttmp.txt
+    if "%return_code%" == "0" print /d:%PRINTERPORT% %BATCHROOTPATH%\report\tmp\prttmp.txt
 @echo.
 @echo ∂‘’Àµ•ªÿ÷¥¥Ú”°Ω· ¯...
 @pause

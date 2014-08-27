@@ -19,7 +19,8 @@ import java.util.List;
 /**
  * 处理利息表actirt的当天使用字段(Curflg)
  */
-@Service("GetirtHandler")
+//@Service("GetirtHandler")
+@Service
 public class GetirtHandler extends AbstractACBatchJobLogic {
     private static final Logger logger = LoggerFactory.getLogger(GetirtHandler.class);
     @Inject

@@ -373,10 +373,8 @@ public class ActAddition implements Serializable {
             }
         }
         //…Ë÷√Ω∂Ó÷µ
-//        actchd.setBallim((long)(Double.parseDouble(actchd.getBallimD())*100));
-//        actchd.setOvelim((long)(Double.parseDouble(actchd.getOvelimD())*100));
-        actoac.setBallim((long) (Double.parseDouble(actchd.getBallimD()) * 100));
-        actoac.setOvelim((long) (Double.parseDouble(actchd.getOvelimD()) * 100));
+        actoac.setBallim(0L);
+        actoac.setOvelim(0L);
         this.actoac.setOrgidt(orgidt);
         OperatorManager opm = OnlineService.getOperatorManager();
         this.actoac.setCretlr(opm.getOperatorId());
@@ -617,8 +615,19 @@ public class ActAddition implements Serializable {
         actoac.setStmdep("01060");
         actoac.setLegdep("01060");
         actoac.setDepnum("60");
+        actoac.setActtyp("3");
+        actoac.setIntflg("4");
+        actoac.setIntcyc("S");
+        actoac.setCqeflg("3");
+        actoac.setStmcyc("M");
+        actoac.setStmcdt("0031");
+        actoac.setLegcyc("M");
+        actoac.setLegcdt("0031");
+        actoac.setCinrat("AAA");
+
         short d = 1;
         actoac.setStmsht(d);
+        actoac.setLegsht(d);
         return actoac;
     }
 

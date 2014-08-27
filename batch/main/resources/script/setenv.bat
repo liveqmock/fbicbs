@@ -3,6 +3,9 @@
     REM 设置批量CLASS路径
     SET PRJPATH=F:\svn-fbicbs\out\artifacts\fbicbs
 
+    REM 设置打印机端口
+    SET PRINTERPORT=LTP1
+
     REM 设置批量主路径
     SET BATCHROOTPATH=d:\fbicbs\batch
 

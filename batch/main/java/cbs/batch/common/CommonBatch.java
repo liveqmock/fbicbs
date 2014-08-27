@@ -102,12 +102,16 @@ public class CommonBatch {
         long startTime = System.currentTimeMillis();
 
         String jobId = getJobId();
+        //20120528 zhanrui
+        //jobId = jobId.replaceFirst(jobId.substring(0,1), jobId.substring(0,1).toUpperCase());
+
         String jobRunId = System.getProperty(SYS_KEY_JOB_RUN_ID, null);
         String userId = System.getProperty(SYS_KEY_USER_ID, null);
         String moduleId = System.getProperty(SYS_KEY_MODULE_ID, null);
 
         String dirPrefix = PKG_DIR + moduleId + "/" + jobId.toLowerCase();
         String mybatisConfigFile = dirPrefix +  "/prop/mybatis-batch.xml";
+
         String executeClassName = (dirPrefix + "/" + jobId + "Handler").replaceAll("/", ".");
 
         int exitStatus = EXITSTATUS_BATCHMAIN_STARTERROR;
@@ -203,7 +207,7 @@ public class CommonBatch {
 
         System.setProperty("jobId", jobId);
         //TODO    !!
-        System.setProperty("prjPath", "d:/cbs/log");
+        System.setProperty("prjPath", "d:/fbicbs/log");
         PropertyConfigurator.configure(path);
 
         log.debug("Log4J配置文件读入成功。");

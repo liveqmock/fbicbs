@@ -18,7 +18,8 @@ import org.springframework.stereotype.Service;
  * User: zhangxiaobo
  * Date: 2010-2-22
  */
-@Service("DelvchHandler")
+//@Service("DelvchHandler")
+@Service
 public class DelvchHandler extends AbstractACBatchJobLogic {
     private static final Logger logger = LoggerFactory.getLogger(DelvchHandler.class);
     @Inject

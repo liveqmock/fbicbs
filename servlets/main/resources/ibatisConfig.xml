@@ -10,10 +10,12 @@ PUBLIC "-//ibatis.apache.org//DTD Config 3.0//EN" "http://ibatis.apache.org/dtd/
 				<property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl" />
 				<property name="username" value="cbs" />
 				<property name="password" value="cbs" />
-				<!--<property name="poolMaximumActiveConnections" value="10" />-->
-				<!--<property name="poolMaximumIdleConnections" value="20" />-->
-				<!--<property name="poolMaximumCheckoutTime" value="20000" />-->
-				<!--<property name="poolTimeToWait" value="1000" />-->
+<!--
+				<property name="poolMaximumActiveConnections" value="5" />
+				<property name="poolMaximumIdleConnections" value="5" />
+				<property name="poolMaximumCheckoutTime" value="20000" />
+				<property name="poolTimeToWait" value="1000" />
+-->
 			</dataSource>
 		</environment>
 	</environments>
@@ -44,6 +46,7 @@ PUBLIC "-//ibatis.apache.org//DTD Config 3.0//EN" "http://ibatis.apache.org/dtd/
         <mapper resource="cbs/repository/code/mapper/ActtlrMapper.xml" />
         <mapper resource="cbs/repository/code/mapper/ActorgMapper.xml" />
 
+        <mapper resource="cbs/repository/platform/mapper/PtenumainMapper.xml" />
         <mapper resource="cbs/repository/platform/mapper/PtenudetailMapper.xml" />
         <mapper resource="cbs/repository/platform/mapper/ScttlrMapper.xml" />
 

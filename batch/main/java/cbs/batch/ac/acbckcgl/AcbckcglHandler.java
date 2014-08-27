@@ -23,7 +23,8 @@ import java.util.List;
  * Time: 9:31:50
  * To change this template use File | Settings | File Templates.
  */
-@Service("AcbckcglHandler")
+//@Service("AcbckcglHandler")
+@Service
 public class AcbckcglHandler extends AbstractACBatchJobLogic {
     private static final Logger logger = LoggerFactory.getLogger(AcbckcglHandler.class);
     @Inject

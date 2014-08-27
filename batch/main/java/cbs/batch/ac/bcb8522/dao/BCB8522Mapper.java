@@ -53,10 +53,10 @@ public interface BCB8522Mapper {
             "            0.00,                0.00,               0.00,      0.00,                0.00,          0.00," +
             "            0.00,                0.00,               0,       0,                   0.00,               0.00," +
             "            0,                   0,                  0.00,    0.00,                0,                  0," +
-            "           #{dinrat},         #{cinrat},        #{dratsf},  #{cratsf},          0.00,               0.00," +
-            "            0.00,                0.00,              #{intflg},  #{intcyc},         #{inttra},       #{opndat}," +
+            "           #{dinrat,jdbcType=VARCHAR},         #{cinrat,jdbcType=VARCHAR},        #{dratsf},  #{cratsf},          0.00,               0.00," +
+            "            0.00,                0.00,              #{intflg},  #{intcyc,jdbcType=VARCHAR},         #{inttra},       #{opndat}," +
             "           #{acttyp},         #{glcode},        #{plcode},   #{depnum},     #{opndat},         0.00," +
-            "            0.00,              #{cqeflg},       #{ballim},  #{ovelim},       #{oveexp},        #{opndat}," +
+            "            0.00,              #{cqeflg,jdbcType=VARCHAR},       #{ballim},  #{ovelim},       #{oveexp},        #{opndat}," +
             "            #{clsdat}, #{regsts},#{frzsts},  #{actsts},  #{cretlr},  #{credat}," +
             "           #{recsts},  #{opndat})")
     int insertActByOac(@Param("sysidt")String sysidt,@Param("orgidt")String orgidt,@Param("cusidt")String cusidt,

@@ -17,7 +17,8 @@ import java.util.List;
 /**
  * æ…∞Ê”‡∂Ó±Ì
  */
-@Service("ActchkReceiptHandler")
+//@Service("ActchkReceiptHandler")
+@Service
 public class ActchkReceiptHandler extends AbstractACBatchJobLogic {
     private static final Logger logger = LoggerFactory.getLogger(ActchkReceiptHandler.class);
     @Inject

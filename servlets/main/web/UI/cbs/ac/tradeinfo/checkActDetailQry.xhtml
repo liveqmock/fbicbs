@@ -82,6 +82,9 @@
                             <p:commandButton id="directPrint" ajax="false" value="打印"
                                      actionListener="#{actCheckDetailBean.printActDetailReport}" onclick="onPrint();"
                              style="margin-left:10px;"/>
+                            <p:commandButton id="expexcel" ajax="false" value="导出"
+                                             actionListener="#{actCheckDetailBean.onExpExcel}"
+                                             style="margin-left:15px;width: 80px;"/>
                         </h:panelGroup>
 
                     </h:panelGrid>

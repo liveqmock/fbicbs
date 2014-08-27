@@ -88,7 +88,7 @@ SETLOCAL
 
     echo ** getirt利率生效处理...... | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat getirt > %BATCHROOTPATH%/tmp/getirt
+    call job_invoker.bat Getirt > %BATCHROOTPATH%/tmp/getirt
     call :errexit %ERRORLEVEL% getirt
 
     echo  日期:%date:~0,4%-%date:~5,2%-%date:~8,2% 时间:%time:~0,2%:%time:~3,2%:%time:~6,2% | tee -a  %BATCHLOGFILE%

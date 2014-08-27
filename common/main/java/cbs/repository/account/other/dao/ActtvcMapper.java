@@ -133,6 +133,7 @@ public interface ActtvcMapper {
      * @return
      */
     List<BatchBookVO> selectMultiVchsetRecords(@Param("sysidt")String sysidt,@Param("orgidt")String orgidt, @Param("tlrnum")String tlrnum);
+    List<BatchBookVO> selectMultiVchsetRecordsForNoDCBalChk(@Param("sysidt")String sysidt,@Param("orgidt")String orgidt, @Param("tlrnum")String tlrnum);
 
     /**
      * zhanrui 查询待处理传票集

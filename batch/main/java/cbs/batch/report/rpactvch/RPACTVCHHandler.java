@@ -9,6 +9,9 @@ import cbs.repository.account.maininfo.dao.ActvthMapper;
 import cbs.repository.account.maininfo.model.ActvchForGlDRpt;
 import cbs.repository.code.dao.ActorgMapper;
 import cbs.repository.code.model.Actorg;
+import cbs.repository.platform.dao.PtenudetailMapper;
+import cbs.repository.platform.model.Ptenudetail;
+import cbs.repository.platform.model.PtenudetailExample;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -20,24 +23,37 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
+ * 科目日结单.
+ * User: Administrator （hanghaiyu）
  * Date: 2011-3-17
  * Time: 15:02:33
- * To change this template use File | Settings | File Templates.
+ * 版本修改：2012-11-09   zhanrui  增加输出格式参数配置
  */
 @Service
 public class RPACTVCHHandler extends AbstractACBatchJobLogic {
     private static final Log logger = LogFactory.getLog(RPACTVCHHandler.class);
     private String nowDate = "";
     private String reportdate = "";
+
+
+    //每页所含表格数
+    private static int TABLE_NUM_PER_PAGE = 3;
+    //每个表格顶端边距行数
+    private static int TABLE_MARGIN_TOP = 2;
+    //每个表格底部边距行数
+    private static int TABLE_MARGIN_BOTTOM = 0;
+
     @Inject
     private BatchSystemService systemService;
+
     @Inject
     private ActorgMapper orgmap;
 
     @Inject
     private ActvthMapper vchmap;
+
+    @Inject
+    private PtenudetailMapper enudetail;
 
     @Override
     protected void processBusiness(BatchParameterData parameterData) {
@@ -45,6 +61,16 @@ public class RPACTVCHHandler extends AbstractACBatchJobLogic {
         try {
             nowDate = systemService.getBizDate();
             reportdate = systemService.getBizDate10();
+
+            //zhanrui  根据枚举配置打印参数，无枚举配置时使用默认值
+            try {
+                TABLE_NUM_PER_PAGE = getEnu_RPTFMTPARAM("KMRJD_TABLE_NUM");
+                TABLE_MARGIN_TOP = getEnu_RPTFMTPARAM("KMRJD_MARGIN_TOP");
+                TABLE_MARGIN_BOTTOM = getEnu_RPTFMTPARAM("KMRJD_MARGIN_BOTTOM");
+            } catch (Exception e) {
+                logger.error("枚举表中报表打印参数定义错误, 使用默认设置", e);
+            }
+
             ExcelActvch1();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -53,6 +79,17 @@ public class RPACTVCHHandler extends AbstractACBatchJobLogic {
 
     protected void initBatch(final BatchParameterData batchParam) {
 
+    }
+
+    public int getEnu_RPTFMTPARAM(String enumitem){
+        PtenudetailExample example = new PtenudetailExample();
+        example.createCriteria().andEnutypeEqualTo("RPTFMTPARAM").andEnuitemvalueEqualTo(enumitem);
+        List<Ptenudetail>  enudetails = enudetail.selectByExample(example);
+        if (enudetails.size() == 1) {
+            return Integer.parseInt(enudetails.get(0).getEnuitemexpand());
+        }else{
+            throw new RuntimeException("参数定义错误");
+        }
     }
 
     public String ExcelActvch1() throws IOException {
@@ -67,16 +104,16 @@ public class RPACTVCHHandler extends AbstractACBatchJobLogic {
         String titleGlc = "";
         String titleCur = "";
         String title2Cell1 = "          ";
-        String title3 = "┃   项目   ┃   借方笔数       ┃     借方金额         ┃   贷方笔数       ┃     贷方金额         ┃件";
+        String title3 = "┃   项目   ┃ 借方笔数 ┃     借方金额         ┃ 贷方笔数 ┃     贷方金额         ┃件";
         String title4 = "┃现金      ┃";
         String title5 = "┃转账      ┃";
         String title6 = "┃其他      ┃";
         String title7 = "┃合计      ┃";
-        String nodtTitle = "                 0┃                  0.00┃                 0┃                  0.00┃";
+        String nodtTitle = "         0┃                  0.00┃         0┃                  0.00┃";
         String footer = title2Cell1 + "复核：              记账：                    制表：                         ";
-        String topplan =    "┏━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓附";
-        String middleplan = "┃━━━━━╋━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━╋━━━━━━━━━━━┃";
-        String bottomplan = "┗━━━━━┻━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━┻━━━━━━━━━━━┛张";
+        String topplan = "┏━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓附";
+        String middleplan = "┃━━━━━╋━━━━━╋━━━━━━━━━━━╋━━━━━╋━━━━━━━━━━━┃";
+        String bottomplan = "┗━━━━━┻━━━━━┻━━━━━━━━━━━┻━━━━━┻━━━━━━━━━━━┛张";
 
         List<Actorg> orgLst = orgmap.selectForActvch();
         if (orgLst.size() == 0) {
@@ -117,8 +154,12 @@ public class RPACTVCHHandler extends AbstractACBatchJobLogic {
                 titleCurDate = ReportHelper.getLeftSpaceStr("日期：" + reportdate, 20);
                 titleGlc = ReportHelper.getLeftSpaceStr("科目：" + glcode + " " + glcnam, 48);
                 titleCur = ReportHelper.getLeftSpaceStr("币别：" + curnmc, 20);
-                bw.newLine();
-                bw.newLine();
+
+
+                for (int i = 0; i < TABLE_MARGIN_TOP; i++) {
+                    bw.newLine();
+                }
+
                 bw.write(title1);
                 bw.newLine();
                 bw.write(titleOrg + titleCurDate);
@@ -133,7 +174,7 @@ public class RPACTVCHHandler extends AbstractACBatchJobLogic {
                 //获取数据
                 List<ActvchForGlDRpt> gldrptLst = vchmap.selectForGlDRpt(orgidt, curcde, glcode);
                 short totalvchatt = 0;
-                for (ActvchForGlDRpt gld:gldrptLst) {
+                for (ActvchForGlDRpt gld : gldrptLst) {
                     totalvchatt += gld.getVchatt();  //附件数
                 }
                 Iterator it2 = gldrptLst.iterator();
@@ -149,9 +190,9 @@ public class RPACTVCHHandler extends AbstractACBatchJobLogic {
                     double doubleDamt = Double.parseDouble(gldrpt.getDamt()) * -1 / 100;
                     int intCcunt = Integer.parseInt(gldrpt.getCcunt());
                     double doubleCamt = Double.parseDouble(gldrpt.getCamt()) / 100;
-                    String dcunt = ReportHelper.getRightSpaceStr(df01.format(intDcun), 18) + "┃";   //借方笔数
+                    String dcunt = ReportHelper.getRightSpaceStr(df01.format(intDcun), 10) + "┃";   //借方笔数
                     String damt = ReportHelper.getRightSpaceStr(df0.format(doubleDamt), 22) + "┃";     //借方金额
-                    String ccunt = ReportHelper.getRightSpaceStr(df01.format(intCcunt), 18) + "┃";   //贷方笔数
+                    String ccunt = ReportHelper.getRightSpaceStr(df01.format(intCcunt), 10) + "┃";   //贷方笔数
                     String camt = ReportHelper.getRightSpaceStr(df0.format(doubleCamt), 22) + "┃";     //贷方金额
 
                     if (tempi == 0 && rvslbl.equals("1")) {
@@ -181,9 +222,9 @@ public class RPACTVCHHandler extends AbstractACBatchJobLogic {
                 bw.newLine();
                 bw.write(middleplan);
                 bw.newLine();
-                String strTotalDcunt = ReportHelper.getRightSpaceStr(df01.format(totalDcunt), 18) + "┃";
+                String strTotalDcunt = ReportHelper.getRightSpaceStr(df01.format(totalDcunt), 10) + "┃";
                 String strTotalDamt = ReportHelper.getRightSpaceStr(df0.format(totalDamt), 22) + "┃";
-                String strTotalCcunt = ReportHelper.getRightSpaceStr(df01.format(totalCcunt), 18) + "┃";
+                String strTotalCcunt = ReportHelper.getRightSpaceStr(df01.format(totalCcunt), 10) + "┃";
                 String strTotalCamt = ReportHelper.getRightSpaceStr(df0.format(totalCamt), 22) + "┃";
                 bw.write(title7 + strTotalDcunt + strTotalDamt + strTotalCcunt + strTotalCamt);
                 bw.newLine();
@@ -191,10 +232,15 @@ public class RPACTVCHHandler extends AbstractACBatchJobLogic {
                 bw.newLine();
                 bw.write(footer);
                 bw.newLine();
+
                 //换页符添加
                 glCurCnt++;
-                if (glCurCnt % 3 == 0) {
+                if (glCurCnt % TABLE_NUM_PER_PAGE == 0) {
                     bw.write("\f");
+                }else{
+                    for (int i = 0; i < TABLE_MARGIN_BOTTOM; i++) {
+                        bw.newLine();
+                    }
                 }
             }
             bw.flush();

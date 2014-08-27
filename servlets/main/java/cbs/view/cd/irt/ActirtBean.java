@@ -1,12 +1,14 @@
 package cbs.view.cd.irt;
 
 import cbs.common.IbatisManager;
+import cbs.common.OnlineService;
 import cbs.common.enums.ACEnum;
 import cbs.common.utils.MessageUtil;
 import cbs.repository.code.dao.ActirtMapper;
+import cbs.repository.code.dao.ActsctMapper;
 import cbs.repository.code.model.Actirt;
 import cbs.repository.code.model.ActirtExample;
-import cbs.common.OnlineService;
+import cbs.repository.code.model.Actsct;
 import org.apache.ibatis.session.SqlSession;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.datatable.DataTable;
@@ -54,18 +56,18 @@ public class ActirtBean {
         if (formerAction != null) {
             initPage();
             if (actirt == null || actirt.getCurcde() == null) {
-                 if(!"addBean".equals(formerAction)){
-                String curcde = params.get("curcde");
-                String effdat = params.get("effdat");
-                String irtkd1 = params.get("irtkd1");
-                String irtkd2 = params.get("irtkd2");
-                effdat = parseDefaultDate(effdat, Locale.US);
-                SqlSession session = ibatisManager.getSessionFactory().openSession();
-                ActirtMapper irtMapper = session.getMapper(ActirtMapper.class);
-                this.actirt = irtMapper.selectUniqueIrt(curcde, effdat, irtkd1, irtkd2,ACEnum.RECSTS_VALID.getStatus());
-                 }
+                if (!"addBean".equals(formerAction)) {
+                    String curcde = params.get("curcde");
+                    String effdat = params.get("effdat");
+                    String irtkd1 = params.get("irtkd1");
+                    String irtkd2 = params.get("irtkd2");
+                    effdat = parseDefaultDate(effdat, Locale.US);
+                    SqlSession session = ibatisManager.getSessionFactory().openSession();
+                    ActirtMapper irtMapper = session.getMapper(ActirtMapper.class);
+                    this.actirt = irtMapper.selectUniqueIrt(curcde, effdat, irtkd1, irtkd2, ACEnum.RECSTS_VALID.getStatus());
+                }
             }
-           /* else {
+            /* else {
                 actirt.setCurflg("0");   // 当天使用标记为0
                 actirt.setModflg("Y");  // 当天修改标记为Y
                 // 浮动上下限
@@ -76,12 +78,12 @@ public class ActirtBean {
                 actirt.setTrmunt("Y");    //  期限单位年Y
             }*/
         } else {
-                if (context.getRenderResponse()) {
-                    queryRecords();
-                }
+            if (context.getRenderResponse()) {
+                queryRecords();
+            }
         }
     }
-      
+
     public void queryRecords() {
         SqlSession session = ibatisManager.getSessionFactory().openSession();
         try {
@@ -91,7 +93,7 @@ public class ActirtBean {
             String strCurcde = emptyToNull(curcde);
             String qryCurcde = strCurcde == null ? "001" : strCurcde;
             irtkd = irtkd != null ? irtkd.toUpperCase() : null;
-            irtList = mapper.selectIrtByCondition(qryCurcde, qryDate, emptyToNull(irtkd), emptyToNull(irtnam));
+            irtList = mapper.selectIrtByCondition(qryCurcde, emptyToNull(irtkd), emptyToNull(irtnam));
             if (irtList == null || irtList.size() == 0) {
                 MessageUtil.addInfoWithClientID("msgs", "M546");
             }
@@ -99,8 +101,7 @@ public class ActirtBean {
         } catch (Exception e) {
             logger.error("利率查询失败：" + e.getMessage());
             MessageUtil.addErrorWithClientID("msgs", "M932");
-        }
-        finally {
+        } finally {
             closeSession(session);
         }
     }
@@ -112,28 +113,48 @@ public class ActirtBean {
         try {
             ActirtMapper mapper = session.getMapper(ActirtMapper.class);
             // 验证利率是否已存在
-            if(isExist(mapper)){
+            if (isExist(mapper)) {
                 MessageUtil.addErrorWithClientID("msgs", "WD02");
                 return;
             }
             OperatorManager oper = OnlineService.getOperatorManager();
-            actirt.setCurflg("0");
+            // 新增利率 生效
+            //Actsct
+            ActsctMapper sctMapper = session.getMapper(ActsctMapper.class);
+            Actsct sct = sctMapper.selectByPrimaryKey((short) 8);
+            if (sct.getCrndat().after(actirt.getEffdat())) {
+                actirt.setCurflg("1");
+            } else {
+                actirt.setCurflg("0");
+            }
             //   新增利率不可设置为Y，只有利率修改的时候才会将其设置为Y
             // 利率修改时将
-           // actirt.setModflg("Y");
+            // actirt.setModflg("Y");
             actirt.setCredat(new Date());
             actirt.setCretlr(oper.getOperatorId());
             actirt.setRecsts(ACEnum.RECSTS_VALID.getStatus());
             int rtnInt = 0;
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            if(mapper.selectUniqueIrt(actirt.getCurcde(),sdf.format(actirt.getEffdat()),actirt.getIrtkd1(),actirt.getIrtkd2(),
-            ACEnum.RECSTS_INVALID.getStatus())!=null){
-                 ActirtExample example = new ActirtExample();
+            if (mapper.selectUniqueIrt(actirt.getCurcde(), sdf.format(actirt.getEffdat()), actirt.getIrtkd1(), actirt.getIrtkd2(),
+                    ACEnum.RECSTS_INVALID.getStatus()) != null) {
+                ActirtExample example = new ActirtExample();
                 example.createCriteria().andCurcdeEqualTo(actirt.getCurcde()).andEffdatEqualTo(actirt.getEffdat())
                         .andIrtkd1EqualTo(actirt.getIrtkd1()).andIrtkd2EqualTo(actirt.getIrtkd2());
-                rtnInt = mapper.updateByExampleSelective(actirt,example);
-            }else{
-            rtnInt = mapper.insertSelective(actirt);
+                rtnInt = mapper.updateByExampleSelective(actirt, example);
+            } else {
+                // 原利率置为无效
+
+                if (sct.getCrndat().after(actirt.getEffdat())) {
+                    Actirt irt = mapper.selectCurIrt(actirt.getCurcde(), actirt.getIrtkd1(), actirt.getIrtkd2());
+                    irt.setCurflg("0");
+                    irt.setRecsts(ACEnum.RECSTS_INVALID.getStatus());
+                    ActirtExample example = new ActirtExample();
+                    example.createCriteria().andCurcdeEqualTo(actirt.getCurcde()).andCurflgEqualTo(ACEnum.CLRFLG_TRUE.getStatus())
+                            .andIrtkd1EqualTo(actirt.getIrtkd1()).andIrtkd2EqualTo(actirt.getIrtkd2());
+                    mapper.updateByExample(irt, example);
+                }
+
+                rtnInt = mapper.insertSelective(actirt);
             }
             if (rtnInt == 1) {
                 session.commit();
@@ -150,15 +171,17 @@ public class ActirtBean {
             closeSession(session);
         }
     }
-    public boolean isExist(ActirtMapper  mapper){
+
+    public boolean isExist(ActirtMapper mapper) {
         boolean isExist = false;
-        Actirt tempIrt = mapper.selectUniqueIrt(actirt.getCurcde(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(actirt.getEffdat())
-                ,actirt.getIrtkd1(),actirt.getIrtkd2(),ACEnum.RECSTS_VALID.getStatus());
-        if(tempIrt != null){
+        Actirt tempIrt = mapper.selectUniqueIrt(actirt.getCurcde(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(actirt.getEffdat())
+                , actirt.getIrtkd1(), actirt.getIrtkd2(), ACEnum.RECSTS_VALID.getStatus());
+        if (tempIrt != null) {
             isExist = true;
         }
         return isExist;
     }
+
     public void update() {
         SqlSession session = ibatisManager.getSessionFactory().openSession();
         try {
@@ -175,8 +198,7 @@ public class ActirtBean {
             session.rollback();
             logger.error("修改利率码信息失败：" + e.getMessage());
             MessageUtil.addErrorWithClientID("msgs", "M803");
-        }
-        finally {
+        } finally {
             closeSession(session);
         }
     }
@@ -199,17 +221,18 @@ public class ActirtBean {
             session.rollback();
             logger.error("删除利率码信息失败：" + e.getMessage());
             MessageUtil.addErrorWithClientID("msgs", "M804");
-        }
-        finally {
+        } finally {
             closeSession(session);
         }
     }
-     public String back() {
+
+    public String back() {
         if ("showQryDetail".equals(formerAction)) {
             return "actirtQry?faces-redirect=true";
         }
         return "actirtMng?faces-redirect=true";
     }
+
     private void initPage() {
         UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
         CommandButton backBtn = (CommandButton) viewRoot.findComponent("inputform:back");
@@ -315,9 +338,11 @@ public class ActirtBean {
         }
         return cmnDate;
     }
-   private void updateIrtDate(){
+
+    private void updateIrtDate() {
         /*new SimpleDateFormat(Locale.US).;*/
-   }
+    }
+
     public String formatDate(Date date) {
         return new SimpleDateFormat("yyyy-MM-dd").format(date);
     }

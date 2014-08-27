@@ -13,6 +13,8 @@ import pub.platform.security.OperatorManager;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +52,7 @@ public class PdfReportFile {
     private PdfPrintHelper printHelper;
     //createBy: haiyuhuang
     private List<ArrayList> dataAryList;
+
     //createBy: haiyuhuang
     public PdfReportFile(String title, String[] afterTitleMsg, int[] msgAligns, String[] columns, String[] fields, int[] aligns,
                          Rectangle pageSize, float[] tableWidths, List<ArrayList> dataList) {
@@ -166,7 +169,7 @@ public class PdfReportFile {
         }
         document = new Document(this.pageSize);
         OperatorManager opm = OnlineService.getOperatorManager();
-        String strPath = PropertyManager.getProperty("REPEAT_PRNTPATH") + opm.getOperatorId() +  ".pdf";
+        String strPath = PropertyManager.getProperty("REPEAT_PRNTPATH") + opm.getOperatorId() + ".pdf";
         FileOutputStream out = new FileOutputStream(strPath);
         PdfWriter.getInstance(document, out);
         document.open();
@@ -175,7 +178,7 @@ public class PdfReportFile {
         this.setTitleCellToTable(40, 0, this.createTable(tableWidths, 30f, 535, true, 0));
         this.setAfterTitleCellToTable(0, this.createTable(new float[]{400f, 235f}, 10f, 535, true, 0), msgAligns, this.afterTitleMsg);
 
-        this.addDatacellToPDF(dataAryList,table);
+        this.addDatacellToPDF(dataAryList, table);
         document.add(table);
         this.closeDocument();
     }
@@ -183,10 +186,10 @@ public class PdfReportFile {
     //pdf内容注入 createBy： haiyuhuang
     private void addDatacellToPDF(List<ArrayList> dataList, PdfPTable pdfTable) {
         PdfPCell cell = null;
-        for (ArrayList<String> dtlist:dataList) {
-            for (int i=0;i<dtlist.size();i++) {
+        for (ArrayList<String> dtlist : dataList) {
+            for (int i = 0; i < dtlist.size(); i++) {
                 String cont = dtlist.get(i);
-                cell = new PdfPCell(new Paragraph(cont,cellFont));
+                cell = new PdfPCell(new Paragraph(cont, cellFont));
                 cell.setBorder(0);
                 table.addCell(cell);
             }
@@ -222,6 +225,7 @@ public class PdfReportFile {
 
     // 遍历数据列表，添加到表格
     private void addDataCellToTable(List<?> dataList, PdfPTable pdfTable) throws Exception {
+        DecimalFormat df = new DecimalFormat("###,###,##0.00");
         PdfPCell cell = null;
         int fieldLength = fields.length;
         for (Object model : dataList) {
@@ -234,6 +238,12 @@ public class PdfReportFile {
                         cell = new PdfPCell(new Paragraph((String) classField.get(model), cellFont));
                     } else if (classField.getType() == Double.class) {
                         cell = new PdfPCell(new Paragraph(String.format("%.2f", (Double) classField.get(model)), cellFont));
+                    } else if (classField.getType() == Long.class && field.equalsIgnoreCase("txnamt")) {
+                        Long txnamt = (Long) classField.get(model);
+                        BigDecimal bdAmt = new BigDecimal(String.valueOf(txnamt)).divide(new BigDecimal("100.00"));
+                        String amt = df.format(bdAmt);
+                        if (amt.startsWith("-")) amt = amt.substring(1, amt.length());
+                        cell = new PdfPCell(new Paragraph(amt, cellFont));
                     }
                     cell.setHorizontalAlignment(aligns[i]);
                     table.addCell(cell);

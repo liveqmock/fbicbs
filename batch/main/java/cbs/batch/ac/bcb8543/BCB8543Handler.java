@@ -72,11 +72,11 @@ public class BCB8543Handler extends AbstractACBatchJobLogic {
                 throw new RuntimeException("命令行参数不能为空！");
             }
             this.recTyp = parameterData.getCommandLine()[0].toUpperCase();
+            initProps();
 
             if ("Y".equalsIgnoreCase(recTyp) && "N".equalsIgnoreCase(sct.getIpymak())) {
                 return;
             }
-            initProps();
             int actIndex = 0;
             if (actList != null && !actList.isEmpty()) {
                 while (actIndex < actList.size()) {
@@ -262,7 +262,10 @@ public class BCB8543Handler extends AbstractACBatchJobLogic {
             }
         } else {
             this.wkIrt = act.getCinrat();
-            logger.info("ACT-CINRAT=" + act.getCinrat());
+            logger.info("ACT-CUSIDT=" + act.getCusidt() + " , ACT-CINRAT=" + act.getCinrat());
+            if (this.wkIrt == null || this.wkIrt.length() < 3) {
+                this.wkIrt = "   ";
+            }
             CirPojo cir = mapper.qryCir(wkBaseDate, this.wkIrt.substring(0, 1), this.wkIrt.substring(1, 3), act.getCurcde());
             if (cir == null) {
                 this.wkDcrirt = act.getCratsf();
@@ -289,11 +292,13 @@ public class BCB8543Handler extends AbstractACBatchJobLogic {
         this.decpos = mapper.selectDecposByCde(act.getCurcde(), ACEnum.RECSTS_VALID.getStatus());
         if (act.getBokbal() < 0) {
             this.wkIntbal = act.getBokbal() - act.getDifbal();
-            act.setDraccm(act.getDraccm() + this.wkIntbal);
+            // 2012-12-24
+            act.setDraccm(act.getDraccm() + this.wkIntbal * this.wkNxtdds);
         }
         if (act.getBokbal() >= 0) {
             this.wkIntbal = act.getBokbal() - act.getCifbal();
-            act.setCraccm(act.getCraccm() + this.wkIntbal);
+            // 2012-12-24
+            act.setCraccm(act.getCraccm() + this.wkIntbal * this.wkNxtdds);
         }
         BlhSumIrt blhSumIrt = mapper.selectBlhSumIrt(act.getOrgidt(), act.getCusidt(), act.getApcode(),
                 act.getCurcde(), this.wkLintdt);

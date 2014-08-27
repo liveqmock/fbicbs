@@ -677,11 +677,12 @@
             and nsm.cusidt=sbl.cusidt
             and nsm.apcode=sbl.apcode
             and nsm.curcde=sbl.curcde
-            and nsm.secccy=sbl.secccy
+             and nvl(trim(nsm.secccy), ' ')=nvl(trim(sbl.secccy), ' ')
         where
              nsm.orgidt=#{orgidt}
-             and ani.oldacn <> '50808' and ani.oldacn <> '8580001'
-        order by cusidt
+             --and ani.oldacn <> '50808' and ani.oldacn <> '8580001'
+        --order by cusidt
+        order by ani.oldacn
        ]]>
     </select>
     <resultMap id="lgcForContentResultMap" type="cbs.repository.account.maininfo.model.ActstmForStmCotent">

@@ -53,7 +53,7 @@ set BusinessDate=""
 set /p BusinessDate=请输入计息日期（例:20110620）:
 echo 日期： %BusinessDate%
 @echo 报表开始打印...
-    print /d:lpt1 D:\fbicbs\batch\report\%BusinessDate%\010\存款计息通知单8910out.txt
+    print /d:%PRINTERPORT% %BATCHROOTPATH%\report\%BusinessDate%\010\存款计息通知单8910out.txt
 @echo.
 @echo 利息通知单打印结束...
 @pause
@@ -69,7 +69,7 @@ if %BusinessDate%=="" set BusinessDate=%SYSDATE%
 echo 日期： %BusinessDate%
 @echo 报表开始打印...
 
-    print /d:lpt1 D:\fbicbs\batch\report\%BusinessDate%\010\存款计息清单8910lst.txt
+    print /d:%PRINTERPORT% %BATCHROOTPATH%\report\%BusinessDate%\010\存款计息清单8910lst.txt
 
 @echo.
 @echo 利息清单打印结束...
@@ -85,7 +85,7 @@ set /p BusinessDate=请输入计息日期（例:20110620）:
 if %BusinessDate%=="" set BusinessDate=%SYSDATE%
 echo 日期： %BusinessDate%
 @echo 报表开始打印...
-    print /d:lpt1 D:\fbicbs\batch\report\%BusinessDate%\010\存款未计息清单8910err.txt
+    print /d:%PRINTERPORT% %BATCHROOTPATH%\report\%BusinessDate%\010\存款未计息清单8910err.txt
 
 @echo.
 @echo 未计息清单打印结束...
@@ -101,7 +101,7 @@ set /p BusinessDate=请输入计息日期（例:20110620）:
 if %BusinessDate%=="" set BusinessDate=%SYSDATE%
 echo 日期： %BusinessDate%
 @echo 报表开始打印...
-    print /d:lpt1 D:\fbicbs\batch\report\%BusinessDate%\010\存款计息传票8910vch.txt
+    print /d:%PRINTERPORT% %BATCHROOTPATH%\report\%BusinessDate%\010\存款计息传票8910vch.txt
 
 @echo.
 @echo 计息传票打印结束...
@@ -117,7 +117,7 @@ set /p BusinessDate=请输入计息日期（例:20110620）:
 if %BusinessDate%=="" set BusinessDate=%SYSDATE%
 echo 日期： %BusinessDate%
 @echo 报表开始打印...
-    print /d:lpt1 D:\fbicbs\batch\report\%BusinessDate%\010\转账借方凭证.txt
+    print /d:%PRINTERPORT% %BATCHROOTPATH%\report\%BusinessDate%\010\转账借方凭证.txt
 
 @echo.
 @echo 转账借方凭证打印结束...
@@ -138,8 +138,8 @@ if %beginPage%=="" goto error
 set filename="存款计息通知单8910out.txt"
 @echo 日期： %BusinessDate%
 @echo 报表开始打印...
-    call job_invokerRpt.bat pageacbint %BusinessDate% %filename% %beginPage% %endPage% > %BATCHROOTPATH%/tmp/pageacbint
-    print /d:lpt1 D:\fbicbs\batch\report\tmp\利息通知单8910out_按页.txt
+    call job_invokerRpt.bat PageAcbint %BusinessDate% %filename% %beginPage% %endPage% > %BATCHROOTPATH%/tmp/pageacbint
+    print /d:%PRINTERPORT% %BATCHROOTPATH%\report\tmp\利息通知单8910out_按页.txt
 @echo.
 @echo 利息通知单按页打印结束...
 @pause

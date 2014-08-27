@@ -342,7 +342,7 @@
 
 <h:form id="confirmForm">
     <p:confirmDialog message="确认全部删除当前套的传票吗?" modal="true"
-                     header="功能确认" severity="alert" widgetVar="confirmDeleteAll">
+                     header="功能确认" severity="warn" widgetVar="confirmDeleteAll">
         <p:commandButton value="确认" update="dtform:pdt, inputform:input,  msgs"
                          oncomplete="confirmDeleteAll.hide()"
                          actionListener="#{batchBookAction.onDeleteVchset}" style="margin-left:100px;"/>
@@ -363,7 +363,7 @@
         <h:panelGrid columns="1" cellpadding="5">
             <h:outputLabel for="vchset" value="请输入传票套号: *"/>
             <h:inputText value="#{batchBookAction.vchsetTemp}" onfocus="this.select()"
-                         id="vchset" required="true" label="vchset" onkeydown="KeyDown()">
+                         required="true" label="vchset" onkeydown="KeyDown()">
             </h:inputText>
             <f:facet name="footer">
                 <p:commandButton id="modifyvchset" value="确定" update="dtform, inputform:input, vchsetgrowl" ajax="true"

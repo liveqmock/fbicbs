@@ -193,7 +193,7 @@ public class BatchBookAction implements Serializable {
             wk_txnamt = tvcamt + sumAmtByActno(acttvcListForvch, acttvc.getCusidt(), acttvc.getApcode(), acttvc.getCurcde());
             //1.检查联机余额表       2011-11-24 by haiyu   透支检查
             // 读取新老检查切换枚举   0=老检查标准 ； 1=新检查标准
-            String chkflag = SystemService.getChkflag();
+            String chkflag = SystemService.getChkOverDraftFlag();
             if (chkflag.equals("1")) {
                 if (!checkAccountBalance(session, this.sysidt, acttvc.getOrgidt(), acttvc.getCusidt(),
                         acttvc.getApcode(), acttvc.getCurcde(), wk_txnamt, tvcamt, true, true)) {
@@ -364,7 +364,7 @@ public class BatchBookAction implements Serializable {
         SqlSession session = ibatisManager.getSessionFactory().openSession();
         try {
             // 删除前判断余下的是否透支 获取chkflag 新旧判断标准  2011-11-25 by haiyu
-            String chkflag = SystemService.getChkflag();
+            String chkflag = SystemService.getChkOverDraftFlag();
             if (chkflag.equals("1")) {
                 long wk_txnamt = 0L;
                 if (ACEnum.RVSLBL_TRUE.getStatus().equals(selectedRecord.getRvslbl())) {
@@ -374,7 +374,7 @@ public class BatchBookAction implements Serializable {
                 }
                 if (!chkActBal(session, -wk_txnamt, this.orgidt, selectedRecord.getCusidt(),
                         selectedRecord.getApcode(), selectedRecord.getCurcde(), this.tlrnum,
-                        selectedRecord.getVchset(),selectedRecord.getActno())) {
+                        selectedRecord.getVchset(), selectedRecord.getActno())) {
                     throw new RuntimeException();
                 }
             }
@@ -425,10 +425,17 @@ public class BatchBookAction implements Serializable {
      * @param e event
      */
     public void onBalanceAct(ActionEvent e) {
+
+        boolean isChkDC = SystemService.isChkAllVchIsDCBalanced();
+
         logger.info("套平开始...");
-        if (checkVchsetBeforeBalance()) {
+        if (checkVchsetBeforeBalance(isChkDC)) {
             if (processBalanceAct()) {
-                MessageUtil.addWarnWithClientID("msgs", "套平成功...");
+                if (isChkDC) {
+                    MessageUtil.addWarnWithClientID("msgs", "套平成功...");
+                } else {
+                    MessageUtil.addWarnWithClientID("msgs", "套平成功...(未进行借贷平衡检查)");
+                }
                 this.vchset = 0;
                 init();
             }
@@ -473,7 +480,7 @@ public class BatchBookAction implements Serializable {
         SqlSession session = ibatisManager.getSessionFactory().openSession();
         try {
             //删除前判断余下的是否透支 获取chkflag 新旧判断标准  2011-11-25 by haiyu
-            String chkflag = SystemService.getChkflag();
+            String chkflag = SystemService.getChkOverDraftFlag();
             if (chkflag.equals("1")) {
                 long wk_txnamt = 0L;
                 int tmpcnt = 0;
@@ -482,7 +489,7 @@ public class BatchBookAction implements Serializable {
                         wk_txnamt = sumAmtByActnoForchk(selectedRecords, vo.getCusidt(), vo.getApcode(), vo.getCurcde());
                         if (!chkActBal(session, -wk_txnamt, this.orgidt, vo.getCusidt(),
                                 vo.getApcode(), vo.getCurcde(), this.tlrnum,
-                                vo.getVchset(),vo.getActno())) {
+                                vo.getVchset(), vo.getActno())) {
                             throw new RuntimeException();
                         }
                     } else {
@@ -492,7 +499,7 @@ public class BatchBookAction implements Serializable {
                             wk_txnamt = sumAmtByActnoForchk(selectedRecords, vo.getCusidt(), vo.getApcode(), vo.getCurcde());
                             if (!chkActBal(session, -wk_txnamt, this.orgidt, vo.getCusidt(),
                                     vo.getApcode(), vo.getCurcde(), this.tlrnum,
-                                    vo.getVchset(),vo.getActno())) {
+                                    vo.getVchset(), vo.getActno())) {
                                 throw new RuntimeException();
                             }
                         }
@@ -534,7 +541,7 @@ public class BatchBookAction implements Serializable {
         SqlSession session = ibatisManager.getSessionFactory().openSession();
         try {
             //删除前判断余下的是否透支 获取chkflag 新旧判断标准  2011-11-25 by haiyu
-            String chkflag = SystemService.getChkflag();
+            String chkflag = SystemService.getChkOverDraftFlag();
             if (chkflag.equals("1")) {
                 long wk_txnamt = 0L;
                 int tmpcnt = 0;
@@ -543,7 +550,7 @@ public class BatchBookAction implements Serializable {
                         wk_txnamt = sumAmtByActnoForchk(voList, vo.getCusidt(), vo.getApcode(), vo.getCurcde());
                         if (!chkActBal(session, -wk_txnamt, this.orgidt, vo.getCusidt(),
                                 vo.getApcode(), vo.getCurcde(), this.tlrnum,
-                                vo.getVchset(),vo.getActno())) {
+                                vo.getVchset(), vo.getActno())) {
                             throw new RuntimeException();
                         }
                     } else {
@@ -553,7 +560,7 @@ public class BatchBookAction implements Serializable {
                             wk_txnamt = sumAmtByActnoForchk(voList, vo.getCusidt(), vo.getApcode(), vo.getCurcde());
                             if (!chkActBal(session, -wk_txnamt, this.orgidt, vo.getCusidt(),
                                     vo.getApcode(), vo.getCurcde(), this.tlrnum,
-                                    vo.getVchset(),vo.getActno())) {
+                                    vo.getVchset(), vo.getActno())) {
                                 throw new RuntimeException();
                             }
                         }
@@ -817,7 +824,11 @@ public class BatchBookAction implements Serializable {
             ActtvcMapper mapper = session.getMapper(ActtvcMapper.class);
             List<BatchBookVO> voRecords;
             if (this.vchset == 0) {
-                voRecords = mapper.selectMultiVchsetRecords(this.sysidt, this.orgidt, this.tlrnum);
+                if (SystemService.isChkAllVchIsDCBalanced()) {
+                    voRecords = mapper.selectMultiVchsetRecords(this.sysidt, this.orgidt, this.tlrnum);
+                } else {
+                    voRecords = mapper.selectMultiVchsetRecordsForNoDCBalChk(this.sysidt, this.orgidt, this.tlrnum);
+                }
                 filterVOListForNewVchset(voRecords);
             } else {
                 voRecords = mapper.selectOneVchsetRecords(this.sysidt, this.orgidt, this.tlrnum, this.vchset);
@@ -841,7 +852,7 @@ public class BatchBookAction implements Serializable {
      */
     private void filterVOListForNewVchset(List<BatchBookVO> voRecords) {
         this.voList = new ArrayList<BatchBookVO>();
-        for (Iterator it = voRecords.iterator(); it.hasNext();) {
+        for (Iterator it = voRecords.iterator(); it.hasNext(); ) {
             //初始化vchset
             BatchBookVO vo = (BatchBookVO) it.next();
             if (this.vchset == 0) {
@@ -873,7 +884,7 @@ public class BatchBookAction implements Serializable {
      */
     private void filterVOListForBalancedVchset(List<BatchBookVO> voRecords) {
         this.voList = new ArrayList<BatchBookVO>();
-        for (Iterator it = voRecords.iterator(); it.hasNext();) {
+        for (Iterator it = voRecords.iterator(); it.hasNext(); ) {
             //初始化vchset
             BatchBookVO vo = (BatchBookVO) it.next();
             if (ACEnum.RECSTS_TVC_VALID.getStatus().equals(vo.getRecsts())) {
@@ -1514,7 +1525,7 @@ public class BatchBookAction implements Serializable {
      *
      * @return true/false
      */
-    private boolean checkVchsetBeforeBalance() {
+    private boolean checkVchsetBeforeBalance(boolean isChkDC) {
         SqlSession session = ibatisManager.getSessionFactory().openSession();
 
         boolean result = true;
@@ -1526,21 +1537,31 @@ public class BatchBookAction implements Serializable {
             }
 
             //检查本套金额是否平衡
-            if (sumAmtByVchset(records) != 0) {
-                MessageUtil.addErrorWithClientID("msgs", "M144");
-                return false;
+            if (isChkDC) {
+                if (sumAmtByVchset(records) != 0) {
+                    MessageUtil.addErrorWithClientID("msgs", "M144");
+                    return false;
+                }
             }
 
             //检查帐号及透支情况
             int count = 0;
             ActobfMapper obfmapper = session.getMapper(ActobfMapper.class);
             ActobfExample obfexample = new ActobfExample();
+
+            List<Acttvc> tmpRecords = new ArrayList<Acttvc>();
+
+            //20130121 zhanrui   修改透支检查逻辑：合计金额时不在统计已套平过未修改的记录
             for (Acttvc record : records) {
-                //已套平的跳过
+                //无效记录或已套平未修改过的跳过
                 if (!ACEnum.RECSTS_TVC_VALID.getStatus().equals(record.getRecsts())
                         || !ACEnum.VCHSTS_TVC_INSTVC.getStatus().equals(record.getVchsts())) {
                     continue;
                 }
+                tmpRecords.add(record);
+            }
+
+            for (Acttvc record : tmpRecords) {
                 String actno = getActnoByActnoCode(session, record.getOrgidt(), record.getCusidt(), record.getApcode(), record.getCurcde());
                 obfexample.clear();
                 obfexample.createCriteria().andSysidtEqualTo(this.sysidt).andOrgidtEqualTo(record.getOrgidt())
@@ -1553,7 +1574,7 @@ public class BatchBookAction implements Serializable {
                     continue;
                 }
                 Actobf obf = obfmapper.selectByExample(obfexample).get(0);
-                long totalamt = sumAmtByActno(records, record.getCusidt(), record.getApcode(), record.getCurcde());
+                long totalamt = sumAmtByActno(tmpRecords, record.getCusidt(), record.getApcode(), record.getCurcde());
 
                 if (((obf.getGlcbal().equals(ACEnum.GLCBAL_C.getStatus()))
                         && (totalamt < 0)
@@ -1588,7 +1609,7 @@ public class BatchBookAction implements Serializable {
     private long sumAmtByActnoForchk(List<BatchBookVO> records, String cusidt, String apcode, String curcde) {
         long amt = 0;
         for (BatchBookVO record : records) {
-            //TODO 外币情况？
+            //TODO 支持外币情况下需按币种进行汇总
             if (record.getCusidt().equals(cusidt)
                     && record.getApcode().equals(apcode)
                     && record.getCurcde().equals(curcde)) {
@@ -1597,7 +1618,6 @@ public class BatchBookAction implements Serializable {
                 } else {
                     amt += record.getTxnamt();
                 }
-                //amt += record.getTxnamt();
             }
         }
         return amt;
@@ -1614,7 +1634,7 @@ public class BatchBookAction implements Serializable {
     private long sumAmtByActnoForchk(BatchBookVO[] records, String cusidt, String apcode, String curcde) {
         long amt = 0;
         for (BatchBookVO record : records) {
-            //TODO 外币情况？
+            //TODO 支持外币情况下需按币种进行汇总
             if (record.getCusidt().equals(cusidt)
                     && record.getApcode().equals(apcode)
                     && record.getCurcde().equals(curcde)) {
@@ -1623,7 +1643,6 @@ public class BatchBookAction implements Serializable {
                 } else {
                     amt += record.getTxnamt();
                 }
-                //amt += record.getTxnamt();
             }
         }
         return amt;
@@ -1641,7 +1660,7 @@ public class BatchBookAction implements Serializable {
     private long sumAmtByActno(List<Acttvc> records, String cusidt, String apcode, String curcde) {
         long amt = 0;
         for (Acttvc record : records) {
-            //TODO 外币情况？
+            //TODO 支持外币情况下需按币种进行汇总
             if (record.getCusidt().equals(cusidt)
                     && record.getApcode().equals(apcode)
                     && record.getCurcde().equals(curcde)) {
@@ -1650,7 +1669,6 @@ public class BatchBookAction implements Serializable {
                 } else {
                     amt += record.getTxnamt();
                 }
-                //amt += record.getTxnamt();
             }
         }
         return amt;
@@ -1665,7 +1683,7 @@ public class BatchBookAction implements Serializable {
     private long sumAmtByVchset(List<Acttvc> records) {
         long amt = 0;
         for (Acttvc record : records) {
-            //TODO 外币情况？
+            //TODO 支持外币情况下需按币种进行汇总
             if (ACEnum.RVSLBL_TRUE.getStatus().equals(record.getRvslbl())) {
                 amt += (-record.getTxnamt());
             } else {
@@ -1685,7 +1703,6 @@ public class BatchBookAction implements Serializable {
 
         try {
             ActtvcMapper mapper = session.getMapper(ActtvcMapper.class);
-            //ActtvcExample example = new ActtvcExample();
             List<Acttvc> records = mapper.selectValidRecordByVchset(this.orgidt, this.tlrnum, this.vchset);
 
             if (records.size() == 0) {
@@ -1710,6 +1727,7 @@ public class BatchBookAction implements Serializable {
                 if (!checkAccountBalance(session, this.sysidt, acttvc.getOrgidt(), acttvc.getCusidt(),
                         acttvc.getApcode(), acttvc.getCurcde(), wk_txnamt, wk_txnamt, true, false)) {
                     logger.error("账户余额检查错误!");
+                    MessageUtil.addError("套内序号: " + acttvc.getSetseq());
                     throw new RuntimeException();
                 } else {
                     //更新联机余额表

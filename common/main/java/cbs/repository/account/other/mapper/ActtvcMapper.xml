@@ -676,6 +676,49 @@
         ]]>
     </select>
 
+    <select id="selectMultiVchsetRecordsForNoDCBalChk" resultMap="ViewResultMap">
+        <![CDATA[
+
+        SELECT  A.VCHSET,A.SETSEQ,
+                A.CUSIDT, A.APCODE, A.CURCDE,
+                C.OLDACN AS ACTNO,
+                A.RVSLBL AS TYPE,
+                A.TXNAMT,
+                A.VALDAT,A.ANACDE,A.FURINF,A.VCHATT,A.VCHSTS,A.RECSTS,
+                B.ACTNAM
+        FROM
+           (SELECT ORGIDT, TLRNUM, VCHSET, SETSEQ,
+                   CUSIDT, APCODE, CURCDE, PRDCDE,
+                   TXNAMT, VALDAT, RVSLBL, ANACDE,
+                   FURINF, FXRATE, SECCCY, SECAMT,
+                   CORAPC, VCHATT, VCHAUT, DEPNUM,
+                   TXNBAK, ACTBAK, CLRBAK, ERYDAT,
+                   ERYTIM, OUFCRE, VCHSTS, FXEFLG,
+                   RECSTS, ERYTYP
+             FROM ACTTVC
+            WHERE ORGIDT=#{orgidt}
+              AND TLRNUM=#{tlrnum}
+              AND ( VCHSET IN ( SELECT DISTINCT VCHSET
+                                  FROM ACTTVC
+                                 WHERE ORGIDT=#{orgidt}
+                                   AND TLRNUM=#{tlrnum}
+                                   AND RECSTS=' '
+                                   AND VCHSTS='1' ))
+            ORDER BY VCHSET,SETSEQ DESC) A, ACTOAC B, ACTANI C
+       WHERE
+                B.ORGIDT = A.ORGIDT
+            AND B.CUSIDT = A.CUSIDT
+            AND B.APCODE = A.APCODE
+            AND B.CURCDE = A.CURCDE
+            AND C.SYSIDT = #{sysidt}
+            AND C.ORGIDT = A.ORGIDT
+            AND C.CUSIDT = A.CUSIDT
+            AND C.APCODE = A.APCODE
+            AND C.CURCDE = A.CURCDE
+
+        ]]>
+    </select>
+
     <select id="selectOneVchsetRecords" resultMap="ViewResultMap">
         <![CDATA[
 

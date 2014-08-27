@@ -375,18 +375,9 @@
         select CURCDE, irt.IRTKD1, irt.IRTKD2,EFFDAT, IRTNAM, CURFLG, MODFLG, IRTVAL, IRTSPH, IRTSPL, SPRFLG,
          CDFLAG, IRTTRM, TRMUNT, CRETLR, CREDAT, RECSTS
          from actirt irt
-         join
-        (
-         select max(effdat) as max_effdat,irtkd1,irtkd2
-         from actirt
-         where to_char(effdat,'yyyy-MM-dd') <= #{effdat}
-         group by irtkd1,irtkd2
-         ) nowirt
-         on irt.irtkd1 = nowirt.irtkd1
-         and irt.irtkd2 = nowirt.irtkd2
-         and irt.effdat = nowirt.max_effdat
-         where trim(curcde) = trim(#{curcde})
-         and recsts = ' '
+         where recsts = ' '
+         and irt.curflg = '1'
+         and curcde = #{curcde}
          ]]>
         <if test="irtkd != null">
             and irt.irtkd1||irt.irtkd2 like CONCAT('%',CONCAT(trim(#{irtkd}),'%'))

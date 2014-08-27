@@ -65,7 +65,9 @@ public class BCB8521Handler extends AbstractACBatchJobLogic {
         try {
             initBatch();
             initActvchList();
-            processVchList();
+            if(processVchList() == 8) {
+                throw new RuntimeException("传票借贷不平，查看日志文件list8521");
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -105,60 +107,68 @@ public class BCB8521Handler extends AbstractACBatchJobLogic {
         bw.newLine();
         bw.write(rptLine);
         bw.newLine();
-        if (actvchList.size() < 1) {
-            //转换amt为15为整数 todo
+        /* if (actvchList.size() < 1) {
+          //转换amt为15为整数 todo
 //            bw.write();
 //            bw.newLine();
-            returnValue = 8;
-            this.errFlag = 1;
-        } else {
-            for (Actvch vch:this.actvchList) {
-                if (!vch.getCurcde().equals(this.wkCurcde) || !vch.getOrgidt().equals(this.wkOrgidt)
-                        || !vch.getTlrnum().equals(this.wkTlrnum) || !vch.getVchset().equals(this.wkVchset)
-                        || !vch.getOrgid3().equals(this.wkOrgid3)) {
-                    if (this.vch_amt != 0) {
-                        //转换amt为15为整数 todo
-                        Short ccyDecpos = 0;
-                        if (!this.wkCurcde.trim().equals("")) {
-                            Actccy ccy = this.bcb8521Map.selectActccyByPK(this.wkCurcde);
-                            ccyDecpos = ccy.getDecpos();
-                        }
-                        String amtFormat = DataFormater.formatNum(ccyDecpos, this.vch_amt);
-                        String rptCurcde = ReportHelper.setLeftSpace(this.wkCurcde,10);
-                        String rptTlrnum = ReportHelper.setLeftSpace(this.wkTlrnum,10);
-                        String rptVchset = ReportHelper.setLeftSpace(ReportHelper.getRightSpaceStr(String.valueOf(this.wkVchset),4),10);
-                        String rptTxnamt = ReportHelper.setLeftSpace(ReportHelper.getRightSpaceStr(amtFormat,21),10);
-                        bw.write(rptCurcde + rptTlrnum + rptVchset + rptTxnamt);
-                        bw.newLine();
-                        returnValue = 8;
-                        this.errFlag = 1;
+          returnValue = 8;
+          this.errFlag = 1;
+      } else {*/
+        if(actvchList != null) {
+            logger.info("传票笔数：" + actvchList.size());
+        }
+        for (Actvch vch:this.actvchList) {
+            if (!vch.getCurcde().equals(this.wkCurcde) || !vch.getOrgidt().equals(this.wkOrgidt)
+                    || !vch.getTlrnum().equals(this.wkTlrnum) || !vch.getVchset().equals(this.wkVchset)
+                    || !vch.getOrgid3().equals(this.wkOrgid3)) {
+                if (this.vch_amt != 0) {
+                    //转换amt为15为整数 todo
+                    Short ccyDecpos = 0;
+                    if (!this.wkCurcde.trim().equals("")) {
+                        Actccy ccy = this.bcb8521Map.selectActccyByPK(this.wkCurcde);
+                        ccyDecpos = ccy.getDecpos();
                     }
-                    this.vch_amt = 0;
-                }
-                this.wkCurcde = vch.getCurcde();
-                this.wkOrgidt = vch.getOrgidt();
-                this.wkTlrnum = vch.getTlrnum();
-                this.wkVchset = vch.getVchset();
-                this.wkOrgid3 = vch.getOrgid3();
-                this.wkCount += 1;
-                String vchSecccy = vch.getSecccy();
-                short vchCrnyer = vch.getCrnyer();
-                //
-                if (vchSecccy == null || (!isNumber(vchSecccy) && !vchSecccy.trim().equals(""))) {
-                    logger.info("SECCCY IS WRONG " + vch.getTlrnum() + String.valueOf(vch.getVchset()) + String.valueOf(vch.getSetseq()));
+                    String amtFormat = DataFormater.formatNum(ccyDecpos, this.vch_amt);
+                    String rptCurcde = ReportHelper.setLeftSpace(this.wkCurcde,10);
+                    String rptTlrnum = ReportHelper.setLeftSpace(this.wkTlrnum,10);
+                    String rptVchset = ReportHelper.setLeftSpace(ReportHelper.getRightSpaceStr(String.valueOf(this.wkVchset),4),10);
+                    String rptTxnamt = ReportHelper.setLeftSpace(ReportHelper.getRightSpaceStr(amtFormat,21),10);
+                    bw.write(rptCurcde + rptTlrnum + rptVchset + rptTxnamt);
+                    bw.newLine();
                     returnValue = 8;
                     this.errFlag = 1;
                 }
-//                todo vchCrnyer 不为 numeric ？
-                long vchTxnamt = vch.getTxnamt();
-                if (vch.getRvslbl().equals(ACEnum.RVSLBL_TRUE.getStatus())) {
-                    vchTxnamt = 0 - vchTxnamt;
-                }
-                this.vch_amt += vchTxnamt;
+                this.vch_amt = 0;
             }
+
+            this.wkCurcde = vch.getCurcde();
+            this.wkOrgidt = vch.getOrgidt();
+            this.wkTlrnum = vch.getTlrnum();
+            this.wkVchset = vch.getVchset();
+            this.wkOrgid3 = vch.getOrgid3();
+            this.wkCount += 1;
+            String vchSecccy = vch.getSecccy();
+            short vchCrnyer = vch.getCrnyer();
+            //
+            if (vchSecccy == null || (!isNumber(vchSecccy) && !vchSecccy.trim().equals(""))) {
+                logger.info("SECCCY IS WRONG " + vch.getTlrnum() + String.valueOf(vch.getVchset()) + String.valueOf(vch.getSetseq()));
+                returnValue = 8;
+                this.errFlag = 1;
+            }
+//                todo vchCrnyer 不为 numeric ？
+            long vchTxnamt = vch.getTxnamt();
+            if (vch.getRvslbl().equals(ACEnum.RVSLBL_TRUE.getStatus())) {
+                vchTxnamt = 0 - vchTxnamt;
+            }
+            this.vch_amt += vchTxnamt;
         }
+
+        // }
         bw.flush();
         bw.close();
+        if(this.vch_amt != 0) {
+            return 8;
+        }
         if (this.errFlag == 0) {
             this.returnValue = 0;
         } else {

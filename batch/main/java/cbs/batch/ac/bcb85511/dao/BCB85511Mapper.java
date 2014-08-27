@@ -5,7 +5,6 @@ import cbs.repository.account.billinfo.model.Actsbl;
 import cbs.repository.account.maininfo.model.Actact;
 import cbs.repository.account.maininfo.model.Actoac;
 import cbs.repository.account.maininfo.model.Actvth;
-import cbs.repository.code.model.Actani;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -50,7 +49,17 @@ public interface BCB85511Mapper {
     @Select(" SELECT ORGID3,CUSIDT,APCODE,CURCDE,TXNAMT," +
             " TLRNUM,VCHSET,SETSEQ,ORGID2,PRDCDE," +
             " VALDAT,RVSLBL,ERYDAT,(ANACDE||' '||FURINF) AS FURINF,FXRATE," +
-            " CRNYER,PRDSEQ,THRREF,SECCCY,SECAMT," +
+            " CRNYER,PRDSEQ," +
+            " (CASE WHEN ANACDE='114' THEN (CASE WHEN TXNAMT<0 THEN '利息支出' ELSE '利息收入' END)" +
+            "                    ELSE (" +
+            "                      CASE WHEN RVSLBL='*' THEN '冲正'||to_char(VALDAT,'yyMMdd')" +
+            "                        WHEN RVSLBL='T' THEN (CASE WHEN TXNAMT<0 THEN '转账借' ELSE '转账贷' END)" +
+            "                        WHEN RVSLBL='C' THEN (CASE WHEN TXNAMT<0 THEN '现金借' ELSE '现金贷' END)" +
+            "                        WHEN RVSLBL='B' THEN '补账'||to_char(VALDAT,'yyMMdd')" +
+            "                        ELSE '其它' END" +
+            "                        ) END" +
+            "               ) AS THRREF," +
+            "SECCCY,SECAMT," +
             " ERYTIM,ORGIDT,FXEFLG" +
             " FROM ACTVTH" +
             " ORDER BY  ORGID3,APCODE,CURCDE,CUSIDT,SECCCY,ERYDAT,ERYTIM")

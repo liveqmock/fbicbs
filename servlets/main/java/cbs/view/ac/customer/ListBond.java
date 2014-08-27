@@ -201,8 +201,6 @@ public class ListBond implements java.io.Serializable {
         pe.setOrderByClause("dispno");
         pe.createCriteria().andEnutypeEqualTo(enutypeVal);
         ArrayList aList=new ArrayList();
-        SelectItem siSpace = new SelectItem("","");
-        aList.add(siSpace);
         SqlSession session = ibatisManager.getSessionFactory().openSession();
         try {
             PtenudetailMapper mapper = session.getMapper(PtenudetailMapper.class);

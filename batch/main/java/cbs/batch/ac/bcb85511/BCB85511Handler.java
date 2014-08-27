@@ -110,6 +110,10 @@ public class BCB85511Handler extends AbstractACBatchJobLogic {
             }
             this.needUpSBL = "Y";
             nsm.setLasbal(nsm.getActbal());
+
+            logger.info("[Cusidt:]" + vth.getCusidt() +  "[vth.rvslbl]: " + vth.getRvslbl());
+            logger.info("[Cusidt:]" + nsm.getCusidt() + "  [nsm.actbal]: " + nsm.getActbal());
+
             if (vth.getRvslbl().equals(ACEnum.RVSLBL_TRUE.getStatus())) {
                 nsm.setActbal(nsm.getActbal() - vth.getTxnamt());
             } else {
@@ -117,7 +121,7 @@ public class BCB85511Handler extends AbstractACBatchJobLogic {
             }
             //todo 5950-INSERT-NSM-RTN
 //            nsm.setDayend("");
-            System.out.print(ACEnum.SYSIDT_AC.getStatus() + "," + vth.getOrgid3() + "," + vth.getCusidt() + "," + vth.getApcode() + "," +
+            logger.info(ACEnum.SYSIDT_AC.getStatus() + "," + vth.getOrgid3() + "," + vth.getCusidt() + "," + vth.getApcode() + "," +
                     vth.getCurcde() + ",wkYear2: " + this.wkYear2 + ",getNstmpg:" +
                     nsm.getNstmpg() + ",getPaglin: " + nsm.getPaglin() + ",getErydat: " + vth.getErydat() + ",getErytim: " + vth.getErytim() + ",getTlrnum: " + vth.getTlrnum() + ",getVchset:" + vth.getVchset() + ",getSetseq: " + vth.getSetseq() + ",getTxnamt:" + vth.getTxnamt() + ",getActbal: " +
                     nsm.getActbal() + ",getValdat: " + vth.getValdat() + ",getRvslbl: " + vth.getRvslbl() + ",getOrgid2: " + vth.getOrgid2() + ",getPrdcde: " + vth.getPrdcde() + ",getCrnyer: " + vth.getCrnyer() + ",getPrdseq: " + vth.getPrdseq() + "," +

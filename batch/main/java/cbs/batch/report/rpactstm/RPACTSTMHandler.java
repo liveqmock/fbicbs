@@ -37,7 +37,7 @@ public class RPACTSTMHandler extends AbstractACBatchJobLogic {
     private static final Log logger = LogFactory.getLog(RPACTSTMHandler.class);
     private String nowDate = "";
     private String reportdate = "";
-     @Inject
+    @Inject
     private BatchSystemService systemService;
     @Inject
     private ActorgMapper orgmap;
@@ -76,7 +76,7 @@ public class RPACTSTMHandler extends AbstractACBatchJobLogic {
         String orgidt = "";
         String orgnam = "";
         String title0 = "                                  \u001BW1分户账\u001BW0";
-       String plantop = "--------------------------------------------------------------------------------" +
+        String plantop = "--------------------------------------------------------------------------------" +
                 "-------------------------------";
         String plan = "|----------|------|----------|----------------|----------------|----------------|--" +
                 "---|-----------------------|";
@@ -215,7 +215,7 @@ public class RPACTSTMHandler extends AbstractACBatchJobLogic {
                         bw.newLine();
                         bw.write(ReportHelper.getLeftSpaceStr("户名：" + actnam, title0Cnt1) + "账号：" + actacn);
                         bw.newLine();
-        //                bw.write("序号：" + seq);
+                        //                bw.write("序号：" + seq);
                         bw.write("利率：月 " + irtval);
                         bw.newLine();
                         bw.write(plantop);
@@ -243,8 +243,13 @@ public class RPACTSTMHandler extends AbstractACBatchJobLogic {
                         double dbcraccm = (double) stmCont2.getCraccm() / 100;
                         String craccm = ReportHelper.getRightSpaceStr(df0.format(dbcraccm), contCnt6);
                         bw.write("|" + valdat +"|" + furinf +"|" + thrref +"|" + spaDtxnamt +"|" + spaCtxnamt +"|" + spaActbal + "|" + daynum +" |" + craccm + "|");
-                    } else
-                        bw.write("|" + valdat +"|" + furinf +"|" + thrref +"|" + spaDtxnamt +"|" + spaCtxnamt +"|" + spaActbal+contCont7);
+                    } else {
+                        String daynum = ReportHelper.getRightSpaceStr(String.valueOf(stmCont2.getDaynum()), contCnt5);
+                        double dbcraccm = (double) stmCont2.getCraccm() / 100;
+                        String craccm = ReportHelper.getRightSpaceStr(df0.format(dbcraccm), contCnt6);
+                        bw.write("|" + valdat +"|" + furinf +"|" + thrref +"|" + spaDtxnamt +"|" + spaCtxnamt +"|" + spaActbal + "|" + daynum +" |" + craccm + "|");
+                    }
+//                        bw.write("|" + valdat +"|" + furinf +"|" + thrref +"|" + spaDtxnamt +"|" + spaCtxnamt +"|" + spaActbal+contCont7);
                     bw.newLine();
                     beforeDaynum = stmCont2.getDaynum();
                     beforestmpny = stmCont2.getLegpny();   //年
@@ -265,6 +270,7 @@ public class RPACTSTMHandler extends AbstractACBatchJobLogic {
                 if (acncount < stmnumLst.size()) {
                     //换页符
                     bw.write("\f");
+                    seq++;
                 }
                 acncount++;
             }

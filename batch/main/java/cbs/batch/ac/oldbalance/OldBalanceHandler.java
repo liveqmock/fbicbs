@@ -12,12 +12,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
  * æ…∞Ê”‡∂Ó±Ì
  */
-@Service("OldBalanceHandler")
+//@Service("OldBalanceHandler")
+@Service
 public class OldBalanceHandler extends AbstractACBatchJobLogic {
     private static final Logger logger = LoggerFactory.getLogger(OldBalanceHandler.class);
     @Inject
@@ -42,7 +44,9 @@ public class OldBalanceHandler extends AbstractACBatchJobLogic {
                 for (ActBalance bal : balList) {
                     rowLength2 = (bal.getOldacn() + bal.getActnam()).getBytes().length + 4;
                     deptFileHandler.appendToBody(new StringBuffer("     ").append(bal.getOldacn()).append(" | ")
-                            .append(bal.getActnam()).append(appendSpaceToStr(rowLength - rowLength2, SystemService.formatStrAmt(String.format("%.2f", bal.getBokbal() / 100)))).toString());
+                            .append(bal.getActnam()).append(appendSpaceToStr(
+                                    rowLength - rowLength2, new DecimalFormat("###,###.00").format(bal.getBokbal() / 100))).toString());
+//                            .append(bal.getActnam()).append(appendSpaceToStr(rowLength - rowLength2, SystemService.formatStrAmt(String.format("%.2f", bal.getBokbal() / 100)))).toString());
                 }
                 deptFileHandler.writeToFile();
             }

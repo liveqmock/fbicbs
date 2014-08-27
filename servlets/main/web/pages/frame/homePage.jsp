@@ -9,7 +9,7 @@
 <script language="javascript" src="./js/basic.js"></script>
 <html>
 <head>
-    <title>财务公司核心业务系统</title>
+    <title>会计结算系统</title>
     <link href="<%=contextPath%>/css/ccb.css" type="text/css" rel="stylesheet">
     <meta content="mshtml 6.00.2800.1106" name="generator">
 </head>

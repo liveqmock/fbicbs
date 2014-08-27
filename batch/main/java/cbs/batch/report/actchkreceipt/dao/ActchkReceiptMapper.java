@@ -21,7 +21,7 @@ public interface ActchkReceiptMapper {
             " and act.cusidt = ani.cusidt and act.apcode = ani.apcode" +
             " and act.curcde = ani.curcde join actglc glc on substr(act.apcode,1,3)=glc.glcode" +
             " where ani.oldacn not in(${notNeedAcn}) "+
-            "and act.orgidt = #{orgidt} order by ani.oldacn")
+            "and act.orgidt = #{orgidt} and act.actsts<>'I' order by ani.oldacn")
     List<BalReceipt> qryBalReceipts(@Param("notNeedAcn") String notNeedAcn, @Param("orgidt") String orgidt);
 
     @Select("select * from ptdept where deptid is not null")

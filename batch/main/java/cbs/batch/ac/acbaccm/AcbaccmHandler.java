@@ -30,7 +30,8 @@ import java.util.List;
  * User: zhangxiaobo
  * Date: 2010-2-22
  */
-@Service("AcbaccmHandler")
+//@Service("AcbaccmHandler")
+@Service
 public class AcbaccmHandler extends AbstractACBatchJobLogic {
     private static final Logger logger = LoggerFactory.getLogger(AcbaccmHandler.class);
     @Inject

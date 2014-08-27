@@ -64,8 +64,8 @@ SETLOCAL
 
     echo ********** ACBINT存款账户计息 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat acbint > %BATCHROOTPATH%/tmp/acbint
-    call :errexit %ERRORLEVEL% acbint
+    call job_invoker.bat Acbint > %BATCHROOTPATH%/tmp/Acbint
+    call :errexit %ERRORLEVEL% Acbint
 
     if exist %BATCHROOTPATH%\db\intflag  (
        echo ** BCB8543计息日二次计息...... | tee -a  %BATCHLOGFILE%
@@ -79,117 +79,117 @@ SETLOCAL
     call :check
 
 :: 生成总账...
-    echo ********** bcb8531修改当前总帐 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB8531修改当前总帐 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb8531 Y> %BATCHROOTPATH%/tmp/bcb8531
-    call :errexit %ERRORLEVEL% bcb8531
+    call job_invoker.bat BCB8531 Y> %BATCHROOTPATH%/tmp/BCB8531
+    call :errexit %ERRORLEVEL% BCB8531
 
-    echo ********** bcb8532总帐竖平检查 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB8532总帐竖平检查 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb8532> %BATCHROOTPATH%/tmp/bcb8532
-    call :errexit %ERRORLEVEL% bcb8532
+    call job_invoker.bat BCB8532> %BATCHROOTPATH%/tmp/BCB8532
+    call :errexit %ERRORLEVEL% BCB8532
 
-    echo ********** bcb8533总帐横平检查 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB8533总帐横平检查 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb8533> %BATCHROOTPATH%/tmp/bcb8533
-    call :errexit %ERRORLEVEL% bcb8533
+    call job_invoker.bat BCB8533> %BATCHROOTPATH%/tmp/BCB8533
+    call :errexit %ERRORLEVEL% BCB8533
 
-    echo ********** bcb8534总帐特征检查 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB8534总帐特征检查 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb8534> %BATCHROOTPATH%/tmp/bcb8534
-    call :errexit %ERRORLEVEL% bcb8534
+    call job_invoker.bat BCB8534> %BATCHROOTPATH%/tmp/BCB8534
+    call :errexit %ERRORLEVEL% BCB8534
 
     echo ********** acbckcgl总帐对应科目检查 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat acbckcgl> %BATCHROOTPATH%/tmp/acbckcgl
-    call :errexit %ERRORLEVEL% acbckcgl
+    call job_invoker.bat Acbckcgl> %BATCHROOTPATH%/tmp/Acbckcgl
+    call :errexit %ERRORLEVEL% Acbckcgl
 
-    echo ********** bcb8535总分平帐 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB8535总分平帐 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb8535> %BATCHROOTPATH%/tmp/bcb8535
-    call :errexit %ERRORLEVEL% bcb8535
+    call job_invoker.bat BCB8535> %BATCHROOTPATH%/tmp/BCB8535
+    call :errexit %ERRORLEVEL% BCB8535
 
-    echo ********** bcb8564生成总账 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB8564生成总账 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb8564> %BATCHROOTPATH%/tmp/bcb8564
-    call :errexit %ERRORLEVEL% bcb8564
+    call job_invoker.bat BCB8564> %BATCHROOTPATH%/tmp/BCB8564
+    call :errexit %ERRORLEVEL% BCB8564
 
 :: 账户账页处理...
-    echo ********** bcb8529挂失冻结户处理 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB8529挂失冻结户处理 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb8529> %BATCHROOTPATH%/tmp/bcb8529
-    call :errexit %ERRORLEVEL% bcb8529
+    call job_invoker.bat BCB8529> %BATCHROOTPATH%/tmp/BCB8529
+    call :errexit %ERRORLEVEL% BCB8529
 
-    echo ********** bcb85211核对 ACT 与 OBF ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB85211核对 ACT 与 OBF ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb85211> %BATCHROOTPATH%/tmp/bcb85211
-    call :errexit %ERRORLEVEL% bcb85211
+    call job_invoker.bat BCB85211> %BATCHROOTPATH%/tmp/BCB85211
+    call :errexit %ERRORLEVEL% BCB85211
 
-    echo ********** bcb85511处理当日对帐单 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB85511处理当日对帐单 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb85511> %BATCHROOTPATH%/tmp/bcb85511
-    call :errexit %ERRORLEVEL% bcb85511
+    call job_invoker.bat BCB85511> %BATCHROOTPATH%/tmp/BCB85511
+    call :errexit %ERRORLEVEL% BCB85511
 
-    echo ********** bcb85512处理处理LSM ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB85512处理处理LSM ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-::    call job_invoker.bat bcb85512> %BATCHROOTPATH%/tmp/bcb85512
-::    call :errexit %ERRORLEVEL% bcb85512
+::    call job_invoker.bat BCB85512> %BATCHROOTPATH%/tmp/BCB85512
+::    call :errexit %ERRORLEVEL% BCB85512
 
-    echo ********** bcb85513处理当日分户帐 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB85513处理当日分户帐 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb85513> %BATCHROOTPATH%/tmp/bcb85513
-    call :errexit %ERRORLEVEL% bcb85513
+    call job_invoker.bat BCB85513> %BATCHROOTPATH%/tmp/BCB85513
+    call :errexit %ERRORLEVEL% BCB85513
 
-    echo ********** bcb85517对帐单分户帐余额与ACT核对 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB85517对帐单分户帐余额与ACT核对 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb85517> %BATCHROOTPATH%/tmp/bcb85517
-    call :errexit %ERRORLEVEL% bcb85517
+    call job_invoker.bat BCB85517> %BATCHROOTPATH%/tmp/BCB85517
+    call :errexit %ERRORLEVEL% BCB85517
 
-    echo ********** bcb85516处理关户对帐单分户帐 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB85516处理关户对帐单分户帐 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb85516> %BATCHROOTPATH%/tmp/bcb85516
-    call :errexit %ERRORLEVEL% bcb85516
+    call job_invoker.bat BCB85516> %BATCHROOTPATH%/tmp/BCB85516
+    call :errexit %ERRORLEVEL% BCB85516
 
-    echo ********** bcb85518sbl特殊日期帐页处理sbl ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB85518sbl特殊日期帐页处理sbl ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb85518sbl> %BATCHROOTPATH%/tmp/bcb85518sbl
-    call :errexit %ERRORLEVEL% bcb85518sbl
+    call job_invoker.bat BCB85518SBL> %BATCHROOTPATH%/tmp/BCB85518SBL
+    call :errexit %ERRORLEVEL% BCB85518SBL
 
-    echo ********** bcb85518lbl特殊日期帐页处理lbl ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB85518lbl特殊日期帐页处理lbl ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb85518lbl> %BATCHROOTPATH%/tmp/bcb85518lbl
-    call :errexit %ERRORLEVEL% bcb85518lbl
+    call job_invoker.bat BCB85518LBL> %BATCHROOTPATH%/tmp/BCB85518LBL
+    call :errexit %ERRORLEVEL% BCB85518LBL
 
 ::报表准备
-    echo ********** bcb8554生成一级科目总帐 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB8554生成一级科目总帐 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb8554> %BATCHROOTPATH%/tmp/bcb8554
-    call :errexit %ERRORLEVEL% bcb8554
+    call job_invoker.bat BCB8554> %BATCHROOTPATH%/tmp/BCB8554
+    call :errexit %ERRORLEVEL% BCB8554
 
-    echo ********** bcb8571资产负债数据采集 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB8571资产负债数据采集 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-::    call job_invoker.bat bcb8571> %BATCHROOTPATH%/tmp/bcb8571
-::    call :errexit %ERRORLEVEL% bcb8571
+::    call job_invoker.bat BCB8571> %BATCHROOTPATH%/tmp/BCB8571
+::    call :errexit %ERRORLEVEL% BCB8571
 
-    echo ********** bcb85541生成资产负债总帐 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB85541生成资产负债总帐 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-::    call job_invoker.bat bcb85541> %BATCHROOTPATH%/tmp/bcb85541
-::    call :errexit %ERRORLEVEL% bcb85541
+::    call job_invoker.bat BCB85541> %BATCHROOTPATH%/tmp/BCB85541
+::    call :errexit %ERRORLEVEL% BCB85541
 
-    echo ********** bcb8555生成损益帐 PLF ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB8555生成损益帐 PLF ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-::    call job_invoker.bat bcb8555> %BATCHROOTPATH%/tmp/bcb8555
-::    call :errexit %ERRORLEVEL% bcb8555
+::    call job_invoker.bat BCB8555> %BATCHROOTPATH%/tmp/BCB8555
+::    call :errexit %ERRORLEVEL% BCB8555
 
-    echo ********** bcb8556生成资产负债余额 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB8556生成资产负债余额 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-::    call job_invoker.bat bcb8556> %BATCHROOTPATH%/tmp/bcb8556
-::    call :errexit %ERRORLEVEL% bcb8556
+::    call job_invoker.bat BCB8556> %BATCHROOTPATH%/tmp/BCB8556
+::    call :errexit %ERRORLEVEL% BCB8556
 
-    echo ********** bcb85210批量关户 ********** | tee -a  %BATCHLOGFILE%
+    echo ********** BCB85210批量关户 ********** | tee -a  %BATCHLOGFILE%
     echo %date% %time%  | tee -a  %BATCHLOGFILE%
-    call job_invoker.bat bcb85210> %BATCHROOTPATH%/tmp/bcb85210
-    call :errexit %ERRORLEVEL% bcb85210
+    call job_invoker.bat BCB85210> %BATCHROOTPATH%/tmp/BCB85210
+    call :errexit %ERRORLEVEL% BCB85210
 
 ::生成报表
     call job_acRpt.bat

@@ -4,7 +4,9 @@ import cbs.common.IbatisManager;
 import cbs.common.OnlineService;
 import cbs.common.SystemService;
 import cbs.common.enums.ACEnum;
+import cbs.common.utils.DataFormater;
 import cbs.common.utils.MessageUtil;
+import cbs.common.utils.PropertyManager;
 import cbs.common.utils.ReportHelper;
 import cbs.repository.account.maininfo.dao.ActactMapper;
 import cbs.repository.account.maininfo.dao.ActblhMapper;
@@ -16,8 +18,6 @@ import cbs.repository.code.dao.ActapcMapper;
 import cbs.repository.code.dao.ActccyMapper;
 import cbs.repository.code.dao.ActirtMapper;
 import cbs.repository.code.model.*;
-import cbs.common.utils.DataFormater;
-import cbs.common.utils.PropertyManager;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Rectangle;
 import org.apache.commons.lang.StringUtils;
@@ -34,6 +34,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class ActClear {
     private final String aniOrgidt = "010";
     private String bizStrDate;
     private Date bizDateDate;
-    private double wkCratsf;
+    private BigDecimal wkCratsf;
     private long wkCraccm;
     private String dinIrtval;   //借方利率
     private String cinIrtval;   //贷方利率
@@ -136,9 +137,9 @@ public class ActClear {
             if (act.getCinrat().equals("999")) {
                 double cratsf = Double.parseDouble(act.getCratsf().toString());
                 if (act.getCurcde().equals("001")) {
-                    this.wkCratsf = cratsf / 1000 / 30;
+                    this.wkCratsf = act.getCratsf().divide(new BigDecimal(1000)).divide(new BigDecimal(30));
                 } else {
-                    this.wkCratsf = cratsf / 100 / 360;
+                    this.wkCratsf = act.getCratsf().divide(new BigDecimal(100)).divide(new BigDecimal(360));
                 }
             } else {
                 String irtkd1 = act.getCinrat().substring(0, 1);
@@ -161,11 +162,14 @@ public class ActClear {
                     double irtval = Double.parseDouble(irt.getIrtval().toString());
                     short irttrm = irt.getIrttrm();
                     if (trmunt.equals("Y")) {
-                        this.wkCratsf = irtval / (irttrm * 100);
+                        this.wkCratsf = irt.getIrtval().divide(new BigDecimal(irttrm).multiply(new BigDecimal(100)), 15, BigDecimal.ROUND_HALF_UP);
+                        //this.wkCratsf = irtval / (irttrm * 100);
                     } else if (trmunt.equals("M")) {
-                        this.wkCratsf = irtval / (irttrm * 1000);
+                        this.wkCratsf = irt.getIrtval().divide(new BigDecimal(irttrm).multiply(new BigDecimal(1000)), 6, BigDecimal.ROUND_HALF_UP);
+                        //this.wkCratsf = irtval / (irttrm * 1000);
                     } else if (trmunt.equals("D")) {
-                        this.wkCratsf = irtval / (irttrm * 1000);
+                        this.wkCratsf = irt.getIrtval().divide(new BigDecimal(irttrm).multiply(new BigDecimal(1000)), 6, BigDecimal.ROUND_HALF_UP);
+                        //this.wkCratsf = irtval / (irttrm * 1000);
                     }
                     act.setCratsf(irt.getIrtval());
                 }
@@ -274,10 +278,15 @@ public class ActClear {
 
         ArrayList<String> dataList6 = new ArrayList<String>();
         //利息计算 积数 * 利率
-        double dbdacint = Double.parseDouble(StringUtils.isEmpty(this.dinIrtval.trim()) ? "0" : this.dinIrtval) * act.getDraccm();
-        double dbcacint = Double.parseDouble(StringUtils.isEmpty(this.cinIrtval.trim()) ? "0" : this.cinIrtval) * act.getCraccm();
-        String dacint = DataFormater.formatNum(this.ccyDecpos, dbdacint);
-        String cacint = DataFormater.formatNum(this.ccyDecpos, dbcacint);
+        //double dbdacint = Double.parseDouble(StringUtils.isEmpty(this.dinIrtval.trim()) ? "0" : this.dinIrtval) * act.getDraccm();
+        //double dbcacint = Double.parseDouble(StringUtils.isEmpty(this.cinIrtval.trim()) ? "0" : this.cinIrtval) * act.getCraccm();
+
+        //20120716 zhanrui
+        BigDecimal dbdacint = this.wkCratsf.multiply(new BigDecimal(act.getDraccm()));
+        BigDecimal dbcacint = this.wkCratsf.multiply(new BigDecimal(act.getCraccm()));
+
+        String dacint = DataFormater.formatNum(this.ccyDecpos, dbdacint.doubleValue());
+        String cacint = DataFormater.formatNum(this.ccyDecpos, dbcacint.doubleValue());
         dataList6.add(0,"借方利息：");
         dataList6.add(1,dacint);
         dataList6.add(2,"贷方利息：");
@@ -285,8 +294,8 @@ public class ActClear {
         dataAryList.add(5,dataList6);
 
         ArrayList<String> dataList7 = new ArrayList<String>();
-        String totalacint = DataFormater.formatNum(this.ccyDecpos, dbcacint - dbdacint);   //利息合计
-        String amount = DataFormater.formatNum(this.ccyDecpos, act.getBokbal() + dbcacint - dbdacint);  //本息合计
+        String totalacint = DataFormater.formatNum(this.ccyDecpos, dbcacint.subtract(dbdacint).doubleValue());   //利息合计
+        String amount = DataFormater.formatNum(this.ccyDecpos, new BigDecimal(act.getBokbal()).add(dbcacint).subtract(dbdacint).doubleValue());  //本息合计
         dataList7.add(0,"利息合计：");
         dataList7.add(1,totalacint);
         dataList7.add(2,"本息合计：");

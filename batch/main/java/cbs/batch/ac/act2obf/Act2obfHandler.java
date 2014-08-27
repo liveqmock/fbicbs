@@ -15,7 +15,8 @@ import org.springframework.stereotype.Service;
  * * User: zhangxiaobo
  * Date: 2010-2-22
  */
-@Service("Act2obfHandler")
+//@Service("Act2obfHandler")
+@Service
 public class Act2obfHandler extends AbstractACBatchJobLogic {
     private static final Logger logger = LoggerFactory.getLogger(Act2obfHandler.class);
     @Inject

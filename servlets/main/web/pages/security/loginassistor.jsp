@@ -43,7 +43,8 @@
 
 <%
     // 新增判断是否重复登录 zxb 2011-3-30
-    if (OnLineOpersManager.isUserOnline(username, application)) {
+    // 2012-6-5 胶州
+    /*if (OnLineOpersManager.isUserOnline(username, application)) {
         out.println("<script language=\"javascript\">" +
                 "alert ('该用户已登录，请勿重复登录！');" +
                 " if(top){ top.location.href='" +
@@ -55,7 +56,7 @@
                     "alert ('请联系系统管理员修改IE设置或打开不同的浏览器窗口登录系统！');" +
                     " window.open('', '_parent', '');" +
                     " window.close(); </script>");
-        } else {
+        } else {*/
                 OperatorManager om = new OperatorManager();
                 session.setAttribute(SystemAttributeNames.USER_INFO_NAME, om);
 
@@ -80,6 +81,6 @@
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+      //  }
 %>
 

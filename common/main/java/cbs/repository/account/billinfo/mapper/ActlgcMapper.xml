@@ -864,8 +864,7 @@
             and stm.secccy=lbl.secccy
         where
              stm.orgidt=#{orgidt}
-             and ani.oldacn <> '50808' and ani.oldacn <> '8580001'
-        order by cusidt
+        order by oldacn
        ]]>
     </select>
     <resultMap id="lgcForContentResultMap" type="cbs.repository.account.maininfo.model.ActstmForStmCotent">

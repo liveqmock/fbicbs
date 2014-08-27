@@ -14,6 +14,7 @@ import cbs.repository.account.maininfo.model.Actobf;
 import cbs.repository.account.tempinfo.model.Actcir;
 import cbs.repository.code.model.*;
 import cbs.repository.platform.model.Ptdept;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,8 @@ import java.util.Map;
  */
 // TODO  obf 的初始化和多引用指向同一对象
 //  TODO 大小变量在调用时需再次赋值
-@Service("AcbintHandler")
+//@Service("AcbintHandler")
+@Service
 public class AcbintHandler extends AbstractACBatchJobLogic {
     private static final Logger logger = LoggerFactory.getLogger(AcbintHandler.class);
     @Inject
@@ -407,7 +409,7 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
     private String idtDepnum;
     private String idtFiller = "";
     private String eryApcode;
-    private String eryCurcde;
+    private String eryCurcde = "   ";
     private String eryEryamt;
     private Short eryCdrflg;
     private String eryVchpar;
@@ -525,10 +527,10 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
     private static final String CNST_M_FXFLAG_0 = "0";
     private static final String CNST_M_FXFLAG_1 = "1";
     private static final String CNST_WK_RMB = "001";
-    private   String CNST_M_CUSIDT_HED = "86";
+    private String CNST_M_CUSIDT_HED = "86";
 
-    private Map<String,String> oldacnMaps;   // 新旧账号Map<内部账号,Oldacn>
-    private Map<String,String> apcodeMaps;  //  核算码和利息支出核算码
+    private Map<String, String> oldacnMaps;   // 新旧账号Map<内部账号,Oldacn>
+    private Map<String, String> apcodeMaps;  //  核算码和利息支出核算码
 
     // 3000 5000
     @Override
@@ -540,17 +542,17 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
             int sctnum = Integer.parseInt(ACEnum.SYSIDT_AC.getStatus());
             Ipymak = mapper.qryIpymakByNum(sctnum);
             if ("N".equalsIgnoreCase(Ipymak)) {
-                logger.info("Ipymak = "+Ipymak+" 不计息.");
+                logger.info("Ipymak = " + Ipymak + " 不计息.");
                 return;
             }
             // 生成intflag标志文件，批量shell脚本中判断文件是否存在
-           createIntflagFile();
+            createIntflagFile();
             // 初始化几个对象数组变量
             initObjectArray();
             // 初始化新旧账号对照Map
             initOldactMaps();
             // 初始化核算码和利息支出核算码
-             initApcodeMaps();
+            initApcodeMaps();
 
             SctBean sct = mapper.qrySctByNum(sctnum);
             if (sct == null) {
@@ -566,7 +568,7 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
             // 自动转账
             Actatr atr = mapper.qryAtrByCde(ACEnum.ATRCDE_A10.getStatus());
             if (atr == null) {
-                logger.error("READ ATRATR ERROR ! ATRCDE:  " + ACEnum.ATRCDE_A10.getStatus());
+                logger.error("READ ACTATR ERROR ! ATRCDE:  " + ACEnum.ATRCDE_A10.getStatus());
                 return;
             }
             atrPrdcde = atr.getPrdcde();
@@ -580,9 +582,13 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
             if (deptList != null && !deptList.isEmpty()) {
                 for (Ptdept dept : deptList) {
                     initFilePathByDept(dept);
+                    // A10
+                    logger.info("deptid = " + dept.getDeptid() + " atrCurrag=" + atrCurrag);
                     aos = mapper.qryActAndGlcs(ACEnum.ATRCDE_A10.getStatus(), ACEnum.TRFKID_3.getStatus(),
                             ACEnum.TRFKID_1.getStatus(), ACEnum.TRFKID_7.getStatus(), atrCurrag, ACEnum.RECSTS_VALID.getStatus(),
                             ACEnum.INTFLG_AIF.getStatus(), ACEnum.INTFLG_AIF_4.getStatus(), dept.getDeptid());
+
+                    //logger
                     if (aos != null && !aos.isEmpty()) {
                         wkLOrgidt = "";
                         for (ActAndGlc ao : aos) {
@@ -600,8 +606,8 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
                             actInttra = ao.getInttra();
                             actDepnum = ao.getDepnum();
                             actCacint = ao.getCacint();
-                            if(actCacint < 0) {
-                            logger.info("ACTACT ====  "+actInttra +"   :    "+actCacint);
+                            if (actCacint < 0) {
+                                logger.info("ACTACT ====  " + actInttra + "   :    " + actCacint);
                             }
                             actDacint = ao.getDacint();
                             actCratsf = ao.getCratsf();
@@ -629,7 +635,7 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
                     // 5243-CHG-PAGE
                     chgPage();
                     // 生成转账借方凭证  （sbs中没有）
-                     generateTranDebitVoucherByOrg(dept);
+                    generateTranDebitVoucherByOrg(dept);
                     outFileHandler.writeToFile();
                     errFileHandler.writeToReport();
                     lstFileHandler.writeToReport();
@@ -649,13 +655,13 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
     // 生成转账借方凭证  （sbs中没有）
     private void generateTranDebitVoucherByOrg(Ptdept dept) {
         List<TranDebitVoucher> glcintList = mapper.qryVchForInterestInfos(dept.getDeptid());
-        if(glcintList != null && !glcintList.isEmpty()) {
+        if (glcintList != null && !glcintList.isEmpty()) {
             int index = 1;
-            for(TranDebitVoucher voucher : glcintList) {
-                if(index != 1 && index % 2 != 0) {
-                  voucherHandler.appendToBody(newPageFlag);
+            for (TranDebitVoucher voucher : glcintList) {
+                if (index != 1 && index % 2 != 0) {
+                    voucherHandler.appendToBody(newPageFlag);
                 }
-                String glcnam  = mapper.qryGlcnamByCode(voucher.getCorglc());
+                String glcnam = mapper.qryGlcnamByCode(voucher.getCorglc());
                 voucher.setOrgnam(dept.getDeptname());
                 voucher.setCorglcnam(glcnam);
                 voucher.setDate(busDate10);
@@ -667,24 +673,24 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
     }
 
     private void initApcodeMaps() {
-      apcodeMaps = new HashMap<String,String>();
-      List<Actapc> apcList = mapper.qryApcs();
-      if(apcList != null && !apcList.isEmpty()) {
-         for(Actapc apc : apcList) {
-             apcodeMaps.put(apc.getApcode(),apc.getIntexp());
-         }
-      }
+        apcodeMaps = new HashMap<String, String>();
+        List<Actapc> apcList = mapper.qryApcs();
+        if (apcList != null && !apcList.isEmpty()) {
+            for (Actapc apc : apcList) {
+                apcodeMaps.put(apc.getApcode(), apc.getIntexp());
+            }
+        }
     }
 
     private void initOldactMaps() {
-        oldacnMaps = new HashMap<String,String>();
+        oldacnMaps = new HashMap<String, String>();
         List<Actani> aniList = mapper.qryActanis();
-        if(aniList != null && !aniList.isEmpty()) {
+        if (aniList != null && !aniList.isEmpty()) {
             StringBuilder keyBuilder = null;
-            for(Actani ani : aniList) {
+            for (Actani ani : aniList) {
                 keyBuilder = new StringBuilder();
                 keyBuilder.append(ani.getOrgidt()).append(ani.getCusidt()).append(ani.getApcode()).append(ani.getCurcde());
-                oldacnMaps.put(keyBuilder.toString(),ani.getOldacn());
+                oldacnMaps.put(keyBuilder.toString(), ani.getOldacn());
             }
         }
     }
@@ -692,19 +698,19 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
     // 初始化数组变量
     private void initObjectArray() {
         int i = 0;
-        for(i = 0 ; i < oeryTable.length;i++) {
+        for (i = 0; i < oeryTable.length; i++) {
             oeryTable[i] = new OeryT();
         }
-         for(i = 0 ; i < occyTable.length;i++) {
+        for (i = 0; i < occyTable.length; i++) {
             occyTable[i] = new OccyT();
         }
-     /*  for(i = 0 ; i < oobfTable.length;i++) {
+        /*  for(i = 0 ; i < oobfTable.length;i++) {
             oobfTable[i] = new Obf();
         }
         for(i = 0 ; i < ovchTable.length;i++) {
             ovchTable[i] = new Vch();
         }*/
-         for(i = 0 ; i < oapcTable.length;i++) {
+        for (i = 0; i < oapcTable.length; i++) {
             oapcTable[i] = new OapcT();
         }
 
@@ -712,12 +718,12 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
 
     // 生成intflag利息标志文件
     private void createIntflagFile() throws IOException {
-         File tempFile = new File(PropertyManager.getProperty("ACBINT_FLAGPATH"),
-                    PropertyManager.getProperty("ACBINT_FLAG_FILENAME"));
-            if (tempFile.exists()) {
-                tempFile.delete();
-            }
-            tempFile.createNewFile();
+        File tempFile = new File(PropertyManager.getProperty("ACBINT_FLAGPATH"),
+                PropertyManager.getProperty("ACBINT_FLAG_FILENAME"));
+        if (tempFile.exists()) {
+            tempFile.delete();
+        }
+        tempFile.createNewFile();
     }
 
     //   5100-PROCESS-EVERY-ORGIDT
@@ -749,6 +755,7 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
             pageNo = 1;
             errPage = 1;
             wkLOrgidt = actOrgidt;
+            logger.info(" wkLOrgidt = actOrgidt = " + wkLOrgidt);
             shouRuOrg = actOrgidt;
             ysxlstOrg = actOrgidt;
             ysxvchOrg = actOrgidt;
@@ -789,15 +796,15 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
     private void printShouKuan() {
         // 每页出3个通知
         if (shoukuanNo != 0 && shoukuanNo % 3 == 0) {
-           // shoukuanNo = 0;
-           // shoukuanBot();
+            // shoukuanNo = 0;
+            // shoukuanBot();
             outFileHandler.appendToBody(newPageFlag); // 换页
         }
         shoukuanBank = orgOrgnam;
         outTemplate = null;
         outTemplate = new InterestOutTemplate();
         outTemplate.setTitleName("               利息通知单");
-        outTemplate.setOrgidt(actOrgidt+orgOrgnam);
+        outTemplate.setOrgidt(actOrgidt + orgOrgnam);
         outTemplate.setDate(sdfdate10.format(sctIpydat));
         outTemplate.setActno(oldacnMaps.get(actOrgidt + actCusidt + actApcode + actCurcde));
         //outTemplate.setFromActno(nbActToOldacn(actInttra.substring(1)));
@@ -805,27 +812,27 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
         outTemplate.setActnam(actActnam);
         if ("D".equals(glcGlcbal)) {
             shoukuanInts = actDacint;
-            outTemplate.setInterest(SystemService.formatStrAmt(String.format("%.2f", shoukuanInts/100.0)));
+            outTemplate.setInterest(SystemService.formatStrAmt(String.format("%.2f", shoukuanInts / 100.0)));
             //outTemplate.setFints("");
         } else {
             shoukuanInts = actCacint;
             shoukuanFInts = actDacint;
-            outTemplate.setInterest(SystemService.formatStrAmt(String.format("%.2f", shoukuanInts/100.0)));
+            outTemplate.setInterest(SystemService.formatStrAmt(String.format("%.2f", shoukuanInts / 100.0)));
             //outTemplate.setFints(String.valueOf(shoukuanFInts));
         }
         jixiDate1 = sdfdate10.format(actLintdt);
         outTemplate.setStartDate(jixiDate1);
         outTemplate.setEndDate(jixiDate2);
         if (actCacint != 0) {
-            outTemplate.setCraccm(String.format("%.2f", actCraccm/100.0));
-            outTemplate.setRate(String.valueOf(actCratsf)+"%");
+            outTemplate.setCraccm(String.format("%.2f", actCraccm / 100.0));
+            outTemplate.setRate(String.valueOf(actCratsf) + "%");
             if ("8272".equals(actApcode) && "001".equals(actCurcde)) {
                 tmpInts = new BigDecimal(actCacint + "").subtract(wkInttax);
-               // shengxiInts = tmpInts;
-               // outTemplate.setSxInterest(String.valueOf(shengxiInts));
+                // shengxiInts = tmpInts;
+                // outTemplate.setSxInterest(String.valueOf(shengxiInts));
             } else {
                 //shengxiInts = new BigDecimal(actCacint);
-               // outTemplate.setSxInterest(String.valueOf(shengxiInts));
+                // outTemplate.setSxInterest(String.valueOf(shengxiInts));
             }
             if ("8272".equals(actApcode) && "001".equals(actCurcde)) {
                 tmpInts = new BigDecimal(wkCraccm - wkDraccm);
@@ -835,13 +842,13 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
             }
         }
         if (actDacint != 0) {
-            outTemplate.setCraccm(String.format("%.2f", actDraccm/100.0));
+            outTemplate.setCraccm(String.format("%.2f", actDraccm / 100.0));
             outTemplate.setRate(String.valueOf(actDratsf));
-           // shengxiInts = new BigDecimal(actDacint);
-           // outTemplate.setSxInterest(String.valueOf(shengxiInts));
+            // shengxiInts = new BigDecimal(actDacint);
+            // outTemplate.setSxInterest(String.valueOf(shengxiInts));
         }
         //outTemplate.setVchset(String.valueOf(wkTlr + tlrVchset));
-        outFileHandler.appendToBody("第"+(shoukuanNo/3 +1)+"页, 序号:" +(shoukuanNo+1));
+        outFileHandler.appendToBody("第" + (shoukuanNo / 3 + 1) + "页, 序号:" + (shoukuanNo + 1));
         outFileHandler.appendToBody(outTemplate.toString());
         shoukuanNo++;
     }
@@ -855,7 +862,7 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
         errFileHandler = new InterestErrTemplate("存款未计息清单8910err.txt");
         lstFileHandler = new InterestLstTemplate("存款计息清单8910lst.txt");
         voucherHandler = new BatchResultFileHandler("转账借方凭证.txt");
-        String filePath = PropertyManager.getProperty("REPORT_ROOTPATH") + busDate + "/" +  dept.getDeptid() + "/";
+        String filePath = PropertyManager.getProperty("REPORT_ROOTPATH") + busDate + "/" + dept.getDeptid() + "/";
         lstFileHandler.setFilePath(filePath);
         lstFileHandler.setTitle("                                                    存款计息清单");
         outFileHandler.setFilePath(filePath);
@@ -915,6 +922,7 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
             obf.recsts = actobf.getRecsts();
             obf.ovelim = actobf.getOvelim();
             obf.oveexp = actobf.getOveexp();
+            logger.info("++++++++[actobf.getOveexp()] : " + obf.oveexp);
             obf.cqeflg = actobf.getCqeflg();
             obf.glcbal = actobf.getGlcbal();
         }
@@ -988,10 +996,10 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
             meryCurcd1 = actCurcde;
             meryApcde2 = apcIntexp;
             meryTxamt1 = new BigDecimal(actCacint);
-            if(!"2".equals(meryApcde1.substring(0,1))){
-            logger.info("meryApcde1 == " + meryApcde1.toString());
-            logger.info("meryApcde2 == " + meryApcde2.toString());
-            logger.info("meryTxamt1 == " + meryTxamt1.toString());
+            if (!"2".equals(meryApcde1.substring(0, 1))) {
+                logger.info("meryApcde1 == " + meryApcde1.toString());
+                logger.info("meryApcde2 == " + meryApcde2.toString());
+                logger.info("meryTxamt1 == " + meryTxamt1.toString());
             }
 
             meryTxamt2 = wkInttax;
@@ -1121,10 +1129,10 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
         //    5242-BOT-LINE
         botLine();
 
-         if (vchTemplate != null) {
-            vchFileHandler.appendToBody("页码: "+(vchNo/4+1)+" 序号:"+(vchNo+1));
+        if (vchTemplate != null) {
+            vchFileHandler.appendToBody("页码: " + (vchNo / 4 + 1) + " 序号:" + (vchNo + 1));
             vchFileHandler.appendToBody(vchTemplate.toString());
-             vchNo++;
+            vchNo++;
         }
     }
 
@@ -1226,10 +1234,10 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
     private void checkInttraRtn() {
         rtnEryCode = 0;
         tmpInttra = actInttra;
-        inttraOrgidt = tmpInttra.substring(1,4);
-        inttraCusidt = tmpInttra.substring(4,11);
-        inttraApcode = tmpInttra.substring(11,15);
-        inttraCurcde = tmpInttra.substring(15,18);
+        inttraOrgidt = tmpInttra.substring(1, 4);
+        inttraCusidt = tmpInttra.substring(4, 11);
+        inttraApcode = tmpInttra.substring(11, 15);
+        inttraCurcde = tmpInttra.substring(15, 18);
         if ("".equals(actInttra.trim())) {
             errReason = "转息账号没输入";
             rtnEryCode = 1;
@@ -1297,19 +1305,19 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
             errAccum = wkCraccm;
             errInts = actCacint;
             errRat = actCratsf;
-            errActno = errActOrgidt+errActCusidt+errActApcode+errActCurcde;
+            errActno = errActOrgidt + errActCusidt + errActApcode + errActCurcde;
             //   "账号", "户名", "积数", "利率", "利息", "原因","转息账号"
-            errFileHandler.appendFieldValues(new String[]{oldacnMaps.get(errActno) +"   ", errActnam, String.format("%.2f", errAccum/100.0),
-                    String.valueOf(errRat)+"%",SystemService.formatStrAmt(String.format("%.2f", errInts/100.0)),errReason, errInttra});
+            errFileHandler.appendFieldValues(new String[]{oldacnMaps.get(errActno) + "   ", errActnam, String.format("%.2f", errAccum / 100.0),
+                    String.valueOf(errRat) + "%", SystemService.formatStrAmt(String.format("%.2f", errInts / 100.0)), errReason, errInttra});
             //errLine++;
         }
         if (actDacint != 0) {
             errAccum = wkDraccm;
             errInts = actDacint;
             errRat = actDratsf;
-            errActno = errActOrgidt+errActCusidt+errActApcode+errActCurcde;
-            errFileHandler.appendFieldValues(new String[]{oldacnMaps.get(errActno)+"   ", errActnam, String.format("%.2f", errAccum/100.0),
-                    String.valueOf(errRat)+"%", SystemService.formatStrAmt(String.format("%.2f", errInts/100.0)), errReason, errInttra});
+            errActno = errActOrgidt + errActCusidt + errActApcode + errActCurcde;
+            errFileHandler.appendFieldValues(new String[]{oldacnMaps.get(errActno) + "   ", errActnam, String.format("%.2f", errAccum / 100.0),
+                    String.valueOf(errRat) + "%", SystemService.formatStrAmt(String.format("%.2f", errInts / 100.0)), errReason, errInttra});
         }
     }
 
@@ -1370,15 +1378,15 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
             cratsfOut = actCratsf;
             intsOut = actCacint;
             // "账号", "户名", "积数", "年利率", "利息", "传票套号"
-            lstFileHandler.appendFieldValues(new String[]{oldacnMaps.get(actOrgidt+accountOut) +"   ", huMing, String.format("%.2f", avabalOut/100.0),
-                    String.valueOf(cratsfOut)+"%", SystemService.formatStrAmt(String.format("%.2f", intsOut/100.0)), outrecTlrnum+outrecVchset});
+            lstFileHandler.appendFieldValues(new String[]{oldacnMaps.get(actOrgidt + accountOut) + "   ", huMing, String.format("%.2f", avabalOut / 100.0),
+                    String.valueOf(cratsfOut) + "%", SystemService.formatStrAmt(String.format("%.2f", intsOut / 100.0)), outrecTlrnum + outrecVchset});
         }
         if (actDacint != 0) {
             avabalOut = wkDraccm;
             cratsfOut = actDratsf;
             intsOut = actDacint;
-            lstFileHandler.appendFieldValues(new String[]{oldacnMaps.get(actOrgidt+accountOut)+"   ", huMing, String.format("%.2f", avabalOut/100.0),
-                    String.valueOf(cratsfOut)+"%", SystemService.formatStrAmt(String.format("%.2f", intsOut/100.0)), outrecTlrnum+outrecVchset});
+            lstFileHandler.appendFieldValues(new String[]{oldacnMaps.get(actOrgidt + accountOut) + "   ", huMing, String.format("%.2f", avabalOut / 100.0),
+                    String.valueOf(cratsfOut) + "%", SystemService.formatStrAmt(String.format("%.2f", intsOut / 100.0)), outrecTlrnum + outrecVchset});
 
         }
     }
@@ -1456,12 +1464,15 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
 
     //  5106-UPDATE-PDNTLR
     private void updatePdntlr() {
+        logger.info("wkLOrgidt = '':" + "".equals(wkLOrgidt) + " wkLOrgidt=null:" + (wkLOrgidt == null));
         try {
+            logger.info("updatePdn --- orgidt= " + wkLOrgidt);
             mapper.updatePdn(pdnPdnseq, wkLOrgidt, atrPrdcde);
         } catch (Exception e) {
             throw new RuntimeException("UPDATE　ACTPDN ERROR ! orgidt=" + wkLOrgidt + "  prdcde=" + wkPrdcde);
         }
         try {
+            logger.info("updateTlr --- orgidt= " + wkLOrgidt);
             mapper.updateTlr(tlrVchset, wkLOrgidt, wkTlr);
         } catch (Exception e) {
             throw new RuntimeException("UPDATE ACTTLR ERROR ! orgidt=" + wkLOrgidt);
@@ -1600,10 +1611,10 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
         oobfCnt = 0;
         // TODO
         int i = 0;
-         for(i = 0 ; i < oobfTable.length;i++) {
+        for (i = 0; i < oobfTable.length; i++) {
             oobfTable[i] = new Obf();
         }
-        for(i = 0 ; i < ovchTable.length;i++) {
+        for (i = 0; i < ovchTable.length; i++) {
             ovchTable[i] = new Vch();
         }
         if (meryCatcde != null && !meryCatcde.equals(oeryCatcde)) {
@@ -1708,7 +1719,7 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
                     vch.vchaut, vch.vchano, nullToEmptystr(vch.depnum), vch.txnbak, vch.actbak, vch.clrbak, vch.orgid4, vch.erytyp,
                     vch.erydat, vch.erytim, vch.recsts);
         } catch (ParseException pe) {
-           throw new RuntimeException(" DATE PARSE ERROR OCCURS WNEN INSERT VCH !    " + vch.orgidt + vch.tlrnum + vch.vchset + vch.setseq);
+            throw new RuntimeException(" DATE PARSE ERROR OCCURS WNEN INSERT VCH !    " + vch.orgidt + vch.tlrnum + vch.vchset + vch.setseq);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(" INSERT VCH ERROR!    " + vch.orgidt + vch.tlrnum + vch.vchset + vch.setseq);
@@ -1716,14 +1727,15 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
 
     }
 
-    private String nullToEmptystr(String str){
-        return (str== null)?"":str;
+    private String nullToEmptystr(String str) {
+        return (str == null) ? "" : str;
     }
+
     private String parseDate10ToDate8(String date10) throws ParseException {
         String date8 = null;
-         if(date10 != null && date10.contains("-") && date10.length() == 10) {
+        if (date10 != null && date10.contains("-") && date10.length() == 10) {
             date8 = sdfdate8.format(sdfdate10.parse(date10));
-         }
+        }
         return date8;
     }
 
@@ -1735,15 +1747,23 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
             return;
         }
         obf = oobfTable[oobfCnt];
+        logger.info("obf.obfkey=== " + obf.sysidt + obf.orgidt + obf.cusidt + obf.apcode + obf.curcde);
         acrUpdateObf();
     }
 
     private void acrUpdateObf() {
         try {
+            if(StringUtils.isEmpty(obf.oveexp)) {
+                obf.oveexp = "11111111";
+            }
+            if(StringUtils.isEmpty(obf.cqeflg)) {
+                obf.cqeflg = "1";
+            }
+
             mapper.updateObf(obf.bokbal, obf.avabal, obf.difbal, obf.cifbal, obf.actsts, obf.frzsts, obf.regsts, obf.recsts,
                     obf.ovelim, obf.oveexp, obf.cqeflg, obf.glcbal, obf.sysidt, obf.orgidt, obf.cusidt, obf.apcode, obf.curcde);
         } catch (Exception e) {
-            throw new RuntimeException(" UPDATE OBF ERROR! " + obf.obfkey);
+            throw new RuntimeException(" UPDATE OBF ERROR! " + obf.obfkey, e);
         }
     }
 
@@ -1802,7 +1822,7 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
         obf.cusidt = vch.cusidt;
         obf.apcode = vch.apcode;
         obf.curcde = vch.curcde;
-        obf.obfkey = obf.sysidt+obf.orgidt+obf.cusidt+obf.apcode+obf.curcde;
+        obf.obfkey = obf.sysidt + obf.orgidt + obf.cusidt + obf.apcode + obf.curcde;
         //  99516-READ-OBF-RTN
         readObfRtn();
         if ("*".equals(vch.rvslbl)) {
@@ -1818,15 +1838,15 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
         CNST_M_CHK_BAL = obf.glcbal;
         if (
                 (
-                CNST_M_CRBAL_FLAG.equals(CNST_M_CHK_BAL) && (obf.avabal < (-1) * obf.ovelim)
-                && (!"*".equals(vch.rvslbl) && vch.txnamt < 0 || "*".equals(vch.rvslbl) && vch.txnamt > 0)
+                        CNST_M_CRBAL_FLAG.equals(CNST_M_CHK_BAL) && (obf.avabal < (-1) * obf.ovelim)
+                                && (!"*".equals(vch.rvslbl) && vch.txnamt < 0 || "*".equals(vch.rvslbl) && vch.txnamt > 0)
                 )
-                ||
-                (
-                        CNST_M_DRBAL_FLAG.equals(CNST_M_CHK_BAL) && (obf.avabal > obf.ovelim)
-                        && (!"*".equals(vch.rvslbl) && vch.txnamt > 0 || "*".equals(vch.rvslbl) && vch.txnamt < 0)
-                )
-         ) {
+                        ||
+                        (
+                                CNST_M_DRBAL_FLAG.equals(CNST_M_CHK_BAL) && (obf.avabal > obf.ovelim)
+                                        && (!"*".equals(vch.rvslbl) && vch.txnamt > 0 || "*".equals(vch.rvslbl) && vch.txnamt < 0)
+                        )
+                ) {
             rtnEryCode = wkSetseq;
             vch.furinf = "BALANCE OVER";
         }
@@ -1861,6 +1881,7 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
             obf.cqeflg = actobf.getCqeflg();
             obf.glcbal = actobf.getGlcbal();
         }
+        logger.info("actobf == null :" + (actobf == null));
         if (actobf == null || (!ACEnum.RECSTS_VALID.getStatus().equals(obf.recsts)
                 || !ACEnum.RECSTS_VALID.getStatus().equals(obf.actsts))) {
             //   PERFORM  AUTO-CREATE-PROC    THRU  AUTO-CREATE-EXIT
@@ -1889,7 +1910,7 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
         obf.cusidt = vch.cusidt;
         obf.apcode = vch.apcode;
         obf.curcde = vch.curcde;
-        obf.obfkey = obf.sysidt+obf.orgidt+obf.cusidt+obf.apcode+obf.curcde;
+        obf.obfkey = obf.sysidt + obf.orgidt + obf.cusidt + obf.apcode + obf.curcde;
         obf.avabal = 0L;
         obf.bokbal = 0L;
         obf.ovelim = 0L;
@@ -2012,6 +2033,7 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
             glcGlcbal = apcglc.getGlcbal();
             glcGlcopn = apcglc.getGlcopn();
             apcApctyp = apcglc.getApctyp();
+            logger.info("glcGlcbal =" + glcGlcbal + " ,glcGlcopn =" + glcGlcopn + ",apcApctyp=" + apcApctyp);
         } else {
             throw new RuntimeException("READ APCODE,GLCODE ERROR ! apcode=" + apcApcode);
         }
@@ -2076,7 +2098,7 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
         CNST_M_CUSIDT_ORG = CNST_M_CUSIDT_ITG.substring(1, 4);
         CNST_M_CUSIDT_DEP = CNST_M_CUSIDT_ITG.substring(4, 6);
         CNST_M_CUSIDT_CHK = CNST_M_CUSIDT_ITG.substring(6, 7);
-        CNST_M_CUSIDT_HED = CNST_M_CUSIDT_IBK.substring(0,2);
+        CNST_M_CUSIDT_HED = CNST_M_CUSIDT_IBK.substring(0, 2);
         CNST_M_CUSIDT_BNK = CNST_M_CUSIDT_IBK.substring(2, 7);
         if (CNST_M_CUSIDT_CUSIDT1.equals(CNST_M_CUSIDT)) {
             vch.cusidt = meryCusid1;
@@ -2093,22 +2115,22 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
         } else if (CNST_M_CUSIDT_ORG_TXN.equals(CNST_M_CUSIDT_ORG)) {
             CNST_M_CUSIDT_ORG = meryTxnorg;
             CNST_M_CUSIDT_CHK = "0";
-            CNST_M_CUSIDT_ITG = CNST_M_CUSIDT_FST+CNST_M_CUSIDT_ORG+CNST_M_CUSIDT_DEP+CNST_M_CUSIDT_CHK;
+            CNST_M_CUSIDT_ITG = CNST_M_CUSIDT_FST + CNST_M_CUSIDT_ORG + CNST_M_CUSIDT_DEP + CNST_M_CUSIDT_CHK;
             vch.cusidt = CNST_M_CUSIDT_ITG;
         } else if (CNST_M_CUSIDT_ORG_ACT.equals(CNST_M_CUSIDT_ORG)) {
             CNST_M_CUSIDT_ORG = meryActorg;
             CNST_M_CUSIDT_CHK = "0";
-            CNST_M_CUSIDT_ITG = CNST_M_CUSIDT_FST+CNST_M_CUSIDT_ORG+CNST_M_CUSIDT_DEP+CNST_M_CUSIDT_CHK;
+            CNST_M_CUSIDT_ITG = CNST_M_CUSIDT_FST + CNST_M_CUSIDT_ORG + CNST_M_CUSIDT_DEP + CNST_M_CUSIDT_CHK;
             vch.cusidt = CNST_M_CUSIDT_ITG;
         } else if (CNST_M_CUSIDT_ORG_CLR.equals(CNST_M_CUSIDT_ORG)) {
             CNST_M_CUSIDT_ORG = meryClrorg;
             CNST_M_CUSIDT_CHK = "0";
-            CNST_M_CUSIDT_ITG = CNST_M_CUSIDT_FST+CNST_M_CUSIDT_ORG+CNST_M_CUSIDT_DEP+CNST_M_CUSIDT_CHK;
+            CNST_M_CUSIDT_ITG = CNST_M_CUSIDT_FST + CNST_M_CUSIDT_ORG + CNST_M_CUSIDT_DEP + CNST_M_CUSIDT_CHK;
             vch.cusidt = CNST_M_CUSIDT_ITG;
         } else if (CNST_M_CUSIDT_ORG_SUP.equals(CNST_M_CUSIDT_ORG)) {
             CNST_M_CUSIDT_ORG = merySuporg;
             CNST_M_CUSIDT_CHK = "0";
-            CNST_M_CUSIDT_ITG = CNST_M_CUSIDT_FST+CNST_M_CUSIDT_ORG+CNST_M_CUSIDT_DEP+CNST_M_CUSIDT_CHK;
+            CNST_M_CUSIDT_ITG = CNST_M_CUSIDT_FST + CNST_M_CUSIDT_ORG + CNST_M_CUSIDT_DEP + CNST_M_CUSIDT_CHK;
             vch.cusidt = CNST_M_CUSIDT_ITG;
         } else if (CNST_M_CUSIDT_BNK_ACT.equals(CNST_M_CUSIDT_BNK)) {
             CNST_M_CUSIDT_BNK = meryCusid5;
@@ -2253,8 +2275,8 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
         } else {
             vch.txnamt = 0L;
         }
-        if(vch.apcode.startsWith("2") && eryCdrflg < 0) {
-            logger.info("vch.apcode(2227)  : "+vch.apcode+"   eryCdrflg : "+eryCdrflg);
+        if (vch.apcode.startsWith("2") && eryCdrflg < 0) {
+            logger.info("vch.apcode(2227)  : " + vch.apcode + "   eryCdrflg : " + eryCdrflg);
         }
         if (eryCdrflg < 0) {
             vch.txnamt = 0 - vch.txnamt;
@@ -2398,13 +2420,13 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
 
     // 由内部账号计算获取对应的利息支出账号的Oldacn        01090106008521001
     private String nbActToOldacn(String actno) {
-        if(actno == null || actno.length() != 17){
+        if (actno == null || actno.length() != 17) {
             throw new RuntimeException("内部账号为空或长度不等于17！");
         }
-        String intActno = actno.substring(0,3)+"9"+actno.substring(0,3)+"600"+
-                    apcodeMaps.get(actno.substring(10,14))+actno.substring(14,17);
-        String rtnActno =  oldacnMaps.get(intActno);
-        if(rtnActno == null) {
+        String intActno = actno.substring(0, 3) + "9" + actno.substring(0, 3) + "600" +
+                apcodeMaps.get(actno.substring(10, 14)) + actno.substring(14, 17);
+        String rtnActno = oldacnMaps.get(intActno);
+        if (rtnActno == null) {
             rtnActno = intActno;
         }
         return rtnActno;
@@ -2475,7 +2497,7 @@ public class AcbintHandler extends AbstractACBatchJobLogic {
         private String anacde = "";
         private String furinf = "";
         private BigDecimal fxrate = new BigDecimal(0);
-        private String secccy = "";
+        private String secccy = "   ";
         private int secamt = 0;
         private String corapc = "";
         private int vchatt = 0;

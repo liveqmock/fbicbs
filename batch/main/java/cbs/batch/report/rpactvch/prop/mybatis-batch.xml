@@ -21,6 +21,7 @@
         <mapper resource="cbs/repository/code/mapper/ActsctMapper.xml"/>
         <mapper resource="cbs/repository/code/mapper/ActorgMapper.xml"/>
         <mapper resource="cbs/repository/account/maininfo/mapper/ActvthMapper.xml"/>
+        <mapper resource="cbs/repository/platform/mapper/PtenudetailMapper.xml"/>
     </mappers>
 
 </configuration>
