@@ -1,4 +1,9 @@
 <%@ page import="pub.platform.security.OnLineOpersManager" %>
+<%@ page import="cbs.common.utils.PropertyManager" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.util.Calendar" %>
+<%@ page import="java.text.ParseException" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -11,16 +16,51 @@
 <%@ page contentType="text/html;charset=GBK" language="java" %>
 
 <%
-   /*  // 检测是否是同一session
-   if(OnLineOpersManager.isSessionOnline(session.getId(), application)){
-               out.println("<script language=\"javascript\">" +
-                "alert ('请打开新的浏览器窗口登录系统！');" +
-                " window.open('', '_parent', '');" +
-                  " window.close(); </script>");
-          }*/
+    /*  // 检测是否是同一session
+    if(OnLineOpersManager.isSessionOnline(session.getId(), application)){
+                out.println("<script language=\"javascript\">" +
+                 "alert ('请打开新的浏览器窗口登录系统！');" +
+                 " window.open('', '_parent', '');" +
+                   " window.close(); </script>");
+           }*/
+
+    String version = PropertyManager.getProperty("sys.version");
+    SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+    if ("0".equals(version)) {  // 试用版本
+        String endDate = PropertyManager.getProperty("sys.date");
+        Date d1 = new Date();
+        Date d2 = format.parse(endDate);
+
+        Calendar c1 = Calendar.getInstance();
+        Calendar c2 = Calendar.getInstance();
+        c1.setTime(d1);
+        c2.setTime(d2);
+        if (c1.after(c2)) {
+            c1 = c2;
+            c2.setTime(d1);
+        }
+        int betweenYears = c2.get(Calendar.YEAR) - c1.get(Calendar.YEAR);
+        int betweenDays = c2.get(Calendar.DAY_OF_YEAR) - c1.get(Calendar.DAY_OF_YEAR);
+        for (int i = 0; i < betweenYears; i++) {
+            c1.set(Calendar.YEAR, (c1.get(Calendar.YEAR) + 1));
+            betweenDays += c1.getMaximum(Calendar.DAY_OF_YEAR);
+        }
+
+        if(betweenDays < 1) {
+            String path = request.getContextPath();
+            out.println("<script language=\"javascript\">"
+                    + "alert ('当前系统试用期已过!');" +
+                    "if(top){ top.location.href='" + path + "/pages/security/loginPage.jsp'; } else { location.href = '" + path + "/pages/security/loginPage.jsp';} </script>");
+
+        } else if(betweenDays < 15) {
+            out.println("<script language=\"javascript\">"
+                    + "alert ('当前系统试用期仅剩" + betweenDays + "天，过期系统将无法继续使用!');</script>");
+        }
+
+    }
 
     String contextPath = request.getContextPath();
-    String cookieName="usernamecookie";
+    String cookieName = "usernamecookie";
     Cookie cookies[] = request.getCookies();
     String username = "";
     if (cookies != null) {
@@ -30,7 +70,7 @@
             }
         }
     }
-    
+
 %>
 
 
@@ -82,8 +122,9 @@
                             <UL>
                                 <LI class="user_main_text">Cookie：</LI>
                                 <LI class="user_main_input">
-                                    <SELECT id="DropExpiration" name="DropExpiration" onKeyPress="return submitViaEnter(event)">
-                                    <OPTION value="Month" selected>保存一个月</OPTION>
+                                    <SELECT id="DropExpiration" name="DropExpiration"
+                                            onKeyPress="return submitViaEnter(event)">
+                                        <OPTION value="Month" selected>保存一个月</OPTION>
                                         <OPTION value="Year">保存一年</OPTION>
                                         <OPTION value="None">不保存</OPTION>
                                     </SELECT></LI>
