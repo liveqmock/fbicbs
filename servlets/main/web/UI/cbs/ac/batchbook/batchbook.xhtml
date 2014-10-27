@@ -53,12 +53,14 @@
                     event.keyCode = 9;
                 } else if (event.srcElement.id == 'inputform:furinf') {
                     checkfurinf();
-                    event.keyCode = 9;
-                } else if (event.srcElement.id == 'inputform:vchatt') {
+                    //event.keyCode = 9;
+                    document.forms['inputform']['inputform:actno'].focus();
+                    document.forms['inputform']['inputform:save'].click();
+                }/* else if (event.srcElement.id == 'inputform:vchatt') {
                     checkvchatt();
                     document.forms['inputform']['inputform:actno'].focus();
                     document.forms['inputform']['inputform:save'].click();
-                } else if (event.srcElement.id == 'vchsetform:vchset') {
+                }*/ else if (event.srcElement.id == 'vchsetform:vchset') {
                     event.returnValue = false;
                     event.cancel = true;
                     document.forms['vchsetform']['vchsetform:modifyvchset'].click();
@@ -191,11 +193,11 @@
                 <h:outputLabel value="凭证号码*:" for="furinf"/>
                 <h:inputText autocomplete="off" id="furinf" value="#{batchBookAction.vo.furinf}" onfocus="this.select()"
                              onkeydown="KeyDown()"/>
-                <h:outputLabel value="附件:" for="vchatt"/>
+                <!--<h:outputLabel value="附件:" for="vchatt"/>
                 <h:inputText autocomplete="off" id="vchatt" value="#{batchBookAction.vo.vchatt}" onfocus="this.select()"
                              onkeydown="KeyDown()"
                              style="text-align:right">
-                </h:inputText>
+                </h:inputText>-->
                 <h:panelGroup>
                     <h:inputHidden id="setseq" value="#{batchBookAction.vo.setseq}"/>
                     <h:inputHidden id="sysdate" value="#{batchBookAction.sysdate}"/>
@@ -323,9 +325,9 @@
         <p:column headerText="凭证号码" style="text-align:center">
             <h:outputText value="#{record.furinf}"/>
         </p:column>
-        <p:column headerText="附件" style="width:25px;">
+        <!--<p:column headerText="附件" style="width:25px;">
             <h:outputText value="#{record.vchatt}" style="float: right"/>
-        </p:column>
+        </p:column>-->
 
         <p:column headerText="操作" style="width:100px;text-align:center">
             <h:commandLink immediate="true" value="修改" action="#{batchBookAction.onEditRecord}">

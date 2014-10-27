@@ -1023,9 +1023,10 @@ public class BatchBookAction implements Serializable {
             result = false;
         }
 
+        /*删除附件
         if (!checkVchatt(vo.getVchatt())) {
             result = false;
-        }
+        }*/
         //日期检查
         if (!checkDate8(this.vo.getValdat())) {
             result = false;
