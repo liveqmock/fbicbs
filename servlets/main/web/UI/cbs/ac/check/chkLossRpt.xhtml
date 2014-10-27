@@ -16,16 +16,24 @@
             }
         </style>
         <script type="text/javascript" language="javascript">
-            document.onkeydown = function TabReplace() {
+            function KeyDown() {
                 if (event.keyCode == 13) {
-                    if (event.srcElement.id == 'form:saveBtn') {
-                        document.forms['form']['form:saveBtn'].click();
+                    if (event.srcElement.id == 'inputform:actnum') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        document.forms['inputform']['inputform:papcde'].focus();
+                    }else if (event.srcElement.id == 'inputform:papcde') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        document.forms['inputform']['inputform:paptyp'].focus();
+                    }else if (event.srcElement.id == 'inputform:remark') {
+                        event.returnValue = false;
+                        event.cancel = true;
+                        document.forms['inputform']['inputform:saveBtn'].click();
                     }else{
                         event.keyCode = 9;
                     }
-                    /*if (event.srcElement.tagName != 'BUTTON'){
-                        event.keyCode = 9;
-                    }*/
+
                 }
              }
         </script>
@@ -43,47 +51,51 @@
 
                         <h:outputLabel value="帐号:" for="actnum"/>
                         <h:inputText id="actnum" size="30" maxlength="8" required="true" requiredMessage="帐号不能为空"
-                                     value="#{chkLossRptAction.actrep.actnum}">
-                            <p:ajax event="blur" update="msgs,input"  listener="#{chkLossRptAction.handleCom}"/>
+                                     value="#{chkLossRptAction.actrep.actnum}" onkeydown="KeyDown()" onfocus="this.select()">
+                            <p:ajax event="blur" update="msgs"  listener="#{chkLossRptAction.handleCom}"/>
                         </h:inputText>
                         <h:outputLabel value="支票号:" for="papcde"/>
                         <h:inputText id="papcde" size="30" maxlength="12" required="true" requiredMessage="支票号不能为空"
-                                     value="#{chkLossRptAction.actrep.papcde}">
-                            <p:ajax event="blur" update="msgs,input"  listener="#{chkLossRptAction.handlePap}"/>
+                                     value="#{chkLossRptAction.actrep.papcde}" onkeydown="KeyDown()" onfocus="this.select()">
+                            <p:ajax event="blur" update="msgs"  listener="#{chkLossRptAction.handlePap}"/>
                         </h:inputText>
-                        <h:outputLabel value="挂失票据类别:" />
-                        <h:selectOneMenu id="paptyp" value="#{chkLossRptAction.actrep.paptyp}" style="width:183px">
+                        <h:outputLabel value="挂失票据类别:" for="paptyp"/>
+                        <h:selectOneMenu id="paptyp" value="#{chkLossRptAction.actrep.paptyp}" style="width:183px"
+                                         onkeydown="KeyDown()" onfocus="this.select()">
                             <f:selectItem itemLabel="转账支票" itemValue="101"/>
                             <f:selectItem itemLabel="现金支票" itemValue="202"/>
                         </h:selectOneMenu>
                         <h:outputLabel value="挂失原因:"/>
-                        <h:selectOneMenu id="reason" value="#{chkLossRptAction.actrep.reason}"  style="width:183px">
+                        <h:selectOneMenu id="reason" value="#{chkLossRptAction.actrep.reason}"  style="width:183px"
+                                         onkeydown="KeyDown()" onfocus="this.select()">
                         <f:selectItem itemLabel="遗失" itemValue="1"/>
                         <f:selectItem itemLabel="损毁" itemValue="2"/>
                         <f:selectItem itemLabel="被盗" itemValue="3"/>
                     </h:selectOneMenu>
-                    <h:outputLabel value="票据金额:" for="papamt"/>
+                    <h:outputLabel value="票据金额:" for="papamt" />
                     <h:inputText id="papamt" size="30" value="#{chkLossRptAction.actrep.papamt}"
-                                 required="true" requiredMessage="票据金额不能为空"/>
-                    <h:outputLabel value="支票收款人:"/>
-                    <h:inputText id="actnu1" size="30" value="#{chkLossRptAction.actrep.actnu1}"/>
+                                 required="true" requiredMessage="票据金额不能为空" onkeydown="KeyDown()" onfocus="this.select()"/>
+                    <h:outputLabel value="支票收款人:" for="actnu1"/>
+                    <h:inputText id="actnu1" size="30" value="#{chkLossRptAction.actrep.actnu1}" onkeydown="KeyDown()"/>
                     <h:outputLabel value="挂失生效日:" for="avabdt"/>
                     <p:inputMask id="avabdt" style="width: 178px"  mask="9999-99-99" value="#{chkLossRptAction.avabdt}"
-                                     onkeydown="KeyDown()" required="true" requiredMessage="挂失生效日不能为空"/>
+                                     onkeydown="KeyDown()" required="true" requiredMessage="挂失生效日不能为空" />
 
                         <h:outputLabel value="挂失到期日:" for="avaedt"/>
                         <p:inputMask id="avaedt" style="width: 178px"  mask="9999-99-99" value="#{chkLossRptAction.avaedt}"
                                      onkeydown="KeyDown()" required="true" requiredMessage="挂失到期日不能为空"/>
 
-                        <h:outputLabel value="挂失申请人姓名:"/>
-                        <h:inputText size="30" value="#{chkLossRptAction.actrep.pernam}" required="true" requiredMessage="挂失申请人姓名不能为空"/>
-                        <h:outputLabel value="挂失申请人证件号:"/>
-                        <h:inputText size="30" value="#{chkLossRptAction.actrep.percde}" required="true" requiredMessage="挂失申请人证件号不能为空"/>
-                        <h:outputLabel value="票据签发日期:"/>
+                        <h:outputLabel value="挂失申请人姓名:" for="pernam"/>
+                        <h:inputText size="30" id="pernam" value="#{chkLossRptAction.actrep.pernam}" required="true"
+                                     onkeydown="KeyDown()" requiredMessage="挂失申请人姓名不能为空"/>
+                        <h:outputLabel value="挂失申请人证件号:" for="percde"/>
+                        <h:inputText size="30" id="percde" value="#{chkLossRptAction.actrep.percde}" required="true"
+                                     onkeydown="KeyDown()" requiredMessage="挂失申请人证件号不能为空"/>
+                        <h:outputLabel value="票据签发日期:" for="sgndat"/>
                         <p:inputMask id="sgndat" style="width: 178px" mask="9999-99-99" value="#{chkLossRptAction.sgndat}" onkeydown="KeyDown()"
                                      required="true" requiredMessage="票据签发日期不能为空"/>
-                        <h:outputLabel value="摘要:"/>
-                        <h:inputText size="30" value="#{chkLossRptAction.actrep.remark}"/>
+                        <h:outputLabel value="摘要:" for="remark"/>
+                        <h:inputText size="30" id="remark" value="#{chkLossRptAction.actrep.remark}" onkeydown="KeyDown()"/>
                     </h:panelGrid>
                     <br/>
                     <p:separator/>
