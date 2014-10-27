@@ -17,11 +17,11 @@
         }
 
         .input-col-s {
-            width: 45px;
+            width: 60px;
         }
 
         .input-col-m {
-            width: 60px;
+            width: 70px;
         }
 
         .input-col-l {
@@ -169,7 +169,7 @@
     <p:focus for="actno"/>
     <p:panel header="【传票录入】 当前套号:[#{batchBookAction.vchset}]" id="input">
         <h:panelGroup>
-            <h:panelGrid style="padding-top:5px;padding-bottom:2px;" columns="8" cellspacing="2"
+            <h:panelGrid style="padding-top:5px;padding-bottom:2px;" columns="6" cellspacing="2"
                          columnClasses="input-col-m,input-col-xl,input-col-m,input-col-xl,input-col-s,input-col-xl,input-col-l,input-col-xl">
                 <h:outputLabel value="帐号* :" for="actno"/>
                 <h:inputText autocomplete="off" id="actno" value="#{batchBookAction.vo.actno}"
