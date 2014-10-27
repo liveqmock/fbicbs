@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                width: 160px;
+                text-align: right;
+            }
+
+            .col-input {
+            }
+        </style>
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                }
+            }
+
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:growl id="msgs" showDetail="true"/>
+            <p:focus for="form:papcde"/>
+            <h:form id="form">
+                <p:panel header="【支票解除挂失】">
+                    <br/>
+                    <h:panelGrid columns="4" cellspacing="5" width="100%" id="input"
+                                 columnClasses="col-label,col-input,col-label,col-input">
+
+                        <h:outputLabel value="支票号:" for="papcde"/>
+                        <h:inputText id="papcde" size="30" maxlength="12" required="true" requiredMessage="支票号不能为空"
+                                     value="#{chkLossRptAction.reppap}">
+                            <p:ajax update="msgs,input"  listener="#{chkLossRptAction.handlePapRel}"/>
+                        </h:inputText>
+
+                        <h:outputLabel value="帐号:" for="actnum"/>
+                        <h:inputText id="actnum" size="30" maxlength="8" readonly="true"
+                                     value="#{chkLossRptAction.actrep.actnum}">
+                        </h:inputText>
+
+                        <h:outputLabel value="挂失票据类别:" />
+                        <h:selectOneMenu id="paptyp" value="#{chkLossRptAction.actrep.paptyp}" style="width:183px" readonly="true">
+                            <f:selectItem itemLabel="转账支票" itemValue="101"/>
+                            <f:selectItem itemLabel="现金支票" itemValue="202"/>
+                        </h:selectOneMenu>
+                        <h:outputLabel value="挂失原因:"/>
+                        <h:selectOneMenu value="#{chkLossRptAction.actrep.reason}"  style="width:183px" readonly="true">
+                            <f:selectItem itemLabel="遗失" itemValue="1"/>
+                            <f:selectItem itemLabel="损毁" itemValue="2"/>
+                            <f:selectItem itemLabel="被盗" itemValue="3"/>
+                        </h:selectOneMenu>
+                        <h:outputLabel value="票据金额:" for="papamt" />
+                        <h:inputText id="papamt" size="30" value="#{chkLossRptAction.actrep.papamt}"
+                                readonly="true"/>
+                        <h:outputLabel value="支票收款人:" for="actnu1"/>
+                        <h:inputText size="30" id="actnu1" value="#{chkLossRptAction.actrep.actnu1}"/>
+                        <h:outputLabel value="挂失生效日:" for="avabdt"/>
+                        <p:inputMask id="avabdt" style="width: 178px"  mask="9999-99-99" value="#{chkLossRptAction.avabdt}"
+                                     onkeydown="KeyDown()" readonly="true"/>
+
+                        <h:outputLabel value="挂失到期日:" for="avaedt"/>
+                        <p:inputMask id="avaedt" style="width: 178px"  mask="9999-99-99" value="#{chkLossRptAction.avaedt}"
+                                     onkeydown="KeyDown()" readonly="true"/>
+
+                        <h:outputLabel value="挂失申请人姓名:"/>
+                        <h:inputText size="30" value="#{chkLossRptAction.actrep.pernam}" readonly="true"/>
+                        <h:outputLabel value="挂失申请人证件号:"/>
+                        <h:inputText size="30" value="#{chkLossRptAction.actrep.percde}" readonly="true"/>
+                        <h:outputLabel value="票据签发日期:"/>
+                        <p:inputMask id="sgndat" style="width: 178px" mask="9999-99-99" value="#{chkLossRptAction.sgndat}"
+                                     readonly="true"/>
+                        <h:outputLabel value="摘要:"/>
+                        <h:inputText size="30" value="#{chkLossRptAction.actrep.remark}" readonly="true"/>
+                    </h:panelGrid>
+                    <br/>
+                    <p:separator/>
+                    <h:panelGrid columns="2">
+                        <h:commandButton id="saveBtn" style="margin-left:400px;width:80px;" value="解除挂失"
+                                         actionListener="#{chkLossRptAction.onChkLossRel}" ajax="true"
+                                         update="msgs,form,pdt">
+                        </h:commandButton>
+                    </h:panelGrid>
+                </p:panel>
+
+                <p:ajaxStatus style="height:18px;text-align:center">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

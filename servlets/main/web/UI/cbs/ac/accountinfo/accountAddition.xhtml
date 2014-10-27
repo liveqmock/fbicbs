@@ -264,13 +264,13 @@
                 <p:message for="acttype"/>
                 <h:outputLabel value="计息标志:"/>
                 <h:panelGroup>
-                    <h:selectOneMenu value="#{actaddition.actoac.intflg}" required="true" requiredMessage="不能为空"
-                                     style="width:89%"
-                                     id="intflg">
-                        <f:selectItems value="#{listbond.alintflg}"></f:selectItems>
-                    </h:selectOneMenu>
-                    <span class="red_star">*</span>
-                </h:panelGroup>
+                <h:selectOneMenu value="#{actaddition.actoac.intflg}" required="true" requiredMessage="不能为空"
+                                 style="width:89%"
+                                 id="intflg">
+                    <f:selectItems value="#{listbond.alintflg}"></f:selectItems>
+                </h:selectOneMenu>
+                <span class="red_star">*</span>
+            </h:panelGroup>
                 <p:message for="intflg"/>
                 <h:outputLabel value="计息周期码:"/>
                 <h:selectOneMenu value="#{actaddition.actoac.intcyc}" style="width:89%" id="infcyc">

@@ -59,6 +59,8 @@ PUBLIC "-//ibatis.apache.org//DTD Config 3.0//EN" "http://ibatis.apache.org/dtd/
         <mapper resource="cbs/repository/account/maininfo/mapper/ActpleMapper.xml" />
         <mapper resource="cbs/repository/account/maininfo/mapper/ActvthMapper.xml" />
         <mapper resource="cbs/repository/account/maininfo/mapper/ActbvaMapper.xml" />
+        <mapper resource="cbs/repository/account/maininfo/mapper/ActslpMapper.xml" />
+        <mapper resource="cbs/repository/account/maininfo/mapper/ActrepMapper.xml" />
 
         <mapper resource="cbs/repository/platform/mapper/PtdeptMapper.xml" />
 	</mappers>

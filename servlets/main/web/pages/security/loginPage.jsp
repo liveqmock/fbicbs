@@ -4,6 +4,7 @@
 <%@ page import="java.util.Calendar" %>
 <%@ page import="java.text.ParseException" %>
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="cbs.common.SystemService" %>
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -28,7 +29,8 @@
     SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
     if ("0".equals(version)) {  // 试用版本
         String endDate = PropertyManager.getProperty("sys.date");
-        Date d1 = new Date();
+
+        Date d1 = format.parse(SystemService.getBizDate());  // 得到系统日期
         Date d2 = format.parse(endDate);
 
         Calendar c1 = Calendar.getInstance();

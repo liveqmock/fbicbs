@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <classPathEntry location="/WorkSpace/fbi-fbicbs/lib/ojdbc6.jar"/>
+
+    <!--信息 -->
+    <context id="AllInfo" targetRuntime="MyBatis3">
+        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+                        connectionURL="jdbc:oracle:thin:localhost:1521:orcl"
+                        userId="cbs"
+                        password="cbs">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="cbs.repository.account.maininfo.model" targetProject="common/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="cbs.repository.account.maininfo.mapper" targetProject="common/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="cbs.repository.account.maininfo.dao" targetProject="common/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+
+        <!--<table schema="ibp" tableName="acttsc">-->
+        <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table tableName="actslp">
+            <property name="actslp" value="true"/>
+            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>-->
+        <table tableName="actrep">
+            <property name="actrep" value="true"/>
+            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+    </context>
+</generatorConfiguration>

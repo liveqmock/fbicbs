@@ -18,72 +18,81 @@
         <script type="text/javascript" language="javascript">
             document.onkeydown = function TabReplace() {
                 if (event.keyCode == 13) {
-                    if (event.srcElement.tagName != 'BUTTON')
+                    if (event.srcElement.id == 'form:saveBtn') {
+                        document.forms['form']['form:saveBtn'].click();
+                    }else{
                         event.keyCode = 9;
+                    }
+                    /*if (event.srcElement.tagName != 'BUTTON'){
+                        event.keyCode = 9;
+                    }*/
                 }
-            }
-
+             }
         </script>
     </ui:define>
 
     <ui:define name="content">
         <div style="margin:5px;">
-            <p:growl id="msgs" showDetail="false"/>
+            <p:growl id="msgs" showDetail="true"/>
+            <p:focus for="form:actnum"/>
             <h:form id="form">
                 <p:panel header="【支票挂失登记】">
                     <br/>
-                    <h:panelGrid columns="4" cellspacing="5"
+                    <h:panelGrid columns="4" cellspacing="5" width="100%" id="input"
                                  columnClasses="col-label,col-input,col-label,col-input">
-                        <h:outputLabel value="帐号:" for="custno"/>
-                        <h:inputText id="custno" size="30" required="true" requiredMessage="系统数据未初始化！"
-                                     value=""/>
-                        <h:outputLabel value="挂失票据类别:" for="custname"/>
-                        <h:inputText id="custname" size="30"
-                                     value=""/>
-                        <h:outputLabel value="挂失票据起始号码:" for="managerName"/>
-                        <h:inputText id="managerName" size="30"
-                                     value=""/>
-                        <h:outputLabel value="挂失票据截止号码:" for="managerPhone1"/>
-                        <h:inputText id="managerPhone1" size="30"
-                                     value=""/>
 
-                        <h:outputLabel value="挂失有效日数:" for="loanType"/>
-                        <h:inputText id="loanType" size="30" maxlength="2"
-                                     value=""/>
-                        <h:outputLabel value="票据金额:" for="loanAmt"/>
-                        <h:inputText id="loanAmt" size="30" maxlength="19"
-                                     value=""/>
+                        <h:outputLabel value="帐号:" for="actnum"/>
+                        <h:inputText id="actnum" size="30" maxlength="8" required="true" requiredMessage="帐号不能为空"
+                                     value="#{chkLossRptAction.actrep.actnum}">
+                            <p:ajax event="blur" update="msgs,input"  listener="#{chkLossRptAction.handleCom}"/>
+                        </h:inputText>
+                        <h:outputLabel value="支票号:" for="papcde"/>
+                        <h:inputText id="papcde" size="30" maxlength="12" required="true" requiredMessage="支票号不能为空"
+                                     value="#{chkLossRptAction.actrep.papcde}">
+                            <p:ajax event="blur" update="msgs,input"  listener="#{chkLossRptAction.handlePap}"/>
+                        </h:inputText>
+                        <h:outputLabel value="挂失票据类别:" />
+                        <h:selectOneMenu id="paptyp" value="#{chkLossRptAction.actrep.paptyp}" style="width:183px">
+                            <f:selectItem itemLabel="转账支票" itemValue="101"/>
+                            <f:selectItem itemLabel="现金支票" itemValue="202"/>
+                        </h:selectOneMenu>
                         <h:outputLabel value="挂失原因:"/>
-                        <h:inputText id="specialReq" size="30" maxlength="2"
-                                     value=""/>
-                        <h:outputLabel value="交费方式:"/>
-                        <h:inputText id="paperType" size="30" maxlength="2"
-                                     value=""/>
+                        <h:selectOneMenu id="reason" value="#{chkLossRptAction.actrep.reason}"  style="width:183px">
+                        <f:selectItem itemLabel="遗失" itemValue="1"/>
+                        <f:selectItem itemLabel="损毁" itemValue="2"/>
+                        <f:selectItem itemLabel="被盗" itemValue="3"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="票据金额:" for="papamt"/>
+                    <h:inputText id="papamt" size="30" value="#{chkLossRptAction.actrep.papamt}"
+                                 required="true" requiredMessage="票据金额不能为空"/>
+                    <h:outputLabel value="支票收款人:"/>
+                    <h:inputText id="actnu1" size="30" value="#{chkLossRptAction.actrep.actnu1}"/>
+                    <h:outputLabel value="挂失生效日:" for="avabdt"/>
+                    <p:inputMask id="avabdt" style="width: 178px"  mask="9999-99-99" value="#{chkLossRptAction.avabdt}"
+                                     onkeydown="KeyDown()" required="true" requiredMessage="挂失生效日不能为空"/>
 
-                        <h:outputLabel value="收款人:"/>
-                        <h:inputText size="30" maxlength="2"
-                                     value=""/>
-                        <h:outputLabel value="票据签发日期:"/>
-                        <h:inputText size="30" maxlength="2"
-                                     value=""/>
+                        <h:outputLabel value="挂失到期日:" for="avaedt"/>
+                        <p:inputMask id="avaedt" style="width: 178px"  mask="9999-99-99" value="#{chkLossRptAction.avaedt}"
+                                     onkeydown="KeyDown()" required="true" requiredMessage="挂失到期日不能为空"/>
+
                         <h:outputLabel value="挂失申请人姓名:"/>
-                        <h:inputText size="30" maxlength="2"
-                                     value=""/>
-                        <h:outputLabel value="挂失申请人证件:"/>
-                        <h:inputText size="30" maxlength="2"
-                                     value=""/>
+                        <h:inputText size="30" value="#{chkLossRptAction.actrep.pernam}" required="true" requiredMessage="挂失申请人姓名不能为空"/>
+                        <h:outputLabel value="挂失申请人证件号:"/>
+                        <h:inputText size="30" value="#{chkLossRptAction.actrep.percde}" required="true" requiredMessage="挂失申请人证件号不能为空"/>
+                        <h:outputLabel value="票据签发日期:"/>
+                        <p:inputMask id="sgndat" style="width: 178px" mask="9999-99-99" value="#{chkLossRptAction.sgndat}" onkeydown="KeyDown()"
+                                     required="true" requiredMessage="票据签发日期不能为空"/>
                         <h:outputLabel value="摘要:"/>
-                        <h:inputText size="30" maxlength="2"
-                                     value=""/>
+                        <h:inputText size="30" value="#{chkLossRptAction.actrep.remark}"/>
                     </h:panelGrid>
                     <br/>
                     <p:separator/>
                     <h:panelGrid columns="2">
-                        <p:commandButton id="saveBtn" style="margin-left:302px;width:80px;" value="保存"
-                                         action="#"
+                        <h:commandButton id="saveBtn" style="margin-left:400px;width:80px;" value="挂 失"
+                                         actionListener="#{chkLossRptAction.onChkRpt}" ajax="true"
                                          update="msgs,form,pdt">
-                        </p:commandButton>
-                        <p:commandButton id="clsBtn" style="margin-left:10px;width:80px;" value="重置"/>
+                        </h:commandButton>
+                        <h:commandButton id="clsBtn" type="reset" style="margin-left:10px;width:80px;" value="重置" update="form,pdt"/>
                     </h:panelGrid>
                 </p:panel>
 
