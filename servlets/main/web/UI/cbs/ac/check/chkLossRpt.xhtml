@@ -18,11 +18,11 @@
         <script type="text/javascript" language="javascript">
             function KeyDown() {
                 if (event.keyCode == 13) {
-                    if (event.srcElement.id == 'inputform:actnum') {
+                    if (event.srcElement.id == 'inputform:papcde') {
                         event.returnValue = false;
                         event.cancel = true;
-                        document.forms['inputform']['inputform:papcde'].focus();
-                    }else if (event.srcElement.id == 'inputform:papcde') {
+                        document.forms['inputform']['inputform:actnum'].focus();
+                    }else if (event.srcElement.id == 'inputform:actnum') {
                         event.returnValue = false;
                         event.cancel = true;
                         document.forms['inputform']['inputform:paptyp'].focus();
@@ -42,22 +42,22 @@
     <ui:define name="content">
         <div style="margin:5px;">
             <p:growl id="msgs" showDetail="true"/>
-            <p:focus for="form:actnum"/>
+            <p:focus for="form:papcde"/>
             <h:form id="form">
                 <p:panel header="【支票挂失登记】">
                     <br/>
                     <h:panelGrid columns="4" cellspacing="5" width="100%" id="input"
                                  columnClasses="col-label,col-input,col-label,col-input">
 
-                        <h:outputLabel value="帐号:" for="actnum"/>
-                        <h:inputText id="actnum" size="30" maxlength="8" required="true" requiredMessage="帐号不能为空"
-                                     value="#{chkLossRptAction.actrep.actnum}" onkeydown="KeyDown()" onfocus="this.select()">
-                            <p:ajax event="blur" update="msgs"  listener="#{chkLossRptAction.handleCom}"/>
-                        </h:inputText>
                         <h:outputLabel value="支票号:" for="papcde"/>
                         <h:inputText id="papcde" size="30" maxlength="12" required="true" requiredMessage="支票号不能为空"
                                      value="#{chkLossRptAction.actrep.papcde}" onkeydown="KeyDown()" onfocus="this.select()">
                             <p:ajax event="blur" update="msgs"  listener="#{chkLossRptAction.handlePap}"/>
+                        </h:inputText>
+                        <h:outputLabel value="帐号:" for="actnum"/>
+                        <h:inputText id="actnum" size="30" maxlength="8" required="true" requiredMessage="帐号不能为空"
+                                     value="#{chkLossRptAction.actrep.actnum}" onkeydown="KeyDown()" onfocus="this.select()">
+                            <p:ajax event="blur" update="msgs"  listener="#{chkLossRptAction.handleCom}"/>
                         </h:inputText>
                         <h:outputLabel value="挂失票据类别:" for="paptyp"/>
                         <h:selectOneMenu id="paptyp" value="#{chkLossRptAction.actrep.paptyp}" style="width:183px"
