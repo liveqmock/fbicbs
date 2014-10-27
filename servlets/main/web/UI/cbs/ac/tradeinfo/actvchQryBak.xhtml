@@ -1,0 +1,250 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui" xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                template="/templates/ui.xhtml">
+
+<ui:define name="head">
+    <style type="text/css">
+        .panel_label1{
+            padding-left :60px;
+            text-align:left;
+        }
+        .panel_value{
+            text-align:left;
+        }
+        .panel_label2{
+            text-align:left;
+            padding-left :70px;
+        }
+
+    </style>
+    <script language="JavaScript" type="text/JavaScript">
+        function KeyDown() {
+            if (event.keyCode == 13) {
+                if (event.srcElement.id == 'inputform:vchset') {
+                    event.returnValue = false;
+                    event.cancel = true;
+                    document.forms['inputform']['inputform:glcode'].focus();
+                }else if (event.srcElement.id == 'inputform:txnamt') {
+                    event.returnValue = false;
+                    event.cancel = true;
+                    document.forms['inputform']['inputform:query'].click();
+                } else {
+                    event.keyCode = 9;
+                }
+            }
+            if (event.keyCode == 9) {
+                if (event.srcElement.id == 'inputform:vchset') {
+                    event.returnValue = false;
+                    event.cancel = true;
+                    document.forms['inputform']['inputform:glcode'].focus();
+                }
+            }
+        }
+    </script>
+</ui:define>
+
+<ui:define name="content">
+    <div class="entry">
+        <h:form id="inputform">
+            <p:focus for="tlrnum"/>
+            <p:messages id="msgs" showSummary="false" showDetail="true"/>
+            <p:panel header="::查询条件::">
+                <h:panelGrid columns="5" border="0" style="width: 90%">
+                    <h:panelGroup>
+                        <h:outputLabel value="柜员号 :" for="tlrnum"/>
+                        <h:inputText id="tlrnum" value="#{actvchBean.vo.tlrnum}" onkeydown="KeyDown()"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:outputLabel value="客户号 :" for="cusidt"/>
+                        <h:inputText id="cusidt" value="#{actvchBean.vo.cusidt}" onkeydown="KeyDown()"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:outputLabel value="账号 :" for="accode"/>
+                        <h:inputText id="accode" value="#{actvchBean.vo.accode}" onkeydown="KeyDown()"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:outputLabel value="传票套号 :" for="vchset"/>
+                        <h:inputText id="vchset" value="#{actvchBean.vo.vchset}" onkeydown="KeyDown()"/>
+                    </h:panelGroup>
+
+                    <p:commandButton id="query" ajax="false" value="查询" action="#{actvchBean.queryRecords}"
+                                     style="margin-left:15px;width: 80px;"/>
+
+                    <h:panelGroup>
+                        <h:outputLabel style="padding-left:13px;text-align:right;" value="科目 :" for="glcode"/>
+                        <h:inputText id="glcode" value="#{actvchBean.vo.glcode}" onkeydown="KeyDown()"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:outputLabel value="核算码 :" for="apcode"/>
+                        <h:inputText id="apcode" value="#{actvchBean.vo.apcode}" onkeydown="KeyDown()"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:outputLabel value="货币 :" for="curcde"/>
+                        <h:selectOneMenu id="curcde" value="#{actvchBean.vo.curcde}" onkeydown="KeyDown()" >
+                            <f:selectItems value="#{beanList.ccyList}"/>
+                        </h:selectOneMenu>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:outputLabel value="金额 :" style="text-align:right;padding-left:25px" for="txnamt"/>
+                        <h:inputText id="txnamt" value="#{actvchBean.vo.txnamt}" onkeydown="KeyDown()"/>
+                    </h:panelGroup>
+                    <p:commandButton id="directPrint" ajax="false" value="导出"
+                                     actionListener="#{actvchBean.onExpExcel}"
+                                     style="margin-left:15px;width: 80px;"/>
+                    <h:panelGroup>
+                        <h:outputLabel value="借贷 :" style="padding-left:13px;text-align:right;" for="borlen"/>
+                        <h:selectOneMenu style="width:100px;" id="borlen" value="#{actvchBean.paramBorlen}">
+                            <f:selectItems value="#{actvchBean.cdOptions}"/>
+                        </h:selectOneMenu>
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:panel>
+            <br/>
+        </h:form>
+        <h:form id="resultForm">
+            <p:dataTable id="resultDataTable" height="200" dblClickSelect="true"  update="resultForm:display"
+                         value="#{actvchBean.vchList}" var="record" onRowSelectComplete="selectedDialog.show()"
+                         selection="#{actvchBean.selectedRecord}" selectionMode="single"
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         paginator="true" rows="15" paginatorPosition="both" rowsPerPageTemplate="100,50,15,10,5"
+                         emptyMessage="数据记录为空...">
+                <f:facet name="header">
+                    <h:outputText value="今日传票信息"/>
+                </f:facet>
+                <p:column headerText="柜员号" style="text-align:center">
+                    <h:outputText value="#{record.tlrnum}"/>
+                </p:column>
+
+                <p:column headerText="传票套号" style="text-align:center">
+                    <h:outputText value="#{record.vchset}"/>
+                </p:column>
+
+                <p:column headerText="套内序号" style="text-align:center">
+                    <h:outputText value="#{record.setseq}"/>
+                </p:column>
+
+                <p:column headerText="科目 " style="text-align:center">
+                    <h:outputText value="#{record.glcode}"/>
+                </p:column>
+
+                <p:column headerText="核算码 " style="text-align:center">
+                    <h:outputText value="#{record.apcode}"/>
+                </p:column>
+
+                <p:column headerText="账号" style="text-align:center">
+                    <h:outputText value="#{record.accode}"/>
+                </p:column>
+
+                <p:column headerText="客户号 " style="text-align:center">
+                    <h:outputText value="#{record.cusidt}"/>
+                </p:column>
+                <p:column headerText="币别" style="text-align:center">
+                    <h:outputText value="#{record.curcde}"/>
+                </p:column>
+
+                <p:column headerText="借贷别 " style="text-align:center">
+                    <h:outputText value="#{record.borlen}"/>
+                </p:column>
+
+                <p:column headerText="交易金额" style="text-align:right">
+                    <h:outputText value="#{record.txnamt/100}" style="float: right">
+                        <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="冲账标志" style="text-align:center">
+                    <h:outputText value="#{record.rvslbl}"/>
+                </p:column>
+
+                <p:column headerText="凭证种类" style="text-align:center">
+                    <h:outputText value="#{record.anacde}"/>
+                </p:column>
+
+                <p:column headerText="摘要 " style="text-align:left">
+                    <h:outputText value="#{record.furinf}"/>
+                </p:column>
+
+                <p:column headerText="入账时间" style="text-align:center">
+                    <h:outputText value="#{record.erytim}"/>
+                </p:column>
+
+                <p:column headerText="是否复核" style="text-align:center">
+                    <h:outputText value="#{record.clrbak}"/>
+                </p:column>
+
+                <p:columnGroup type="footer">
+                    <p:row>
+                        <p:column colspan="50" footerText="传票笔数：#{fn:length(actvchBean.vchList)}  贷方总金额：#{actvchBean.vchTotalAmt}"
+                                  style="text-align:right"/>
+                    </p:row>
+                </p:columnGroup>
+
+            </p:dataTable>
+            <p:dialog header="单笔传票详细信息" widgetVar="selectedDialog" resizable="false"
+                      width="500" showEffect="clip" hideEffect="fold" modal="true"  >
+
+                <h:panelGrid id="display" columns="4" columnClasses="panel_label1,panel_value,panel_label2,panel_value" cellpadding="8">
+
+                    <h:outputText value="柜员号:"/>
+                    <h:outputText value="#{actvchBean.selectedRecord.tlrnum}"/>
+
+                    <h:outputText value="传票套号:"/>
+                    <h:outputText value="#{actvchBean.selectedRecord.vchset}"/>
+
+                    <h:outputText value="套内序号:"/>
+                    <h:outputText value="#{actvchBean.selectedRecord.setseq}"/>
+
+                    <h:outputText value="科目:"/>
+                    <h:outputText value="#{actvchBean.selectedRecord.glcode}"/>
+                    <h:outputText value="核算码:"/>
+                    <h:outputText value="#{actvchBean.selectedRecord.apcode}"/>
+
+                    <h:outputText value="账号:"/>
+                    <h:outputText value="#{actvchBean.selectedRecord.accode}"/>
+
+                    <h:outputText value="客户号:"/>
+                    <h:outputText value="#{actvchBean.selectedRecord.cusidt}"/>
+
+                    <h:outputText value="币别:"/>
+                    <h:outputText value="#{actvchBean.selectedRecord.curcde}"/>
+
+                    <h:outputText value="借贷别:"/>
+                    <h:outputText value="#{actvchBean.selectedRecord.borlen}"/>
+
+                    <h:outputText value="交易金额:"/>
+                    <h:outputText value="#{actvchBean.selectedRecord.txnamt/100}" style="float: left">
+                        <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
+                    </h:outputText>
+
+                    <h:outputText value="交易类型:"/>
+                    <h:outputText value="#{actvchBean.selectedRecord.rvslbl}"/>
+
+                    <h:outputText value="入账时间:"/>
+                    <h:outputText value="#{actvchBean.selectedRecord.erytim}"/>
+
+                    <h:outputText value="凭证种类:"/>
+                    <h:outputText value="#{actvchBean.selectedRecord.anacde}"/>
+
+                    <h:outputText value="摘要:"/>
+                    <h:outputText value="#{actvchBean.selectedRecord.furinf}"/>
+
+                    <h:outputText value="是否复核:"/>
+                    <h:outputText value="#{actvchBean.selectedRecord.clrbak}"/>
+
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+    </div>
+</ui:define>
+</ui:composition>
