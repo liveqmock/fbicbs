@@ -6,10 +6,7 @@ import cbs.common.SystemService;
 import cbs.common.enums.ACEnum;
 import cbs.common.utils.MessageUtil;
 import cbs.repository.account.ext.domain.BatchBookVO;
-import cbs.repository.account.maininfo.dao.ActfrzMapper;
-import cbs.repository.account.maininfo.dao.ActoacMapper;
-import cbs.repository.account.maininfo.dao.ActobfMapper;
-import cbs.repository.account.maininfo.dao.ActvchMapper;
+import cbs.repository.account.maininfo.dao.*;
 import cbs.repository.account.maininfo.model.*;
 import cbs.repository.account.other.dao.ActtvcMapper;
 import cbs.repository.account.other.model.Acttvc;
@@ -85,6 +82,8 @@ public class BatchBookAction implements Serializable {
 
     private List<Ptenudetail> txnTypeList;
     private List<Ptenudetail> voucherTypeList;
+
+    Actrep actrep = new Actrep();//÷ß∆±π“ ß±Ì
 
     @PostConstruct
     public void postConstruct() {
@@ -614,7 +613,10 @@ public class BatchBookAction implements Serializable {
      */
     public void onCheckActno(ActionEvent actionEvent) {
         RequestContext requestContext = RequestContext.getCurrentInstance();
-        if (StringUtils.isEmpty(vo.getActno())) {
+        if (getRepInfo() > 0){
+            requestContext.addCallbackParam("isValid", false);
+            MessageUtil.addError("M408");
+        }else if (StringUtils.isEmpty(vo.getActno())) {
             requestContext.addCallbackParam("isValid", false);
         } else {
             requestContext.addCallbackParam("isValid", true);
@@ -716,7 +718,16 @@ public class BatchBookAction implements Serializable {
         return null;
     }
 
-
+    /**
+     * ºÏ≤È÷ß∆±π“ ß
+     * wang
+     */
+    public int getRepInfo(){
+        SqlSession session = ibatisManager.getSessionFactory().openSession();
+        ActrepMapper repmap = session.getMapper(ActrepMapper.class);
+        int n = repmap.countByactno(vo.getActno());
+        return n;
+    }
     //======================================================================
     // Private Methods
     //======================================================================
@@ -1952,5 +1963,13 @@ public class BatchBookAction implements Serializable {
 
     public List<Ptenudetail> getTxnTypeList() {
         return txnTypeList;
+    }
+
+    public Actrep getActrep() {
+        return actrep;
+    }
+
+    public void setActrep(Actrep actrep) {
+        this.actrep = actrep;
     }
 }

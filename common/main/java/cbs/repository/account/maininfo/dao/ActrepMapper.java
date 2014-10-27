@@ -68,9 +68,15 @@ public interface ActrepMapper {
     @Select("select count(*) from actrep where papcde = #{papcde}")
     int countBypapcde(@Param("papcde")String papcde);
 
+    //联机记账检查账号支票是否挂失
+    @Select("select count(*) from actrep where recsts = 'P' and actnum = #{actno}")
+    int countByactno(@Param("actno")String actno);
+
+    //支票解除挂失联动查询
     @Select("select *  from actrep where papcde = #{papcde}")
     Actrep selectRep(@Param("papcde")String papcde);
 
+    //支票挂失解除
     @Update("update actrep set recsts = 'C' where papcde = #{papcde}")
     int updateRep(@Param("papcde")String papcde);
 }
