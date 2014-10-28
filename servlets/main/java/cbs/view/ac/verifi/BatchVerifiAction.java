@@ -1,5 +1,6 @@
 package cbs.view.ac.verifi;
 
+import cbs.common.IbatisManager;
 import cbs.common.utils.MessageUtil;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import java.io.*;
 import java.text.NumberFormat;
@@ -31,6 +33,8 @@ import java.util.List;
 public class BatchVerifiAction implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(BatchVerifiAction.class);
 
+    @ManagedProperty("#{ibatisManager}")
+    IbatisManager ibatisManager;
     private String filepath;
     //private ActvchFI fi = new ActvchFI();
     private JinDieBean bean = new JinDieBean();
@@ -161,7 +165,23 @@ public class BatchVerifiAction implements Serializable {
         return null;
     }
 
+    public String onCompare(){
+        try {
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
     // = = = = = = = = = = =  get set  = = = = = = = = =  = = = =
+
+    public IbatisManager getIbatisManager() {
+        return ibatisManager;
+    }
+
+    public void setIbatisManager(IbatisManager ibatisManager) {
+        this.ibatisManager = ibatisManager;
+    }
 
     public JinDieBean getBean() {
         return bean;

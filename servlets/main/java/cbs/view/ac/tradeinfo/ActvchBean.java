@@ -106,20 +106,20 @@ public class ActvchBean {
                     if (vch.getTxnamt() > 0L) {  //贷方
                         cvchamt = cvchamt.add(new BigDecimal(vch.getTxnamt()));
 
-                        if ("T".equals(vch.getAnacde())) {  //转账
+                        if ("转账支票".equals(vch.getAnacde())) {  //转账
                             t++;
                             tcamt = cvchamt.add(new BigDecimal(vch.getTxnamt()));
 
-                        } else if ("C".equals(vch.getAnacde())) { //现金
+                        } else if ("现金".equals(vch.getAnacde())) { //现金
                             c++;
                             ccamt = cvchamt.add(new BigDecimal(vch.getTxnamt()));
                         }
                     }else { //借方
                         dvchamt = dvchamt.add(new BigDecimal(vch.getTxnamt()));
-                        if ("T".equals(vch.getAnacde())) {  //转账
+                        if ("转账支票".equals(vch.getAnacde())) {  //转账
                             t++;
                             tdamt = dvchamt.add(new BigDecimal(vch.getTxnamt()));
-                        } else if ("C".equals(vch.getAnacde())) { //现金
+                        } else if ("现金".equals(vch.getAnacde())) { //现金
                             c++;
                             cdamt = dvchamt.add(new BigDecimal(vch.getTxnamt()));
                         }
