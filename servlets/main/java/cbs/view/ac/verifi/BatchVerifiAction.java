@@ -38,7 +38,7 @@ public class BatchVerifiAction implements Serializable {
     private String filepath;
     //private ActvchFI fi = new ActvchFI();
     private JinDieBean bean = new JinDieBean();
-    private List<JinDieBean> errorList = new ArrayList<>();
+    private List<JinDieBean> errorList = new ArrayList<JinDieBean>();
 
     public String onBtnImpClick() {
         if(filepath == null){
