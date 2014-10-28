@@ -1,10 +1,12 @@
 package cbs.view.ac.tradeinfo;
 
 import cbs.common.IbatisManager;
+import org.apache.ecs.html.Big;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.faces.bean.ManagedProperty;
+import java.math.BigDecimal;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,6 +26,12 @@ public class ActvchVO {
     private String txnamt;
     private String accode;
     private String cusidt;
+
+    //14-10-27Ìí¼Ó
+    private String anacde;
+    private String rvslbl;
+    private String minamt;
+    private String maxamt;
 
     @ManagedProperty("#{ibatisManager}")
     IbatisManager ibatisManager;
@@ -100,4 +108,35 @@ public class ActvchVO {
         this.ibatisManager = ibatisManager;
     }
 
+    public String getAnacde() {
+        return anacde;
+    }
+
+    public void setAnacde(String anacde) {
+        this.anacde = "".equals(anacde) ? null :anacde;
+    }
+
+    public String getRvslbl() {
+        return rvslbl;
+    }
+
+    public void setRvslbl(String rvslbl) {
+        this.rvslbl = "".equals(rvslbl) ? null : rvslbl;
+    }
+
+    public String getMinamt() {
+        return minamt;
+    }
+
+    public void setMinamt(String minamt) {
+        this.minamt = "".equals(minamt) ? null : minamt;
+    }
+
+    public String getMaxamt() {
+        return maxamt;
+    }
+
+    public void setMaxamt(String maxamt) {
+        this.maxamt = "".equals(maxamt) ? null : maxamt;
+    }
 }

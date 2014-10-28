@@ -72,10 +72,12 @@ public class ActvchBeanBak {
         session = ibatisManager.getSessionFactory().openSession();
         DecimalFormat df = new DecimalFormat("###,###,##0.00");
         try {
+            String rvslbl = "";
             ActvchMapper mapper = session.getMapper(ActvchMapper.class);
             vchList = mapper.selectByCondition(vo.getTlrnum(), vo.getCusidt(), vo.getVchset(),
                     vo.getCurcde(), vo.getGlcode(), vo.getApcode(),
-                    handleAmt(vo.getTxnamt()), vo.getAccode(), paramBorlen);
+                    handleAmt(vo.getTxnamt()), vo.getAccode(), paramBorlen,
+                    vo.getAnacde(),rvslbl,handleAmt(vo.getMinamt()),handleAmt(vo.getMaxamt()));
             BigDecimal vchamt = new BigDecimal("0.00");
             if (vchList == null || vchList.size() == 0) {
                 MessageUtil.addInfoWithClientID("msgs", "M546");

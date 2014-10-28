@@ -3,6 +3,7 @@ package cbs.view.ac.tradeinfo;
 import cbs.common.IbatisManager;
 import cbs.common.OnlineService;
 import cbs.common.SystemService;
+import cbs.common.enums.ACEnum;
 import cbs.common.utils.JxlsManager;
 import cbs.common.utils.MessageUtil;
 import cbs.repository.account.ext.domain.ActvchModel;
@@ -59,6 +60,14 @@ public class ActvchBean {
     private String paramBorlen;   //借贷标志:0=借；1=贷
     private List<SelectItem> cdOptions;  //借贷list
     private String vchTotalAmt = "0.00";
+    private String cvchTotalAmt = "0.00";//贷方总金额
+    private String dvchTotalAmt = "0.00";//借方总金额
+    private String cvchTamt = "0.00";  //转账贷方总金额
+    private String dvchTamt = "0.00";  //转账借方总金额
+    private String cvchCamt = "0.00";  //现金贷方总金额
+    private String dvchCamt = "0.00";  //现金借方总金额
+    private String  cnum = "0";    //  现金总笔数
+    private String  tnum = "0";    //  转账总笔数
 
     @PostConstruct
     private void init() {
@@ -71,12 +80,22 @@ public class ActvchBean {
     public void queryRecords() {
         session = ibatisManager.getSessionFactory().openSession();
         DecimalFormat df = new DecimalFormat("###,###,##0.00");
+        String rvslbl = "";
+        int t = 0;
+        int c = 0;
         try {
+            rvslbl = type2rvslbl(vo.getRvslbl());
             ActvchMapper mapper = session.getMapper(ActvchMapper.class);
-            vchList = mapper.selectByCondition(vo.getTlrnum(), vo.getCusidt(), vo.getVchset(),
-                    vo.getCurcde(), vo.getGlcode(), vo.getApcode(),
-                    handleAmt(vo.getTxnamt()), vo.getAccode(), paramBorlen);
-            BigDecimal vchamt = new BigDecimal("0.00");
+                vchList = mapper.selectByCondition(vo.getTlrnum(), vo.getCusidt(), vo.getVchset(),
+                        vo.getCurcde(), vo.getGlcode(), vo.getApcode(),
+                        handleAmt(vo.getTxnamt()), vo.getAccode(), paramBorlen,
+                        vo.getAnacde(), rvslbl, handleAmt(vo.getMinamt()), handleAmt(vo.getMaxamt()));
+            BigDecimal cvchamt = new BigDecimal("0.00");
+            BigDecimal dvchamt = new BigDecimal("0.00");
+            BigDecimal tcamt = new BigDecimal("0.00");
+            BigDecimal tdamt = new BigDecimal("0.00");
+            BigDecimal ccamt = new BigDecimal("0.00");
+            BigDecimal cdamt = new BigDecimal("0.00");
             if (vchList == null || vchList.size() == 0) {
                 MessageUtil.addInfoWithClientID("msgs", "M546");
                 return;
@@ -84,11 +103,36 @@ public class ActvchBean {
                 this.voucherTypeMap = initPtenudetailMap("VOUCHERTYPE");
                 for (ActvchModel vch : vchList) {
                     vch.setAnacde(voucherTypeMap.get(vch.getAnacde()));
-                    if (vch.getTxnamt() > 0L) {
-                        vchamt = vchamt.add(new BigDecimal(vch.getTxnamt()));
+                    if (vch.getTxnamt() > 0L) {  //贷方
+                        cvchamt = cvchamt.add(new BigDecimal(vch.getTxnamt()));
+
+                        if ("T".equals(vch.getAnacde())) {  //转账
+                            t++;
+                            tcamt = cvchamt.add(new BigDecimal(vch.getTxnamt()));
+
+                        } else if ("C".equals(vch.getAnacde())) { //现金
+                            c++;
+                            ccamt = cvchamt.add(new BigDecimal(vch.getTxnamt()));
+                        }
+                    }else { //借方
+                        dvchamt = dvchamt.add(new BigDecimal(vch.getTxnamt()));
+                        if ("T".equals(vch.getAnacde())) {  //转账
+                            t++;
+                            tdamt = dvchamt.add(new BigDecimal(vch.getTxnamt()));
+                        } else if ("C".equals(vch.getAnacde())) { //现金
+                            c++;
+                            cdamt = dvchamt.add(new BigDecimal(vch.getTxnamt()));
+                        }
                     }
                 }
-                vchTotalAmt = df.format(vchamt.divide(new BigDecimal("100.00")));
+                cvchTotalAmt = df.format(cvchamt.divide(new BigDecimal("100.00")));  //贷方总金额
+                dvchTotalAmt = df.format(dvchamt.divide(new BigDecimal("100.00"))); //借方总金额
+                cvchTamt = df.format(tcamt.divide(new BigDecimal("100.00")));    //转账贷方金额
+                cvchTamt = df.format(tdamt.divide(new BigDecimal("100.00")));    //转账借方金额
+                cvchCamt = df.format(ccamt.divide(new BigDecimal("100.00")));     //现金贷方金额
+                dvchCamt = df.format(cdamt.divide(new BigDecimal("100.00")));     //现金借方金额
+                cnum = c+"";  //现金笔数
+                tnum = t+"";  //转账笔数
             }
             setTableToFirstPage("resultForm:resultDataTable");
         } catch (Exception e) {
@@ -98,6 +142,23 @@ public class ActvchBean {
         } finally {
             closeSession(session);
         }
+    }
+
+    private String type2rvslbl(String type) {
+        String rvslbl;
+        if (("22").equals(type)) {
+            rvslbl = ACEnum.RVSLBL_TRUE.getStatus();
+        } else if (("12").equals(type)) {
+            rvslbl = ACEnum.RVSLBL_TRAN.getStatus();
+        } else if (("11").equals(type)) {
+            rvslbl = ACEnum.RVSLBL_CASH.getStatus();
+        } else if (("52").equals(type)) {
+            rvslbl = ACEnum.RVSLBL_BUZH.getStatus();
+        } else {
+            rvslbl = type;
+        }
+
+        return rvslbl;
     }
 
     public String onExpExcel() {
@@ -231,6 +292,70 @@ public class ActvchBean {
 
     public void setCdOptions(List<SelectItem> cdOptions) {
         this.cdOptions = cdOptions;
+    }
+
+    public String getCvchTotalAmt() {
+        return cvchTotalAmt;
+    }
+
+    public void setCvchTotalAmt(String cvchTotalAmt) {
+        this.cvchTotalAmt = cvchTotalAmt;
+    }
+
+    public String getDvchTotalAmt() {
+        return dvchTotalAmt;
+    }
+
+    public void setDvchTotalAmt(String dvchTotalAmt) {
+        this.dvchTotalAmt = dvchTotalAmt;
+    }
+
+    public String getCvchTamt() {
+        return cvchTamt;
+    }
+
+    public void setCvchTamt(String cvchTamt) {
+        this.cvchTamt = cvchTamt;
+    }
+
+    public String getDvchTamt() {
+        return dvchTamt;
+    }
+
+    public void setDvchTamt(String dvchTamt) {
+        this.dvchTamt = dvchTamt;
+    }
+
+    public String getCvchCamt() {
+        return cvchCamt;
+    }
+
+    public void setCvchCamt(String cvchCamt) {
+        this.cvchCamt = cvchCamt;
+    }
+
+    public String getDvchCamt() {
+        return dvchCamt;
+    }
+
+    public void setDvchCamt(String dvchCamt) {
+        this.dvchCamt = dvchCamt;
+    }
+
+    public String getCnum() {
+        return cnum;
+    }
+
+    public void setCnum(String cnum) {
+        this.cnum = cnum;
+    }
+
+    public String getTnum() {
+        return tnum;
+    }
+
+    public void setTnum(String tnum) {
+        this.tnum = tnum;
     }
 
     /**

@@ -23,11 +23,15 @@
     <script language="JavaScript" type="text/JavaScript">
         function KeyDown() {
             if (event.keyCode == 13) {
-                if (event.srcElement.id == 'inputform:vchset') {
+                if (event.srcElement.id == 'inputform:anacde') {
                     event.returnValue = false;
                     event.cancel = true;
                     document.forms['inputform']['inputform:glcode'].focus();
-                }else if (event.srcElement.id == 'inputform:txnamt') {
+                }else if (event.srcElement.id == 'inputform:rvslbl') {
+                    event.returnValue = false;
+                    event.cancel = true;
+                    document.forms['inputform']['inputform:minamt'].focus();
+                }else if (event.srcElement.id == 'inputform:maxamt') {
                     event.returnValue = false;
                     event.cancel = true;
                     document.forms['inputform']['inputform:query'].click();
@@ -36,10 +40,14 @@
                 }
             }
             if (event.keyCode == 9) {
-                if (event.srcElement.id == 'inputform:vchset') {
+                if (event.srcElement.id == 'inputform:anacde') {
                     event.returnValue = false;
                     event.cancel = true;
                     document.forms['inputform']['inputform:glcode'].focus();
+                }else if(event.srcElement.id == 'inputform:rvslbl'){
+                    event.returnValue = false;
+                    event.cancel = true;
+                    document.forms['inputform']['inputform:minamt'].focus();
                 }
             }
         }
@@ -52,19 +60,19 @@
             <p:focus for="tlrnum"/>
             <p:messages id="msgs" showSummary="false" showDetail="true"/>
             <p:panel header="::查询条件::">
-                <h:panelGrid columns="5" border="0" style="width: 90%">
+                <h:panelGrid columns="6" border="0" style="width: 90%">
                     <h:panelGroup>
-                        <h:outputLabel value="柜员号 :" for="tlrnum"/>
+                        <h:outputLabel value="柜员号 :" for="tlrnum" style="text-align:right;padding-left:13px"/>
                         <h:inputText id="tlrnum" value="#{actvchBean.vo.tlrnum}" onkeydown="KeyDown()"/>
                     </h:panelGroup>
 
                     <h:panelGroup>
-                        <h:outputLabel value="客户号 :" for="cusidt"/>
+                        <h:outputLabel value="客户号 :" for="cusidt" style="text-align:right;padding-left:13px"/>
                         <h:inputText id="cusidt" value="#{actvchBean.vo.cusidt}" onkeydown="KeyDown()"/>
                     </h:panelGroup>
 
                     <h:panelGroup>
-                        <h:outputLabel value="账号 :" for="accode"/>
+                        <h:outputLabel value="账号 :" for="accode" />
                         <h:inputText id="accode" value="#{actvchBean.vo.accode}" onkeydown="KeyDown()"/>
                     </h:panelGroup>
 
@@ -73,22 +81,27 @@
                         <h:inputText id="vchset" value="#{actvchBean.vo.vchset}" onkeydown="KeyDown()"/>
                     </h:panelGroup>
 
+                    <h:panelGroup>
+                        <h:outputLabel value="凭证种类 :" for="anacde"/>
+                        <h:inputText id="anacde" value="#{actvchBean.vo.anacde}" onkeydown="KeyDown()"/>
+                    </h:panelGroup>
+
                     <p:commandButton id="query" ajax="false" value="查询" action="#{actvchBean.queryRecords}"
                                      style="margin-left:15px;width: 80px;"/>
 
                     <h:panelGroup>
-                        <h:outputLabel style="padding-left:13px;text-align:right;" value="科目 :" for="glcode"/>
+                        <h:outputLabel style="padding-left:25px;text-align:right;" value="科目 :" for="glcode"/>
                         <h:inputText id="glcode" value="#{actvchBean.vo.glcode}" onkeydown="KeyDown()"/>
                     </h:panelGroup>
 
                     <h:panelGroup>
-                        <h:outputLabel value="核算码 :" for="apcode"/>
+                        <h:outputLabel value="核算码 :" for="apcode" style="text-align:right;padding-left:13px"/>
                         <h:inputText id="apcode" value="#{actvchBean.vo.apcode}" onkeydown="KeyDown()"/>
                     </h:panelGroup>
 
                     <h:panelGroup>
-                        <h:outputLabel value="货币 :" for="curcde"/>
-                        <h:selectOneMenu id="curcde" value="#{actvchBean.vo.curcde}" onkeydown="KeyDown()" >
+                        <h:outputLabel value="货币 :" for="curcde" />
+                        <h:selectOneMenu id="curcde" style="width:100px;" value="#{actvchBean.vo.curcde}" onkeydown="KeyDown()" >
                             <f:selectItems value="#{beanList.ccyList}"/>
                         </h:selectOneMenu>
                     </h:panelGroup>
@@ -97,18 +110,34 @@
                         <h:outputLabel value="金额 :" style="text-align:right;padding-left:25px" for="txnamt"/>
                         <h:inputText id="txnamt" value="#{actvchBean.vo.txnamt}" onkeydown="KeyDown()"/>
                     </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:outputLabel value="交易类型 :" for="rvslbl"/>
+                        <h:inputText id="rvslbl" value="#{actvchBean.vo.rvslbl}" onkeydown="KeyDown()"/>
+                    </h:panelGroup>
+
                     <p:commandButton id="directPrint" ajax="false" value="导出"
                                      actionListener="#{actvchBean.onExpExcel}"
                                      style="margin-left:15px;width: 80px;"/>
+
                     <h:panelGroup>
-                        <h:outputLabel value="借贷 :" style="padding-left:13px;text-align:right;" for="borlen"/>
+                        <h:outputLabel value="最小金额 :" for="minamt"/>
+                        <h:inputText id="minamt" value="#{actvchBean.vo.minamt}" onkeydown="KeyDown()"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:outputLabel value="最大金额 :" for="maxamt"/>
+                        <h:inputText id="maxamt" value="#{actvchBean.vo.maxamt}" onkeydown="KeyDown()"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:outputLabel value="借贷 :"  for="borlen"/>
                         <h:selectOneMenu style="width:100px;" id="borlen" value="#{actvchBean.paramBorlen}">
                             <f:selectItems value="#{actvchBean.cdOptions}"/>
                         </h:selectOneMenu>
                     </h:panelGroup>
 
                 </h:panelGrid>
-
             </p:panel>
             <br/>
         </h:form>
@@ -185,8 +214,10 @@
 
                 <p:columnGroup type="footer">
                     <p:row>
-                        <p:column colspan="50" footerText="传票笔数：#{fn:length(actvchBean.vchList)}  贷方总金额：#{actvchBean.vchTotalAmt}"
-                                  style="text-align:right"/>
+                        <p:column colspan="50" footerText="传票笔数：#{fn:length(actvchBean.vchList)}  贷方总金额：#{actvchBean.vchTotalAmt}
+                        借方总金额：#{actvchBean.dvchTotalAmt} 转账笔数:#{actvchBean.tnum}  转账贷方金额:#{actvchBean.cvchTamt}
+                        转账借方金额:#{actvchBean.dvchTamt} 现金笔数:#{actvchBean.cnum} 现金贷方金额:#{actvchBean.cvchCamt}
+                        现金借方金额:#{actvchBean.dvchCamt} " style="text-align:right"/>
                     </p:row>
                 </p:columnGroup>
 
