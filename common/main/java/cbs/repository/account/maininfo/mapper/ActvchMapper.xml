@@ -639,6 +639,13 @@
         <if test="borlen == 1">
             and vch.txnamt > 0
         </if>
+        <if test="minamt != null">
+            and vch.txnamt >= #{minamt}
+        </if>
+        <if test="maxamt != null">
+            and  #{maxamt} >= vch.txnamt
+        </if>
+
         order by tlrnum,vchset,setseq
     </select>
     <resultMap id="ActvchResult2Map" type="cbs.repository.account.maininfo.model.ActvchForGlDRpt">
