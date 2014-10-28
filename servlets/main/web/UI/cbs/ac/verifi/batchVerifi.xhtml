@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                /*padding-left: 80px;*/
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-input {
+                width: 180px;
+            }
+
+            .col-qry1 {
+                width: 50%;
+            }
+        </style>
+        <script language="JavaScript" type="text/JavaScript">
+           function setpathvalue(obj) {
+                document.getElementById("editForm:hidfileimp").value=obj.value;
+            }
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <h:form id="editForm" enctype="multipart/form-data">
+                <p:messages id="msgs" showDetail="true"/>
+                <p:panel header="【与财务系统对账】" style="height: 105px">
+                    <h:panelGrid width="100%" cellspacing="0" border="0" columns="2" columnClasses="col-qry1">
+                        <h:panelGroup>
+                            <h:panelGrid cellspacing="0" border="0" columns="2" style="margin-top: 15px">
+                                <h:outputLabel value="选择文件:" style="width:180px;" />
+                                <input style="width:360px;" id="fileimp" type="file" value="" onchange="setpathvalue(this)"></input>
+                                <h:inputHidden id="hidfileimp" value="#{batchVerifiAction.filepath}"/>
+                            </h:panelGrid>
+                        </h:panelGroup>
+                        <h:panelGrid cellspacing="0" border="0" columns="1">
+                            <h:panelGroup>
+                                <p:commandButton style="width:60px;margin-top: 15px" ajax="true"
+                                                 id="btnImp" update="msgs"
+                                                 value="导入" action="#{batchVerifiAction.onBtnImpClick}"
+                                        ></p:commandButton>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+                <p:ajaxStatus style="height:18px;text-align:center">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+                <p:separator/>
+                <p:dataTable id="dterrors" height="200"
+                             value="#{batchVerifiAction.errorList}" var="errRecord"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks}
+                                    {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" paginatorPosition="bottom" rows="15" rowsPerPageTemplate="100,50,15,10,5"
+                             emptyMessage="数据记录为空...">
+
+                    <f:facet name="header">
+                        对账失败信息
+                    </f:facet>
+                    <p:column headerText="账号" style="text-align:center">
+                        <h:outputText value="#{errRecord.jdnum}"/>
+                    </p:column>
+                    <p:column headerText="凭证号" style="text-align:center">
+                        <h:outputText value="#{errRecord.jdinf}"/>
+                    </p:column>
+                    <p:column headerText="记账日期" style="text-align:center">
+                        <h:outputText value="#{errRecord.jddat}"/>
+                    </p:column>
+                    <p:column headerText="贷方金额" style="text-align:center">
+                        <h:outputText value="#{errRecord.jdcmt}"/>
+                    </p:column>
+                    <p:column headerText="借方金额" style="text-align:center">
+                        <h:outputText value="#{errRecord.jddmt}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>
