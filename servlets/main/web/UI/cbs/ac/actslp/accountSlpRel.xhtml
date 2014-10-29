@@ -29,12 +29,12 @@
                              columnClasses="lblWidth,data_input_width,lblWidth,data_input_width1">
                     <h:outputLabel value="账户号："/>
                     <h:inputText maxlength="12" id="oldacn" autocomplete="off"
-                                 style="width:90%;ime-mode:disabled;" value="#{actSlpAction.actani.oldacn}">
+                                 style="width:90%;ime-mode:disabled;" value="#{actSlpRelAction.actani.oldacn}">
                     </h:inputText>
                     <h:outputLabel value="客户名称：" for="cusnam"/>
-                    <h:inputText style="width:90%" id="cusnam" maxlength="72"  value="#{actSlpAction.actoac.actnam}"/>
+                    <h:inputText style="width:90%" id="cusnam" maxlength="72"  value="#{actSlpRelAction.actoac.actnam}"/>
                     <h:panelGroup styleClass="btnWidth">
-                        <p:commandButton ajax="false" action="#{actSlpAction.onBtnQueryClick}" id="btnQuery"
+                        <p:commandButton ajax="false" action="#{actSlpRelAction.onBtnQueryClick}" id="btnQuery"
                                          value="确 定"></p:commandButton>
                         <p:spacer width="5"/>
                         <p:commandButton type="reset" value="重 置"></p:commandButton>
@@ -44,8 +44,8 @@
             </p:panel>
             <br></br>
             <p:dataTable style="width:100%;" var="record" id="actoacInfo"
-                         height="400" value="#{actSlpAction.oacInfoLst}"
-                         selection="#{actSlpAction.selectRec}" selectionMode="single"
+                         height="400" value="#{actSlpRelAction.oacInfoLst}"
+                         selection="#{actSlpRelAction.selectRec}" selectionMode="single"
                          paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          paginator="true" rows="15" paginatorPosition="both" rowsPerPageTemplate="100,50,30,15,5"
                          emptyMessage="数据记录为空...">
@@ -96,7 +96,7 @@
                         <h:outputText value="操作"/>
                     </f:facet>
 
-                    <h:commandLink action="#{actSlpAction.onQueryActInfo}" immediate="true" value="解除">
+                    <h:commandLink action="#{actSlpRelAction.onQueryActInfo}" immediate="true" value="解除">
                         <f:param name="oldacn" value="#{record.oldacn}"></f:param>
                         <f:param name="cusidt" value="#{record.cusidt}"></f:param>
                         <f:param name="apcode" value="#{record.apcode}"></f:param>

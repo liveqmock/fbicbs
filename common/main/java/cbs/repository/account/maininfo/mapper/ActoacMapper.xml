@@ -680,4 +680,44 @@
           ORDER BY AI.OLDACN
      ]]>
     </select>
+    <select id="selectSlpRecords" resultMap="ActInfoResultMap">
+        <![CDATA[
+          SELECT
+              AI.OLDACN,OC.ACTNAM
+              ,BF.BOKBAL,OC.ORGIDT,OC.CUSIDT,OC.APCODE,OC.CURCDE
+              ,OC.CRETLR,OC.CREDAT
+              ,(CASE WHEN OC.OACFLG='O' THEN 'open' WHEN OC.OACFLG='C' THEN 'close' ELSE 'eidt' END) AS OACFLG
+              ,BF.ACTSTS
+          FROM
+              ACTANI AI JOIN ACTOAC OC ON AI.ORGIDT=OC.ORGIDT
+                  AND AI.CUSIDT = OC.CUSIDT AND AI.APCODE = OC.APCODE
+                  AND AI.CURCDE = OC.CURCDE
+              JOIN ACTOBF BF ON OC.ORGIDT=BF.ORGIDT
+                  AND OC.CUSIDT=BF.CUSIDT
+                  AND OC.APCODE=BF.APCODE
+                  AND OC.CURCDE=BF.CURCDE
+          WHERE OC.OACFLG = 'O' AND OC.INTFLG = '0'
+          ORDER BY AI.OLDACN
+     ]]>
+    </select>
+    <select id="selectRegRecords" resultMap="ActInfoResultMap">
+        <![CDATA[
+          SELECT
+              AI.OLDACN,OC.ACTNAM
+              ,BF.BOKBAL,OC.ORGIDT,OC.CUSIDT,OC.APCODE,OC.CURCDE
+              ,OC.CRETLR,OC.CREDAT
+              ,(CASE WHEN OC.OACFLG='O' THEN 'open' WHEN OC.OACFLG='C' THEN 'close' ELSE 'eidt' END) AS OACFLG
+              ,BF.ACTSTS
+          FROM
+              ACTANI AI JOIN ACTOAC OC ON AI.ORGIDT=OC.ORGIDT
+                  AND AI.CUSIDT = OC.CUSIDT AND AI.APCODE = OC.APCODE
+                  AND AI.CURCDE = OC.CURCDE
+              JOIN ACTOBF BF ON OC.ORGIDT=BF.ORGIDT
+                  AND OC.CUSIDT=BF.CUSIDT
+                  AND OC.APCODE=BF.APCODE
+                  AND OC.CURCDE=BF.CURCDE
+          WHERE OC.OACFLG = 'O' AND OC.INTFLG = '1'
+          ORDER BY AI.OLDACN
+     ]]>
+    </select>
 </mapper>

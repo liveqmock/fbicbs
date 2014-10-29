@@ -5,7 +5,6 @@ import cbs.common.enums.ACEnum;
 import cbs.common.utils.MessageUtil;
 import cbs.repository.account.maininfo.dao.ActoacMapper;
 import cbs.repository.account.maininfo.dao.ActobfMapper;
-import cbs.repository.account.maininfo.dao.ActslpMapper;
 import cbs.repository.account.maininfo.model.*;
 import cbs.repository.code.dao.ActaniMapper;
 import cbs.repository.code.model.Actani;
@@ -21,7 +20,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,9 +32,9 @@ import java.util.List;
  */
 @ManagedBean
 @ViewScoped
-public class ActSlpAction implements Serializable {
+public class ActSlpRelAction implements Serializable {
 
-    private static final Log logger = LogFactory.getLog(ActSlpAction.class);
+    private static final Log logger = LogFactory.getLog(ActSlpRelAction.class);
     @ManagedProperty("#{ibatisManager}")
     IbatisManager ibatisManager;
     private Actoac actoac = new Actoac();  //联机开关户资料表
@@ -63,7 +61,7 @@ public class ActSlpAction implements Serializable {
             if (!oldacn.equals("") || !actnam.equals("")) {
                 oacInfoLst = oacmap.selectOLDACNsetRecord(oldacn, actnam);
             } else {
-                oacInfoLst = oacmap.selectRegRecords();
+                oacInfoLst = oacmap.selectSlpRecords();
             }
             bokbalFormat();
         } catch (Exception ex) {
