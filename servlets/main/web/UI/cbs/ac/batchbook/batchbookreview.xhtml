@@ -64,12 +64,13 @@
                     event.keyCode = 9;
                 } else if (event.srcElement.id == 'inputform:furinf') {
                     checkfurinf();
-                    event.keyCode = 9;
-                } else if (event.srcElement.id == 'inputform:vchatt') {
+                    document.forms['inputform']['inputform:actno'].focus();
+                    document.forms['inputform']['inputform:save'].click();
+                }/* else if (event.srcElement.id == 'inputform:vchatt') {
                     checkvchatt();
                     document.forms['inputform']['inputform:actno'].focus();
                     document.forms['inputform']['inputform:save'].click();
-                } else if (event.srcElement.id == 'reviewform:reviewedVchset') {
+                }*/ else if (event.srcElement.id == 'reviewform:reviewedVchset') {
                     document.forms['reviewform']['reviewform:reviewSearch'].click();
                 } else if (event.srcElement.id == 'authform:password') {
                     event.returnValue = false;
@@ -92,9 +93,9 @@
                     document.forms['inputform']['inputform:valdat'].focus();
                 } else if (event.srcElement.id == 'inputform:furinf') {
                     document.forms['inputform']['inputform:anacde'].focus();
-                } else if (event.srcElement.id == 'inputform:vchatt') {
+                } /*else if (event.srcElement.id == 'inputform:vchatt') {
                     document.forms['inputform']['inputform:furinf'].focus();
-                } else if (event.srcElement.id == 'reviewform:reviewedVchset') {
+                }*/ else if (event.srcElement.id == 'reviewform:reviewedVchset') {
                     document.forms['reviewform']['reviewform:reviewedTlrnum'].focus();
                 } else if (event.srcElement.id == 'reviewform:reviewedTlrnum') {
                     document.forms['reviewform']['reviewform:reviewedVchset'].focus();
@@ -289,10 +290,7 @@
                      actionListener="#{batchBookReviewAction.onCheckFurinf}"
                      update="msgs" process="@form"
                      oncomplete="handleInputComplete(xhr, status, args, 'furinf', null)"/>
-    <p:remoteCommand name="checkvchatt" id="checkvchatt" async="false"
-                     actionListener="#{batchBookReviewAction.onCheckVchatt}"
-                     update="msgs" process="@form"
-                     oncomplete="handleInputComplete(xhr, status, args, 'vchatt', null)"/>
+
 
 </h:form>
 
@@ -342,9 +340,9 @@
                 <p:column headerText="凭证号码" style="text-align:center">
                     <h:outputText value="#{record.furinf}"/>
                 </p:column>
-                <p:column headerText="附件" style="width:40px;text-align:center">
+                <!--<p:column headerText="附件" style="width:40px;text-align:center">
                     <h:outputText value="#{record.vchatt}"/>
-                </p:column>
+                </p:column>-->
             </p:dataTable>
         </h:form>
     </p:tab>
@@ -391,9 +389,9 @@
                 <p:column headerText="凭证号码" style="text-align:center">
                     <h:outputText value="#{record.furinf}"/>
                 </p:column>
-                <p:column headerText="附件" style="width:40px;text-align:center">
+                <!--<p:column headerText="附件" style="width:40px;text-align:center">
                     <h:outputText value="#{record.vchatt}"/>
-                </p:column>
+                </p:column>-->
             </p:dataTable>
         </h:form>
     </p:tab>

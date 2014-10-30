@@ -812,7 +812,7 @@
               AND VALDAT = #{record.valdat}
               AND ANACDE = #{record.anacde}
               AND FURINF = #{record.furinf}
-              AND VCHATT = #{record.vchatt}
+
         ORDER BY SETSEQ
     </select>
     <!-- ======================================  -->

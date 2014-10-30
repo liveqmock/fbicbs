@@ -318,7 +318,7 @@ public class BatchBookReviewAction implements Serializable {
     }
 
 
-    public void onCheckVchatt(ActionEvent actionEvent) {
+    /*public void onCheckVchatt(ActionEvent actionEvent) {
 
         RequestContext requestContext = RequestContext.getCurrentInstance();
         boolean isValid = false;
@@ -331,7 +331,7 @@ public class BatchBookReviewAction implements Serializable {
             MessageUtil.addError("附件数输入错误！");
             requestContext.addCallbackParam("isValid", false);
         }
-    }
+    }*/
 
 
     public void onCheckTxnamt(ActionEvent actionEvent) {
@@ -716,9 +716,9 @@ public class BatchBookReviewAction implements Serializable {
             result = false;
         }
 
-        if (!checkVchatt(vo.getVchatt())) {
+        /*if (!checkVchatt(vo.getVchatt())) {
             result = false;
-        }
+        }*/
         //日期检查
         if (!checkDate8(this.vo.getValdat())) {
             result = false;
