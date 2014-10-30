@@ -128,7 +128,7 @@ public class ActvchBean {
                 cvchTotalAmt = df.format(cvchamt.divide(new BigDecimal("100.00")));  //贷方总金额
                 dvchTotalAmt = df.format(dvchamt.divide(new BigDecimal("100.00"))); //借方总金额
                 cvchTamt = df.format(tcamt.divide(new BigDecimal("100.00")));    //转账贷方金额
-                cvchTamt = df.format(tdamt.divide(new BigDecimal("100.00")));    //转账借方金额
+                dvchTamt = df.format(tdamt.divide(new BigDecimal("100.00")));    //转账借方金额
                 cvchCamt = df.format(ccamt.divide(new BigDecimal("100.00")));     //现金贷方金额
                 dvchCamt = df.format(cdamt.divide(new BigDecimal("100.00")));     //现金借方金额
                 cnum = c+"";  //现金笔数
