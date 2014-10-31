@@ -23,15 +23,15 @@
             <p:growl id="growl" showDetail="true"/>
             <h:form id="queryForm">
                 <p:focus for="oldacn"/>
-                <p:panel header="::结清查询::" style="margin-top:10px" id="input">
-                    <table width="100%" style="height:100px;">
+                <p:panel header="::结清查询::" style="margin-top:10px;width:98%;height:150px;" id="input">
+                    <!--<table width="width:100%" style="height:100px;">
                         <tr>
-                            <td  >
+                            <td  >-->
                                 <h:panelGrid cellspacing="0" border="0" columns="3"
-                                             style="margin-left:0px;margin-top:10px;height:40px;width:400px;">
+                                             style="margin-left:10px;margin-top:30px;height:40px;width:50%;">
                                     <h:outputLabel value="账户号："/>
                                     <h:inputText maxlength="12" id="oldacn" autocomplete="off"
-                                                 style="width:90%;ime-mode:disabled;" value="#{actclear.actani.oldacn}">
+                                                 style="width:200px;ime-mode:disabled;" value="#{actclear.actani.oldacn}">
                                     </h:inputText>
                                     <h:panelGroup styleClass="btnWidth">
                                         <p:commandButton ajax="false" action="#{actclear.onBtnClearClick}" id="btnQuery"
@@ -41,9 +41,9 @@
                                         <p:commandButton type="reset" value="重 置"></p:commandButton>
                                     </h:panelGroup>
                                 </h:panelGrid>
-                            </td>
+                       <!--     </td>
                         </tr>
-                    </table>
+                    </table>-->
 
 
                 </p:panel>
