@@ -106,7 +106,7 @@ public class ActvchBean {
                     if (vch.getTxnamt() > 0L) {  //贷方
                         cvchamt = cvchamt.add(new BigDecimal(vch.getTxnamt()));
 
-                        if ("转账支票".equals(vch.getAnacde())) {  //转账
+                        if ("转账".equals(vch.getRvslbl())) {  //转账
                             t++;
                             tcamt = tcamt.add(new BigDecimal(vch.getTxnamt()));
 
@@ -116,7 +116,7 @@ public class ActvchBean {
                         }
                     }else { //借方
                         dvchamt = dvchamt.add(new BigDecimal(vch.getTxnamt()));
-                        if ("转账支票".equals(vch.getAnacde())) {  //转账
+                        if ("转账".equals(vch.getRvslbl())) {  //转账
                             t++;
                             tdamt = tdamt.add(new BigDecimal(vch.getTxnamt()));
                         } else { //现金
