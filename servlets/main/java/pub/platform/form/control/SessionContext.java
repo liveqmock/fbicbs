@@ -3,10 +3,10 @@
 package pub.platform.form.control;
 
 import java.util.Enumeration;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import pub.platform.security.OperatorManager;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 会话上下文环境接口
