@@ -98,7 +98,7 @@ public class ActvchModel {
         if (rvslbl != null) {
             if (rvslbl.equals("*")) this.rvslbl = "冲正";
             else if (rvslbl.equalsIgnoreCase("T")) this.rvslbl = "转账";
-            else if (rvslbl.equalsIgnoreCase("B")) this.rvslbl = "冲账";
+            else if (rvslbl.equalsIgnoreCase("B")) this.rvslbl = "补帐";
             else if (rvslbl.equalsIgnoreCase("C")) this.rvslbl = "现金";
             else this.rvslbl = rvslbl;
         }
