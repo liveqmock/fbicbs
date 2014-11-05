@@ -171,6 +171,9 @@ public class BatchBookAction implements Serializable {
 
         acttvc.setErydat(SystemService.getBizDate());
         acttvc.setErytim(SystemService.getBizTime8());
+        
+        short att = 0;
+        acttvc.setVchatt(att);
 
         acttvc.setFxrate(new BigDecimal(0));
         acttvc.setSecamt(0L);
