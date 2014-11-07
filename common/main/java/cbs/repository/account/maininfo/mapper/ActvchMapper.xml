@@ -645,7 +645,12 @@
         <if test="maxamt != null">
             and  #{maxamt} >= vch.txnamt
         </if>
-
+        <if test="rvslbl != null">
+            and  #{rvslbl} = vch.rvslbl
+        </if>
+        <if test="anacde != null">
+        and vch.anacde = #{anacde}
+        </if>
         order by tlrnum,vchset,setseq
     </select>
     <resultMap id="ActvchResult2Map" type="cbs.repository.account.maininfo.model.ActvchForGlDRpt">
