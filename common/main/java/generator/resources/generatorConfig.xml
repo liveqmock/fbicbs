@@ -39,9 +39,8 @@
             <property name="actslp" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>-->
-        <table tableName="actrep">
-            <property name="actrep" value="true"/>
-            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
+        <table tableName="actvhh">
+            <property name="actvhh" value="true"/>
         </table>
     </context>
 </generatorConfiguration>
