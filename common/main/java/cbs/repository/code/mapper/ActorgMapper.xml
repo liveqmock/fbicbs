@@ -136,6 +136,10 @@
         select distinct org.* from Actvth vth join actorg org
         on vth.orgidt=org.orgidt
     </select>
+    <select id="selectForActvhh" resultMap="BaseResultMap">
+        select distinct org.* from Actvhh vhh join actorg org
+        on vhh.orgidt=org.orgidt
+    </select>
     <select id="selectForActcgl" resultMap="BaseResultMap">
         select distinct org.* from actcgl cgl join actorg org
         on cgl.orgidt=org.orgidt

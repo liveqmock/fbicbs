@@ -1,5 +1,6 @@
 package cbs.repository.account.maininfo.dao;
 
+import cbs.repository.account.maininfo.model.ActvchForGlDRpt;
 import cbs.repository.account.maininfo.model.Actvhh;
 import cbs.repository.account.maininfo.model.ActvhhExample;
 import cbs.repository.account.maininfo.model.ActvhhKey;
@@ -94,4 +95,17 @@ public interface ActvhhMapper {
      * @mbggenerated Wed Nov 12 10:29:21 CST 2014
      */
     int updateByPrimaryKey(Actvhh record);
+
+    /**
+     * createBy: Lichao.W
+     * date:    2014-11-11
+     */
+    List<ActvchForGlDRpt> selectForGlDRpt(@Param("orgidt") String orgidt,@Param("curcde") String curcde,@Param("glcode") String glcode,@Param("ptdate") String ptdate);
+
+    /**
+     * createBy: Lichao.W
+     * date:     2014-14-14
+     * remark: 按照科目，币种分类
+     */
+    List<ActvchForGlDRpt> selectForGlCur(@Param("orgidt") String orgidt,@Param("ptdate") String ptdate);
 }

@@ -18,16 +18,16 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="cbs.repository.account.maininfo.model" targetProject="common/main/java">
+        <javaModelGenerator targetPackage="cbs.repository.account.maininfo.model" targetProject="/">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="cbs.repository.account.maininfo.mapper" targetProject="common/main/java">
+        <sqlMapGenerator targetPackage="cbs.repository.account.maininfo.mapper" targetProject="/">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="cbs.repository.account.maininfo.dao" targetProject="common/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="cbs.repository.account.maininfo.dao" targetProject="/">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
@@ -39,8 +39,9 @@
             <property name="actslp" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>-->
-        <table tableName="actvhh">
+        <table schema="actvhh" tableName="actvhh">
             <property name="actvhh" value="true"/>
+            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
     </context>
 </generatorConfiguration>

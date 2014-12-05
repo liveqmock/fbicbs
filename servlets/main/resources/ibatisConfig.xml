@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration
-PUBLIC "-//ibatis.apache.org//DTD Config 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-config.dtd">
+PUBLIC "-//ibatis.apache.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<environments default="development">
 		<environment id="development">
@@ -61,6 +61,8 @@ PUBLIC "-//ibatis.apache.org//DTD Config 3.0//EN" "http://ibatis.apache.org/dtd/
         <mapper resource="cbs/repository/account/maininfo/mapper/ActbvaMapper.xml" />
         <mapper resource="cbs/repository/account/maininfo/mapper/ActslpMapper.xml" />
         <mapper resource="cbs/repository/account/maininfo/mapper/ActrepMapper.xml" />
+        <mapper resource="cbs/repository/account/maininfo/mapper/ActvhhMapper.xml" />
+        <mapper resource="cbs/repository/account/maininfo/mapper/OldBalanceMapper.xml" />
 
         <mapper resource="cbs/repository/platform/mapper/PtdeptMapper.xml" />
 	</mappers>

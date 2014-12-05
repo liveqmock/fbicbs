@@ -53,7 +53,11 @@ public interface ActorgMapper {
      * This method was created by haiyuhuang
      * date:2010-12-13*/
     List<Actorg> selectForActvch();
-
+    /**
+     * created by lichao.W
+     * date:2014-11-11
+     */
+    List<Actorg> selectForActvhh();
     /**
      * createBy: haiyuhuang
      * date:     2010-12-15*/

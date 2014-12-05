@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui" xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                template="/templates/ui.xhtml">
+
+<ui:define name="head">
+    <style type="text/css">
+        .col-label {
+            text-align: right;
+            font-size: 12px !important;
+            font-weight: bold;
+        }
+
+        .col-input {
+            width: 150px;
+            font-size: 12px !important;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .col-label2 {
+            width: 150px;
+            font-size: 12px !important;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .col-input2 {
+            font-size: 12px !important;
+            text-align: left;
+            font-weight: bold;
+        }
+
+    </style>
+    <script type="text/javascript" language="JavaScript">
+        function KeyDown() {
+            if (event.keyCode == 13) {
+                if (event.srcElement.id == 'inputform:ptdate') {
+                    event.keyCode = 9;
+                } else if (event.srcElement.id == 'inputform:glcode') {
+                    event.keyCode = 9;
+                }else if (event.srcElement.id == 'inputform:prtbtn') {
+                    event.returnValue = false;
+                    event.cancel = true;
+                    document.forms['inputform']['inputform:prtbtn'].click();
+                }else {
+                    event.keyCode = 9;
+                }
+            }
+        }
+    </script>
+</ui:define>
+
+<ui:define name="content">
+        <h:form id="inputform">
+            <p:messages id="msgs"/>
+            <p:panel header="::余额表打印::">
+                <h:panelGrid columns="2" border="0" style="width: 100%">
+                    <h:panelGrid id="input" columns="1" cellpadding="0" cellspacing="5" border="0" style="width:55%;"
+                                 columnClasses="col-label2, col-input2, col-label2, col-input2">
+                    </h:panelGrid>
+                    <h:panelGrid id="btns" columns="1" cellspacing="5" cellpadding="0" >
+                        <p:commandButton id="prtbtn" ajax="false" value="余额表打印" action="#{oldBalanceAction.onPrintBal}"
+                                         style="margin-left:15px;width: 120px;"/>
+                    </h:panelGrid>
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
+</ui:define>
+</ui:composition>
