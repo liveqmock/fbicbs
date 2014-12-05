@@ -269,6 +269,31 @@ public class SystemService {
         return result;
     }
 
+    /**
+     * Create by wanglichao
+     * 2014-11-19
+     * 在对账单打印中使用默认系统日期前一天
+     */
+    public static Date sysDate11() {
+        Date result;
+        SqlSession session = null;
+        try {
+            session = sessionFactory.openSession();
+            ActsctMapper mapper = session.getMapper(ActsctMapper.class);
+            ActsctExample example = new ActsctExample();
+            example.createCriteria().andSctnumEqualTo(Short.parseShort(getSysidtAC()));
+            Actsct sct = mapper.selectByExample(example).get(0);
+            result = sct.getCrndat();
+        } catch (Exception e) {
+            logger.error("获取系统业务时间错误", e);
+            throw new RuntimeException("获取系统业务时间错误！");
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return result;
+    }
     public static Date getIpydat() {
         Date ipydat = null;
         SqlSession session = null;
