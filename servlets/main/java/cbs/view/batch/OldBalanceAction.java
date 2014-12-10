@@ -70,11 +70,15 @@ public class OldBalanceAction implements Serializable {
             ByteArrayOutputStream baos[] = new ByteArrayOutputStream[page];
             for (int item = 0; item < page; item++) {
                 InputStream isr = FacesContext.class.getResourceAsStream("/../../batchTmp/balance.pdf");
+                String coun = item + 1+"";
+                String coun2 = page + "";
                 baos[item] = new ByteArrayOutputStream();
                 reader = new PdfReader(isr);
                 PdfStamper ps = new PdfStamper(reader, baos[item]);
                 AcroFields fields = ps.getAcroFields();
                 fields.setField("sysdat", reportdate);   //³öÕËÈÕ
+                fields.setField("no",coun);  //Ò³Êý
+                fields.setField("no2",coun2);
                 int i = 0;
                 int from = item * pageCount;
                 int to = from + pageCount;
