@@ -89,7 +89,7 @@ public class RPVD0003Handler extends AbstractACBatchJobLogic {
         String strPath = PropertyManager.getProperty("REPORT_ROOTPATH") + "stm\\";
         String orgidt = "";
         String orgnam = "";
-        String title0 = "                                  \u001BW1对账单\u001BW0";
+        String title0 = "                                  \u001BW1中国人民建设银行（青岛市北教育结算中心）\u001BW0";
         String plantop = "--------------------------------------------------------------------------------" +
                 "-----------------------------";  //-2位
         String plan = "|----------|------|----------|----------------|----------------|----------------|--" +
@@ -172,7 +172,13 @@ public class RPVD0003Handler extends AbstractACBatchJobLogic {
         while (it2.hasNext()) {
             ActstmForStmCotent stmCont2 = (ActstmForStmCotent) it2.next();
             if (totalCnt == 1) {
-                double lasbal = (double) stmCont2.getLasbal() / 100;
+                //double lasbal = (double) stmCont2.getLasbal() / 100;
+                double lasbal;      //为使516账户余额显示为正（承上页）
+                if ("51601".equals(actacn)){
+                    lasbal = (double) (stmCont2.getLasbal() * -1) / 100;
+                }else {
+                    lasbal = (double) stmCont2.getLasbal() / 100;
+                }
                 bw.write(plan);
                 bw.newLine();
                 bw.write(contCQY + ReportHelper.getRightSpaceStr(df0.format(lasbal), contCnt3) + contCont7);
@@ -186,7 +192,13 @@ public class RPVD0003Handler extends AbstractACBatchJobLogic {
             String thrref = ReportHelper.getLeftSpaceStr(stmCont2.getThrref(), contCnt2);//摘要
             double dtxnamt = (double) (stmCont2.getDtxnamt() * -1) / 100;
             double ctxnamt = (double) stmCont2.getCtxnamt() / 100;
-            double actbal = (double) stmCont2.getActbal() / 100;
+            //double actbal = (double) stmCont2.getActbal() / 100;
+            double actbal ;
+            if("51601".equals(actacn)){              //516账户不显示余额负数
+                actbal = (double) (stmCont2.getActbal() * -1) / 100;
+            }else {
+                actbal = (double) stmCont2.getActbal() / 100;
+            }
             String spaDtxnamt = ReportHelper.getRightSpaceStr(df0.format(dtxnamt), contCnt3);
             String spaCtxnamt = ReportHelper.getRightSpaceStr(df0.format(ctxnamt), contCnt3);
             String spaActbal = ReportHelper.getRightSpaceStr(df0.format(actbal), contCnt3);
@@ -195,7 +207,13 @@ public class RPVD0003Handler extends AbstractACBatchJobLogic {
             String valdat = ReportHelper.getLeftSpaceStr(dateformt.format(datedat), contCnt4);
             //换页
             if (totalCnt != 1 && (beforestmpny != stmCont2.getStmpny() || beforenstmpg != stmCont2.getNstmpg())) {
-                double lasbal = (double) stmCont2.getLasbal() / 100;
+                //double lasbal = (double) stmCont2.getLasbal() / 100;
+                double lasbal;    //为使516账户余额显示为正
+                if ("51601".equals(actacn)){
+                    lasbal = (double) (stmCont2.getLasbal() * -1) / 100;
+                }else {
+                    lasbal = (double) stmCont2.getLasbal() / 100;
+                }
                 String spaLasbal = ReportHelper.getLeftSpaceStr(df0.format(lasbal), footerCnt1);
                 //添加页脚
                 bw.write(plantop);
@@ -284,7 +302,7 @@ public class RPVD0003Handler extends AbstractACBatchJobLogic {
         String strPath = PropertyManager.getProperty("REPORT_ROOTPATH") + nowDate + "\\";
         String orgidt = "";
         String orgnam = "";
-        String title0 = "                                  \u001BW1对账单\u001BW0";
+        String title0 = "                                  \u001BW1中国人民建设银行（青岛市北教育结算中心）\u001BW0";
         String plantop = "--------------------------------------------------------------------------------" +
                 "-----------------------------";//-2位
         String plan = "|----------|------|----------|----------------|----------------|----------------|--" +
@@ -377,7 +395,13 @@ public class RPVD0003Handler extends AbstractACBatchJobLogic {
                 while (it2.hasNext()) {
                     ActstmForStmCotent stmCont2 = (ActstmForStmCotent) it2.next();
                     if (totalCnt == 1) {
-                        double lasbal = (double) stmCont2.getLasbal() / 100;
+                        double lasbal;      //为使516账户余额显示为正（承上页）
+                        if ("51601".equals(actacn)){
+                            lasbal = (double) (stmCont2.getLasbal() * -1) / 100;
+                        }else {
+                            lasbal = (double) stmCont2.getLasbal() / 100;
+                        }
+                        //double lasbal = (double) stmCont2.getLasbal() / 100;
                         bw.write(plan);
                         bw.newLine();
                         bw.write(contCQY + ReportHelper.getRightSpaceStr(df0.format(lasbal), contCnt3) + contCont7);
@@ -391,7 +415,13 @@ public class RPVD0003Handler extends AbstractACBatchJobLogic {
                     String thrref = ReportHelper.getLeftSpaceStr(stmCont2.getThrref(), contCnt2);//摘要
                     double dtxnamt = (double) (stmCont2.getDtxnamt() * -1) / 100;
                     double ctxnamt = (double) stmCont2.getCtxnamt() / 100;
-                    double actbal = (double) stmCont2.getActbal() / 100;
+                    //double actbal = (double) stmCont2.getActbal() / 100;     //原程序
+                    double actbal ;
+                    if("51601".equals(actacn)){              //516账户不显示余额负数
+                        actbal = (double) (stmCont2.getActbal() * -1) / 100;
+                    }else {
+                        actbal = (double) stmCont2.getActbal() / 100;
+                    }
                     String spaDtxnamt = ReportHelper.getRightSpaceStr(df0.format(dtxnamt), contCnt3);
                     String spaCtxnamt = ReportHelper.getRightSpaceStr(df0.format(ctxnamt), contCnt3);
                     String spaActbal = ReportHelper.getRightSpaceStr(df0.format(actbal), contCnt3);
@@ -400,7 +430,13 @@ public class RPVD0003Handler extends AbstractACBatchJobLogic {
                     String valdat = ReportHelper.getLeftSpaceStr(dateformt.format(datedat), contCnt4);
                     //换页
                     if (totalCnt != 1 && (beforestmpny != stmCont2.getStmpny() || beforenstmpg != stmCont2.getNstmpg())) {
-                        double lasbal = (double) stmCont2.getLasbal() / 100;
+                        double lasbal;    //为使516账户余额显示为正
+                        if ("51601".equals(actacn)){
+                            lasbal = (double) (stmCont2.getLasbal() * -1) / 100;
+                        }else {
+                            lasbal = (double) stmCont2.getLasbal() / 100;
+                        }
+                        //double lasbal = (double) stmCont2.getLasbal() / 100;  //原
                         String spaLasbal = ReportHelper.getLeftSpaceStr(df0.format(lasbal), footerCnt1);
                         //添加页脚
                         bw.write(plantop);
