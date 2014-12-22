@@ -727,8 +727,15 @@ public class BatchBookAction implements Serializable {
      */
     public int getRepInfo(){
         SqlSession session = ibatisManager.getSessionFactory().openSession();
-        ActrepMapper repmap = session.getMapper(ActrepMapper.class);
-        int n = repmap.countByactno(vo.getActno());
+        int n = 0;
+        try {
+            ActrepMapper repmap = session.getMapper(ActrepMapper.class);
+            n = repmap.countByactno(vo.getActno());
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
         return n;
     }
     //======================================================================
