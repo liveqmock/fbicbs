@@ -25,6 +25,7 @@ public class ActstmhisModel {
     private int nstmpg;
     private int paglin;
     private BigDecimal craccm;      //积数
+    private int daynum;            //天数
 
     public String getStmdat() {
         return this.stmdat;
@@ -180,5 +181,13 @@ public class ActstmhisModel {
 
     public void setCraccm(BigDecimal craccm) {
         this.craccm = craccm;
+    }
+
+    public int getDaynum() {
+        return daynum;
+    }
+
+    public void setDaynum(int daynum) {
+        this.daynum = daynum;
     }
 }

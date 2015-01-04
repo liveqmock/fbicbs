@@ -889,10 +889,12 @@
         <result column="FURINF" property="furinf" jdbcType="VARCHAR"/>
         <result column="BORLEN" property="borlen" jdbcType="VARCHAR"/>
         <result column="CRACCM" property="craccm" jdbcType="DECIMAL"/>
+        <result column="DAYNUM" property="daynum" jdbcType="DECIMAL"/>
     </resultMap>
     <select id="selectStmByCondition2" resultMap="ActstmResultMap2">
 
-        select stmdat,valdat,txnamt as borlen,txnamt,rvslbl,actbal,thrref,furinf,tlrnum,vchset,stmtim,stmpny,nstmpg,paglin,craccm
+        select stmdat,valdat,txnamt as borlen,txnamt,rvslbl,actbal,thrref,furinf,tlrnum,vchset,stmtim,stmpny,nstmpg,paglin,
+        craccm,((SELECT SCT.IPYDAT FROM ACTSCT SCT WHERE SCT.SCTNUM=8)-VALDAT) AS daynum
         from actstm stm
         join actani ani
         on stm.cusidt = ani.cusidt
@@ -912,7 +914,8 @@
             and txnamt = #{txnamt}
         </if>
         union
-        select stmdat,valdat,txnamt as borlen,txnamt,rvslbl,actbal,thrref,furinf,tlrnum,vchset,stmtim,stmpny,nstmpg,paglin,craccm
+        select stmdat,valdat,txnamt as borlen,txnamt,rvslbl,actbal,thrref,furinf,tlrnum,vchset,stmtim,stmpny,nstmpg,paglin,
+        craccm,((SELECT SCT.IPYDAT FROM ACTSCT SCT WHERE SCT.SCTNUM=8)-VALDAT) AS daynum
         from actnsm nsm
         join actani ani2
         on nsm.cusidt = ani2.cusidt
