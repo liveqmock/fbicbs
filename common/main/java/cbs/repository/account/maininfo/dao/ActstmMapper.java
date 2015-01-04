@@ -1,6 +1,7 @@
 package cbs.repository.account.maininfo.dao;
 
 import cbs.repository.account.ext.domain.ActstmModel;
+import cbs.repository.account.ext.domain.ActstmhisModel;
 import cbs.repository.account.maininfo.model.Actstm;
 import cbs.repository.account.maininfo.model.ActstmExample;
 import cbs.repository.account.maininfo.model.ActstmForActnum;
@@ -94,5 +95,11 @@ public interface ActstmMapper {
     int updateByExample(@Param("record") Actstm record, @Param("example") ActstmExample example);
 
     List<ActstmModel> selectStmByCondition(@Param("tlrnum") String tlrnum,@Param("bgndat") String bgndat,@Param("enddat") String enddat,@Param("accode") String accode,@Param("txnamt") String txnamt);
+
+    /**
+     * Created by wanglichao 2014-12-25
+     * 历史对账打印  stm表查询
+     */
+    List<ActstmhisModel> selectStmByCondition2(@Param("tlrnum") String tlrnum,@Param("bgndat") String bgndat,@Param("enddat") String enddat,@Param("accode") String accode,@Param("txnamt") String txnamt);
 
 }

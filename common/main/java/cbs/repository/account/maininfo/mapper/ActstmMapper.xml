@@ -872,4 +872,66 @@
         ORDER BY STMPNY,NSTMPG,PAGLIN
         ]]>
     </select>
+
+    <!--
+    created by wanglichao on 2014-12-25
+    历史对账单打印使用 与历史流水账查询多一个字段（积数）
+    -->
+    <resultMap id="ActstmResultMap2" type="cbs.repository.account.ext.domain.ActstmhisModel">
+        <result column="STMDAT" property="stmdat" jdbcType="TIMESTAMP"/>
+        <result column="STMTIM" property="stmtim" jdbcType="VARCHAR"/>
+        <result column="TLRNUM" property="tlrnum" jdbcType="VARCHAR"/>
+        <result column="VCHSET" property="vchset" jdbcType="DECIMAL"/>
+        <result column="TXNAMT" property="txnamt" jdbcType="DECIMAL"/>
+        <result column="ACTBAL" property="actbal" jdbcType="DECIMAL"/>
+        <result column="VALDAT" property="valdat" jdbcType="TIMESTAMP"/>
+        <result column="RVSLBL" property="rvslbl" jdbcType="VARCHAR"/>
+        <result column="FURINF" property="furinf" jdbcType="VARCHAR"/>
+        <result column="BORLEN" property="borlen" jdbcType="VARCHAR"/>
+        <result column="CRACCM" property="craccm" jdbcType="DECIMAL"/>
+    </resultMap>
+    <select id="selectStmByCondition2" resultMap="ActstmResultMap2">
+
+        select stmdat,valdat,txnamt as borlen,txnamt,rvslbl,actbal,thrref,furinf,tlrnum,vchset,stmtim,stmpny,nstmpg,paglin,craccm
+        from actstm stm
+        join actani ani
+        on stm.cusidt = ani.cusidt
+        and stm.curcde = ani.curcde
+        and stm.apcode = ani.apcode
+        where (stm.recsts = ' '  or  stm.recsts = 'N' ) and trim(oldacn) = #{accode}
+        <if test="bgndat != null">
+            <![CDATA[  and stmdat >= to_date(#{bgndat},'yyyy-mm-dd') ]]>
+        </if>
+        <if test="enddat != null">
+            <![CDATA[  and stmdat <= to_date(#{enddat},'yyyy-mm-dd') ]]>
+        </if>
+        <if test="tlrnum != null">
+            and trim(tlrnum) = #{tlrnum}
+        </if>
+        <if test="txnamt != null">
+            and txnamt = #{txnamt}
+        </if>
+        union
+        select stmdat,valdat,txnamt as borlen,txnamt,rvslbl,actbal,thrref,furinf,tlrnum,vchset,stmtim,stmpny,nstmpg,paglin,craccm
+        from actnsm nsm
+        join actani ani2
+        on nsm.cusidt = ani2.cusidt
+        and nsm.curcde = ani2.curcde
+        and nsm.apcode = ani2.apcode
+        where (nsm.recsts = ' ' or nsm.recsts = 'N') and trim(oldacn) = #{accode}
+        <if test="bgndat != null">
+            <![CDATA[  and stmdat >= to_date(#{bgndat},'yyyy-mm-dd') ]]>
+        </if>
+        <if test="enddat != null">
+            <![CDATA[  and stmdat <= to_date(#{enddat},'yyyy-mm-dd') ]]>
+        </if>
+        <if test="tlrnum != null">
+            and trim(tlrnum) = #{tlrnum}
+        </if>
+        <if test="txnamt != null">
+            and txnamt = #{txnamt}
+        </if>
+        order by stmpny,nstmpg,paglin
+    </select>
+
 </mapper>
