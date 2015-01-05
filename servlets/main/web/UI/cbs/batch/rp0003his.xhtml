@@ -127,7 +127,11 @@
                             <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
                         </h:outputText>
                     </p:column>
-
+                    <p:column headerText="交易后余额 " style="text-align:right">
+                        <h:outputText value="#{record.actbal}" style="float: right">
+                            <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
+                        </h:outputText>
+                    </p:column>
                     <p:column headerText="积数 " style="text-align:right">
                         <h:outputText value="#{record.craccm}" style="float: right">
                             <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
