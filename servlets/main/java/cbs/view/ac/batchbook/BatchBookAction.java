@@ -171,7 +171,7 @@ public class BatchBookAction implements Serializable {
 
         acttvc.setErydat(SystemService.getBizDate());
         acttvc.setErytim(SystemService.getBizTime8());
-        
+
         short att = 0;
         acttvc.setVchatt(att);
 
@@ -616,10 +616,10 @@ public class BatchBookAction implements Serializable {
      */
     public void onCheckActno(ActionEvent actionEvent) {
         RequestContext requestContext = RequestContext.getCurrentInstance();
-        if (getRepInfo() > 0){
+        if (getRepInfo() > 0) {
             requestContext.addCallbackParam("isValid", false);
             MessageUtil.addError("M408");
-        }else if (StringUtils.isEmpty(vo.getActno())) {
+        } else if (StringUtils.isEmpty(vo.getActno())) {
             requestContext.addCallbackParam("isValid", false);
         } else {
             requestContext.addCallbackParam("isValid", true);
@@ -725,19 +725,20 @@ public class BatchBookAction implements Serializable {
      * ºÏ≤È÷ß∆±π“ ß
      * wang
      */
-    public int getRepInfo(){
+    public int getRepInfo() {
         SqlSession session = ibatisManager.getSessionFactory().openSession();
         int n = 0;
         try {
             ActrepMapper repmap = session.getMapper(ActrepMapper.class);
             n = repmap.countByactno(vo.getActno());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             session.close();
         }
         return n;
     }
+
     //======================================================================
     // Private Methods
     //======================================================================
@@ -1866,7 +1867,6 @@ public class BatchBookAction implements Serializable {
         }
         return "";
     }
-
 
     //=======================================================================
     // getter & setter
