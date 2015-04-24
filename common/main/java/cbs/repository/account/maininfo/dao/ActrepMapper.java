@@ -69,8 +69,8 @@ public interface ActrepMapper {
     int countBypapcde(@Param("papcde")String papcde);
 
     //联机记账检查账号支票是否挂失
-    @Select("select count(*) from actrep where recsts = 'P' and actnum = #{actno}")
-    int countByactno(@Param("actno")String actno);
+    @Select("select count(*) from actrep where recsts = 'P' and actnum = #{actno} and substr(trim(papcde),5,8) = #{furinf}")
+    int countByactno(@Param("actno")String actno,@Param("furinf")String furinf);
 
     //支票解除挂失联动查询
     @Select("select *  from actrep where papcde = #{papcde}")

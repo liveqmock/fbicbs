@@ -616,10 +616,11 @@ public class BatchBookAction implements Serializable {
      */
     public void onCheckActno(ActionEvent actionEvent) {
         RequestContext requestContext = RequestContext.getCurrentInstance();
-        if (getRepInfo() > 0) {
+        /*if (getRepInfo() > 0) {
             requestContext.addCallbackParam("isValid", false);
             MessageUtil.addError("M408");
-        } else if (StringUtils.isEmpty(vo.getActno())) {
+        } else */
+        if (StringUtils.isEmpty(vo.getActno())) {
             requestContext.addCallbackParam("isValid", false);
         } else {
             requestContext.addCallbackParam("isValid", true);
@@ -730,7 +731,7 @@ public class BatchBookAction implements Serializable {
         int n = 0;
         try {
             ActrepMapper repmap = session.getMapper(ActrepMapper.class);
-            n = repmap.countByactno(vo.getActno());
+            n = repmap.countByactno(vo.getActno(),vo.getFurinf());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -1114,7 +1115,10 @@ public class BatchBookAction implements Serializable {
         if (StringUtils.isEmpty(this.vo.getFurinf())) {
             MessageUtil.addErrorWithClientID("msgs", "凭证号码不能为空！");
             return false;
-        } else {
+        }else if (getRepInfo()>0){  //检查账号+凭证号（支票后4位）是否挂失
+            MessageUtil.addErrorWithClientID("msgs", "该支票已书面挂失！");
+            return false;
+        }else {
             SqlSession session = ibatisManager.getSessionFactory().openSession();
             try {
                 String actno = this.vo.getActno();
